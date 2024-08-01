@@ -6,7 +6,7 @@ export const onRequest = defineMiddleware((context, next) => {
 
   context.locals.user = {
     isAuthenticated: true,
-    isDealer: false,
+    isDealer: true,
     isBasicUser: false,
     language: "de",
   };
