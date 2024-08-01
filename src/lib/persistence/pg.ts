@@ -12,7 +12,7 @@ const sql = postgres({
   database,
   host,
   port,
-  ssl: sslMode === "enabled",
+  ssl: sslMode === "require",
 });
 
 console.log(`Connection to database: ${host}:${port}/${database}`);
