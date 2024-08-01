@@ -1,4 +1,5 @@
 import { decryptJwt } from "@lib/services/auth";
+import { getValueFromCookie } from "@lib/services/cookie";
 import { defineMiddleware } from "astro/middleware";
 
 export const onRequest = defineMiddleware(async (context, next) => {
@@ -28,8 +29,3 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   return next();
 });
-
-function getValueFromCookie(cookie: string, key: string): string | undefined {
-  const tokens = cookie.split(";");
-  return tokens.find((token) => token.includes(key))?.split("=")[1];
-}
