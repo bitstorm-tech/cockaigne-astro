@@ -3,8 +3,8 @@ import type { User } from "@lib/models/user";
 import LanguageChooser from "./LanguageChooser.astro";
 import MobileMenuFooter from "./MobileMenuFooter.astro";
 import DealerMenu from "./DealerMenu.astro";
-import UserMenu from "./UserMenu.astro";
-import StandardMenu from "./StandardMenu.astro";
+import ProUserMenu from "./ProUserMenu.astro";
+import BasicUserMenu from "./BasicUserMenu.astro";
 
 interface Props {
 	user: User;
@@ -19,9 +19,9 @@ const { user } = Astro.props;
 	x-show="showMenu"
 	@click.outside="showMenu = false">
 	<div class="flex flex-col gap-5 p-6 sm:px-3">
-		{user.isAuthenticated && user.isDealer && <DealerMenu lang={user.language} />}
-		{user.isAuthenticated && !user.isDealer && <UserMenu lang={user.language} />}
-		{!user.isAuthenticated && <StandardMenu lang={user.language} />}
+		{user.isDealer && <DealerMenu lang={user.language} />}
+		{user.isProUser && <ProUserMenu lang={user.language} />}
+		{!user.isProUser && <BasicUserMenu lang={user.language} />}
 		<LanguageChooser lang={user.language} />
 		<!--<button onclick="LocationService.toggleLocationServiceSimulation();">-->
 		<!--  Toggle Walk Simulator-->

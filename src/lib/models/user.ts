@@ -1,7 +1,6 @@
 export interface User {
-  id: string;
-  isBasicUser: boolean;
-  isAuthenticated: boolean;
+  userId: string;
+  isProUser: boolean;
   isDealer: boolean;
   language: string;
 }

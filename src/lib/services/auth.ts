@@ -5,14 +5,14 @@ const JWT_SECRET = jose.base64url.decode(import.meta.env.JWT_SECRET);
 export interface JwtPayload {
   sub: string;
   isDealer: boolean;
-  isBasicUser: boolean;
+  isProUser: boolean;
 }
 
-export async function encryptJwt(userId: string, isDealer: boolean, isBasicUser: boolean): Promise<string> {
+export async function encryptJwt(userId: string, isDealer: boolean, isProUser: boolean): Promise<string> {
   const payload = {
     sub: userId,
     isDealer,
-    isBasicUser,
+    isProUser,
   };
 
   return await new jose.SignJWT(payload).setProtectedHeader({ alg: "HS512", typ: "JWT" }).sign(JWT_SECRET);

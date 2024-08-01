@@ -1,13 +1,11 @@
 import { decryptJwt } from "@lib/services/auth";
 import { defineMiddleware } from "astro/middleware";
-import { jwtVerify } from "jose";
 
 export const onRequest = defineMiddleware(async (context, next) => {
   context.locals.user = {
-    id: "",
-    isAuthenticated: false,
+    userId: "",
     isDealer: false,
-    isBasicUser: true,
+    isProUser: false,
     language: "de",
   };
 
@@ -22,10 +20,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (jwt?.length) {
     const jwtPayload = await decryptJwt(jwt);
     if (jwtPayload) {
-      context.locals.user.id = jwtPayload.sub;
+      context.locals.user.userId = jwtPayload.sub;
       context.locals.user.isDealer = jwtPayload.isDealer;
-      context.locals.user.isBasicUser = jwtPayload.isBasicUser;
-      context.locals.user.isAuthenticated = true;
+      context.locals.user.isProUser = jwtPayload.isProUser;
     }
   }
 

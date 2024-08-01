@@ -14,14 +14,14 @@ const user = Astro.locals.user;
         <div class="flex h-12 items-center justify-between">
             <div class="flex gap-4">
                 <a href="/"><img class="h-7" src="/images/logo-text.svg" alt="Logo"/></a>
-                {user.isAuthenticated && !user.isDealer &&
+                {!user.isDealer &&
                         <div class="self-end badge badge-neutral text-xs">
-                            {user.isBasicUser ? t('basic', user.language) : t('pro', user.language)}
+                            {user.isProUser ? t('pro', user.language) : t('basic', user.language)}
                         </div>
                 }
             </div>
             <div class="hidden gap-6 md:flex">
-                {user.isAuthenticated ?
+                {user.isDealer || user.isProUser ?
                         <a class="menu-item" href="/settings">{t('settings', user.language)}</a>
                         <a class="menu-item" href="/contact">Kontaktiere uns</a>
                         <a class="menu-item" href="/logout">Abmelden</a>
