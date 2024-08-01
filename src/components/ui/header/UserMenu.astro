@@ -1,0 +1,23 @@
+---
+import { t } from "@lib/i18n";
+import MobileMenuEntry from "./MobileMenuEntry.astro";
+import CogIcon from "@components/icons/CogIcon.astro";
+import AtIcon from "@components/icons/AtIcon.astro";
+import RocketIcon from "@components/icons/RocketIcon.astro";
+import LogoutIcon from "@components/icons/LogoutIcon.astro";
+
+const { lang } = Astro.props;
+---
+
+<MobileMenuEntry href="/settings" text={t("settings", lang)}>
+	<CogIcon slot="icon" />
+</MobileMenuEntry>
+<MobileMenuEntry href="/contact" text={t("contact_us", lang)}>
+	<AtIcon slot="icon" />
+</MobileMenuEntry>
+<MobileMenuEntry href="/basic-vs-pro" text={t("basic_vs_pro", lang)}>
+	<RocketIcon slot="icon" />
+</MobileMenuEntry>
+<MobileMenuEntry href="/logout" text={t("logout", lang)}>
+	<LogoutIcon slot="icon" />
+</MobileMenuEntry>

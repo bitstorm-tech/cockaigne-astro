@@ -1,0 +1,12 @@
+---
+import { t } from "@lib/i18n";
+import MobileMenuEntry from "./MobileMenuEntry.astro";
+import CogIcon from "@components/icons/CogIcon.astro";
+
+const { lang } = Astro.props;
+---
+
+<MobileMenuEntry href="/settings" text={t("settings", lang)}>
+	<CogIcon slot="icon" />
+</MobileMenuEntry>
+
