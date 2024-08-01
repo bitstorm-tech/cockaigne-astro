@@ -1,6 +1,6 @@
-export class User {
+export interface User {
   isBasicUser: boolean;
   isAuthenticated: boolean;
   isDealer: boolean;
-  language: boolean;
+  language: string;
 }

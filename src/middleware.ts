@@ -1,7 +1,15 @@
 import { defineMiddleware } from "astro/middleware";
-import { User } from "./lib/models/user";
 
 export const onRequest = defineMiddleware((context, next) => {
-  context.locals.user = new User();
+  // const cookie = context.request.headers.get("cookie");
+  // console.log("cookie:", cookie);
+
+  context.locals.user = {
+    isAuthenticated: true,
+    isDealer: false,
+    isBasicUser: false,
+    language: "de",
+  };
+
   return next();
 });

@@ -1,87 +1,47 @@
 ---
-import Close from "@components/icons/Close.astro";
-import FlagDE from "@components/icons/FlagDE.astro";
-import FlagUK from "@components/icons/FlagUK.astro";
-import Menu from "@components/icons/Menu.astro";
-import { t } from "@lib/i18n";
+import Close from '@components/icons/Close.astro';
+import Menu from '@components/icons/Menu.astro';
+import { t } from '@lib/i18n';
+import MobileMenu from '@components/ui/header/MobileMenu.astro';
 
-export const partial = true
+export const partial = true;
 
 const user = Astro.locals.user;
-const lang = "de"
 ---
 
 <nav id="header" class="h-12 border-b border-b-white border-opacity-25" x-data="{showMenu: false}">
-	<div class="px-4 sm:px-6 lg:px-8">
-		<div class="flex h-12 items-center justify-between">
-			<div class="flex gap-4">
-				<a href="/"><img class="h-7" src="/images/logo-text.svg" alt="Logo"/></a>
-				{ user.isAuthenticated && !user.isDealer &&
-					<div class="self-end badge badge-neutral text-xs">
-						{user.isBasicUser ? t("basic", lang) : t("pro", lang)}
-					</div>
-				}
-			</div>
-			<div class="hidden gap-6 md:flex">
-				{ user.isAuthenticated ?
-					<a class="menu-item" href="/settings">{ t("settings", "en") }</a>
-					<a class="menu-item" href="/contact">Kontaktiere uns</a>
-					<a class="menu-item" href="/logout">Abmelden</a>
-				:
-					<a class="menu-item" href="/login">Login</a>
-					<a class="menu-item" href="/signup">Registrieren</a>
-				}
-			</div>
-			<div class="flex select-none md:hidden" @click="showMenu = !showMenu">
-				<div class="h-8 w-8 cursor-pointer text-[#69828c]">
-					<span class="sr-only">Open main menu</span>
-					<div x-show="showMenu === true">
-						<Close/>
-					</div>
-					<div x-show="showMenu === false">
-						<Menu/>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- ----------- -->
-	<!-- Mobile menu -->
-	<!-- ----------- -->
-	<div
-		class="absolute right-2 top-10 z-50 select-none rounded-md border-2 border-[#232b2e] bg-dark md:hidden"
-		x-transition.duration.300ms
-		x-show="showMenu"
-		@click.outside="showMenu = false"
-	>
-		<div class="flex flex-col gap-5 p-6 sm:px-3 ">
-			<!-- if user.IsAuthenticated {
-				if user.IsDealer {
-					@DealerMenu(lang)
-				} else {
-					@UserMenu(lang)
-				}
-			} else {
-				@menuEntry(t("login", lang), "/login", icon.Login())
-				@menuEntry(t("signup", lang), "/signup", icon.Registration())
-			} -->
-			<div class="flex gap-4">
-				{ t("language", lang) }:
-				<div class="flex gap-2">
-					<a class="link w-10" href="/language-set/de">
-						<FlagDE/>
-					</a>
-					<a class="link w-10" href="/language-set/en">
-						<FlagUK/>
-					</a>
-				</div>
-			</div>
-			<button onclick="LocationService.toggleLocationServiceSimulation()">Toggle Walk Simulator</button>
-			<div class="flex gap-8 text-xs justify-around pt-8">
-				<a href="/imprint">{ t("imprint", lang) }</a>
-				<a href="/terms">{ t("terms", lang) }</a>
-				<a href="/privacy">{ t("privacy", lang) }</a>
-			</div>
-		</div>
-	</div>
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex h-12 items-center justify-between">
+            <div class="flex gap-4">
+                <a href="/"><img class="h-7" src="/images/logo-text.svg" alt="Logo"/></a>
+                {user.isAuthenticated && !user.isDealer &&
+                        <div class="self-end badge badge-neutral text-xs">
+                            {user.isBasicUser ? t('basic', user.language) : t('pro', user.language)}
+                        </div>
+                }
+            </div>
+            <div class="hidden gap-6 md:flex">
+                {user.isAuthenticated ?
+                        <a class="menu-item" href="/settings">{t('settings', user.language)}</a>
+                        <a class="menu-item" href="/contact">Kontaktiere uns</a>
+                        <a class="menu-item" href="/logout">Abmelden</a>
+                    :
+                        <a class="menu-item" href="/login">Login</a>
+                        <a class="menu-item" href="/signup">Registrieren</a>
+                }
+            </div>
+            <div class="flex select-none md:hidden" @click="showMenu = !showMenu">
+                <div class="h-8 w-8 cursor-pointer text-[#69828c]">
+                    <span class="sr-only">Open main menu</span>
+                    <div x-show="showMenu === true">
+                        <Close/>
+                    </div>
+                    <div x-show="showMenu === false">
+                        <Menu/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<MobileMenu user={user}></MobileMenu>
 </nav>
