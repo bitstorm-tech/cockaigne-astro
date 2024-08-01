@@ -18,13 +18,13 @@ export const POST: APIRoute = async ({ request }) => {
     return renderAlertTranslated("alert.invalid_username_or_password", lang);
   }
 
-  const password = formData.get("password")?.toString();
+  const password = formData.get("password")?.toString() || "";
   const passwordCorrect = await bcrypt.compare(password, account.password);
   if (!passwordCorrect) {
     return renderAlertTranslated("alert.invalid_username_or_password", lang);
   }
 
-  const jwt = await encryptJwt(account?.id, true, false);
+  const jwt = await encryptJwt(account.id, account.isDealer, !account.isDealer);
   const headers = new Headers();
   headers.append("Set-Cookie", `jwt=${jwt}; HttpOnly; Path=/`);
   headers.append("Set-Cookie", `lang=de; HttpOnly; Path=/`);
