@@ -1,13 +1,13 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import sql from "@lib/persistence/pg";
-import { Deal } from "@lib/models/deal";
+import type { Deal } from "@lib/models/deal";
 
 const deals = (await sql`select *
                          from deals`) as Deal[];
 ---
 
 <Layout title="Welcome to Astro.">
-  <h1>Hello to Cockaigne!</h1>
-  {deals.map((deal) => <div>{deal.title}</div>)}
+	<h1>Hello to Cockaigne!</h1>
+	{deals.map((deal) => <div>{deal.title}</div>)}
 </Layout>
