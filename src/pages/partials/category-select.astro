@@ -1,0 +1,19 @@
+---
+import { getAllCategories } from "@lib/services/deals";
+
+export const partial = true;
+const categories = await getAllCategories();
+const emptyOptionText = "Foobar";
+const selectedId = 2;
+---
+
+<select class="w-full" name="category">
+	<option selected disabled hidden value="-1">{emptyOptionText} ...</option>
+	{
+		categories.map((category) => (
+			<option value={category.id} selected?={category.id == selectedId}>
+				{category.name}
+			</option>
+		))
+	}
+</select>
