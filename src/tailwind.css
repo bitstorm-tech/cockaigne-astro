@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dark text-[#a6adba];
+  }
+
+  h1 {
+    @apply text-3xl;
+    @apply my-4;
+  }
+
+  h2 {
+    @apply text-xl;
+    @apply my-3;
+  }
+
+  button {
+    @apply btn btn-warning focus:outline-none;
+  }
+
+  button.clean {
+    all: unset;
+    cursor: pointer;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="number"],
+  input[type="email"],
+  input[type="datetime-local"],
+  input[type="date"] {
+    @apply input input-bordered focus:border-primary focus:outline-none;
+  }
+
+  input[type="range"] {
+    @apply range;
+  }
+
+  textarea {
+    @apply textarea textarea-bordered focus:border-primary focus:outline-none;
+  }
+
+  select {
+    @apply select select-bordered focus:border-primary focus:outline-none;
+  }
+
+  .form-control {
+    @apply flex flex-col gap-1;
+  }
+
+  .form-control-horizontal {
+    @apply flex items-center gap-1;
+  }
+
+  .form-control,
+  .form-control-horizontal {
+    & label {
+      @apply label-text select-none pl-1 text-xs;
+    }
+  }
+
+  .fade-in.htmx-added {
+    opacity: 0;
+  }
+
+  .fade-in {
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
+  }
+
+  .fade-out.htmx-swapping {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+  }
+
+  .htmx-indicator {
+    display: none;
+  }
+}

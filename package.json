@@ -1,0 +1,23 @@
+{
+  "name": "cockaigne",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.1",
+    "@astrojs/node": "^8.3.2",
+    "@astrojs/tailwind": "^5.1.0",
+    "astro": "^4.12.3",
+    "daisyui": "^4.12.10",
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "tailwindcss": "^3.4.7",
+    "typescript": "^5.5.4"
+  }
+}
