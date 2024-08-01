@@ -1,0 +1,15 @@
+---
+import { t } from "@lib/services/i18n";
+import MobileMenuEntry from "./MobileMenuEntry.astro";
+import LoginIcon from "@components/icons/LoginIcon.astro";
+import RegistrationIcon from "@components/icons/RegistrationIcon.astro";
+
+const { lang } = Astro.props;
+---
+
+<MobileMenuEntry href="/login" text={t("login", lang)}>
+	<LoginIcon slot="icon" />
+</MobileMenuEntry>
+<MobileMenuEntry href="/registration" text={t("signup", lang)}>
+	<RegistrationIcon slot="icon" />
+</MobileMenuEntry>

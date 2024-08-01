@@ -1,5 +1,5 @@
 ---
-import { t } from "@lib/i18n";
+import { t } from "@lib/services/i18n";
 import MobileMenuEntry from "./MobileMenuEntry.astro";
 import CogIcon from "@components/icons/CogIcon.astro";
 import AtIcon from "@components/icons/AtIcon.astro";
@@ -18,6 +18,6 @@ const { lang } = Astro.props;
 <MobileMenuEntry href="/basic-vs-pro" text={t("basic_vs_pro", lang)}>
 	<RocketIcon slot="icon" />
 </MobileMenuEntry>
-<MobileMenuEntry href="/logout" text={t("logout", lang)}>
+<MobileMenuEntry href="/api/logout" text={t("logout", lang)}>
 	<LogoutIcon slot="icon" />
 </MobileMenuEntry>
