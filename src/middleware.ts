@@ -4,7 +4,7 @@ import { defineMiddleware } from "astro/middleware";
 
 export const onRequest = defineMiddleware(async (context, next) => {
   context.locals.user = {
-    userId: "",
+    id: "",
     isDealer: false,
     isProUser: false,
     language: "de",
@@ -21,7 +21,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (jwt?.length) {
     const jwtPayload = await decryptJwt(jwt);
     if (jwtPayload) {
-      context.locals.user.userId = jwtPayload.sub;
+      context.locals.user.id = jwtPayload.sub;
       context.locals.user.isDealer = jwtPayload.isDealer;
       context.locals.user.isProUser = jwtPayload.isProUser;
     }

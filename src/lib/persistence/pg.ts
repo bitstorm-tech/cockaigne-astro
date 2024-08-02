@@ -13,6 +13,7 @@ const sql = postgres({
   host,
   port,
   ssl: sslMode === "require",
+  transform: postgres.toCamel,
 });
 
 console.log(`Connection to database: ${host}:${port}/${database}`);

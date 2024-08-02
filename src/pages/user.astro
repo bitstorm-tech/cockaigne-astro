@@ -1,0 +1,11 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { getAccountById } from "@lib/services/account";
+
+const account = await getAccountById(Astro.locals.user.id);
+---
+
+<Layout>
+	<h1>User Page</h1>
+	{JSON.stringify(account)}
+</Layout>
