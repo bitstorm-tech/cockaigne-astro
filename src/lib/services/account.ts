@@ -21,7 +21,7 @@ export async function getAccountById(id: string): Promise<Account | undefined> {
 
 export async function getUsernameById(id: string): Promise<string> {
   if (id.length === 0) {
-    ("");
+    return "";
   }
 
   const account = await sql<Account[]>`select * from accounts where id = ${id}`;
