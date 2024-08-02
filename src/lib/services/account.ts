@@ -18,3 +18,12 @@ export async function getAccountById(id: string): Promise<Account | undefined> {
   const account = await sql<Account[]>`select * from accounts where id = ${id}`;
   return account[0];
 }
+
+export async function getUsernameById(id: string): Promise<string> {
+  if (id.length === 0) {
+    ("");
+  }
+
+  const account = await sql<Account[]>`select * from accounts where id = ${id}`;
+  return account[0]?.username;
+}

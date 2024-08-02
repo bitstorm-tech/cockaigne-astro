@@ -1,11 +1,62 @@
 ---
+import BookmarkBoxedIcon from "@components/icons/BookmarkBoxedIcon.astro";
+import DealsIcon from "@components/icons/DealsIcon.astro";
+import HeartIcon from "@components/icons/HeartIcon.astro";
+import UserHeader from "@components/ui/user/UserHeader.astro";
 import Layout from "@layouts/Layout.astro";
-import { getAccountById } from "@lib/services/account";
+import { getUsernameById } from "@lib/services/account";
 
-const account = await getAccountById(Astro.locals.user.id);
+const user = Astro.locals.user;
+const username = await getUsernameById(user.id);
 ---
 
 <Layout>
-	<h1>User Page</h1>
-	{JSON.stringify(account)}
+	<UserHeader {username} userId={user.id} lang={user.language} />
+	<div x-data="{selectedTab: 0}">
+		<div class="tabs tabs-bordered" x-cloak>
+			<div
+				hx-get="/partials/deals/active"
+				hx-target="#content"
+				hx-trigger="click, load"
+				class="tab"
+				:class="selectedTab === 0 ? 'tab-active' : ''"
+				@click="selectedTab = 0">
+				<div x-show="selectedTab === 0">
+					<DealsIcon class="h-8 pb-2" />
+				</div>
+				<div x-show="selectedTab !== 0">
+					<DealsIcon class="h-8 pb-2" outline={true} />
+				</div>
+			</div>
+			<div
+				hx-get="/dealer-favorites-list"
+				hx-target="#content"
+				hx-trigger="click"
+				class="tab"
+				:class="selectedTab === 1 ? 'tab-active' : ''"
+				@click="selectedTab = 1">
+				<div x-show="selectedTab === 1">
+					<HeartIcon class="h-8 pb-2" />
+				</div>
+				<div x-show="selectedTab !== 1">
+					<HeartIcon class="h-8 pb-2" outline={true} />
+				</div>
+			</div>
+			<div
+				hx-get="/deal-favorites-list"
+				hx-target="#content"
+				hx-trigger="click"
+				class="tab"
+				:class="selectedTab === 2 ? 'tab-active' : ''"
+				@click="selectedTab = 2">
+				<div x-show="selectedTab === 2">
+					<BookmarkBoxedIcon class="h-8 pb-2" outline={false} />
+				</div>
+				<div x-show="selectedTab !== 2">
+					<BookmarkBoxedIcon class="h-8 pb-2" outline={true} />
+				</div>
+			</div>
+		</div>
+		<div id="content" class="pt-1"></div>
+	</div>
 </Layout>
