@@ -1,7 +1,6 @@
 ---
 import Header from "@components/ui/header/Header.astro";
 import "../tailwind.css";
-import { ViewTransitions } from "astro:transitions";
 
 const { showBadge } = Astro.props;
 ---
@@ -9,7 +8,6 @@ const { showBadge } = Astro.props;
 <!doctype html>
 <html lang="en" data-theme="dark">
 	<head>
-		<ViewTransitions />
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
@@ -26,18 +24,23 @@ const { showBadge } = Astro.props;
 			src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
 			integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g=="
 			crossorigin="anonymous"
-			referrerpolicy="no-referrer"
-		></script>
+			referrerpolicy="no-referrer">
+		</script>
 		<!-- htmx -->
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.1/htmx.min.js"
 			integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw=="
 			crossorigin="anonymous"
-			referrerpolicy="no-referrer"
-		></script>
+			referrerpolicy="no-referrer">
+		</script>
 		<!-- <script src="/static/js/geo.js"></script> -->
 		<!-- <script src="/static/js/ui.js"></script> -->
 		<title>Cockaigne City</title>
+		<style>
+			@view-transition {
+				navigation: auto;
+			}
+		</style>
 	</head>
 	<body>
 		<Header {showBadge} />

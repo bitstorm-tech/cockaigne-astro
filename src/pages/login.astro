@@ -20,9 +20,9 @@ const lang = user.language;
 			<input id="password" type="password" name="password" />
 		</div>
 		<button>{t("login", lang)}</button>
-		<button class="btn btn-primary btn-sm" type="button" hx-post="/api/basic-login">
+		<a class="btn btn-primary" type="button" href="/user">
 			{t("continue_as_basic_user", lang)}
-		</button>
+		</a>
 		<div class="pt-10 text-sm text-center">
 			<a href="/signup">{t("signup", lang)}</a>
 			<span>/</span>
