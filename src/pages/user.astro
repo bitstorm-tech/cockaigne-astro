@@ -10,7 +10,7 @@ const user = Astro.locals.user;
 const username = await getUsernameById(user.id);
 ---
 
-<Layout>
+<Layout showBadge={true}>
 	<UserHeader {username} userId={user.id} lang={user.language} />
 	<div x-data="{selectedTab: 0}">
 		<div class="tabs tabs-bordered" x-cloak>

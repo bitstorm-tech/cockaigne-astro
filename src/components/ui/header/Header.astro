@@ -4,17 +4,16 @@ import MenuIcon from '@components/icons/MenuIcon.astro';
 import { t } from '@lib/services/i18n';
 import MobileMenu from '@components/ui/header/MobileMenu.astro';
 
-export const partial = true;
-
 const user = Astro.locals.user;
+const { showBadge } = Astro.props
 ---
 
 <nav id="header" class="h-12 border-b border-b-white border-opacity-25" x-data="{showMenu: false}">
-    <div class="px-4 sm:px-6 lg:px-8">
-        <div class="flex h-12 items-center justify-between">
+	<div class="px-4 sm:px-6 lg:px-8">
+		     <div class="flex h-12 items-center justify-between">
             <div class="flex gap-4">
                 <a href="/"><img class="h-7" src="/images/logo-text.svg" alt="Logo"/></a>
-                {!user.isDealer &&
+                {!user.isDealer && showBadge &&
                         <div class="self-end badge badge-neutral text-xs">
                             {user.isProUser ? t('pro', user.language) : t('basic', user.language)}
                         </div>
