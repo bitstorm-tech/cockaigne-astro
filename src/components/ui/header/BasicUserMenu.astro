@@ -3,10 +3,14 @@ import { t } from "@lib/services/i18n";
 import MobileMenuEntry from "./MobileMenuEntry.astro";
 import LoginIcon from "@components/icons/LoginIcon.astro";
 import RegistrationIcon from "@components/icons/RegistrationIcon.astro";
+import RocketIcon from "@components/icons/RocketIcon.astro";
 
 const { lang } = Astro.props;
 ---
 
+<MobileMenuEntry href="/basic-vs-pro" text={t("basic_vs_pro", lang)}>
+	<RocketIcon slot="icon" />
+</MobileMenuEntry>
 <MobileMenuEntry href="/login" text={t("login", lang)}>
 	<LoginIcon slot="icon" />
 </MobileMenuEntry>
