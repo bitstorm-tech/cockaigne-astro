@@ -2,6 +2,8 @@
 import DealHeader from "@components/ui/deal/DealHeader.astro";
 import { getAllDealHeaders } from "@lib/services/deals";
 
+export const partial = true;
+
 const dealHeaders = await getAllDealHeaders();
 ---
 

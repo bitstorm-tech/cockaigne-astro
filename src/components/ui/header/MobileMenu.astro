@@ -15,8 +15,9 @@ const { user } = Astro.props;
 
 <div
 	class="absolute right-2 top-10 z-50 select-none rounded-md border-2 border-[#232b2e] bg-dark md:hidden"
-	x-transition.duration.300ms
+	x-transition.duration.200ms
 	x-show="showMenu"
+	x-cloak
 	@click.outside="showMenu = false">
 	<div class="flex flex-col gap-5 p-6 sm:px-3">
 		{user.isDealer && <DealerMenu lang={user.language} />}

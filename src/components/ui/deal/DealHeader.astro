@@ -10,7 +10,6 @@ interface Props {
 
 const { header, hideName = false } = Astro.props;
 const dealerPath = `/dealer/${header.dealerId}`;
-console.log("header:", header);
 ---
 
 <div id={`deal-${header.id}`}>
