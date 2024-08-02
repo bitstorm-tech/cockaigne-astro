@@ -28,7 +28,8 @@ export const POST: APIRoute = async ({ request }) => {
   const headers = new Headers();
   headers.append("Set-Cookie", `jwt=${jwt}; HttpOnly; Path=/`);
   headers.append("Set-Cookie", `lang=de; HttpOnly; Path=/`);
-  headers.append("HX-Location", "/");
+  const redirection = account.isDealer ? `/dealer/${account.id}` : "/user";
+  headers.append("HX-Redirect", redirection);
 
   return new Response(null, { headers, status: 302 });
 };

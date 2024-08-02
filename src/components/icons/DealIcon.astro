@@ -1,0 +1,46 @@
+---
+import AutoFahrradMotorradIcon from "./category/AutoFahrradMotorradIcon.astro";
+import BaumarktGartenIcon from "./category/BaumarktGartenIcon.astro";
+import BeautyWellnessGesundheitIcon from "./category/BeautyWellnessGesundheitIcon.astro";
+import DienstleistungenFinanzenIcon from "./category/DienstleistungenFinanzenIcon.astro";
+import ElektronikTechnikIcon from "./category/ElektronikTechnikIcon.astro";
+import FamilyKidsIcon from "./category/FamilyKidsIcon.astro";
+import FashionSchmuckLifestyleIcon from "./category/FashionSchmuckLifestyleIcon.astro";
+import FloristikIcon from "./category/FloristikIcon.astro";
+import GastronomieBarsCafesIcon from "./category/GastronomieBarsCafesIcon.astro";
+import HomeLivingIcon from "./category/HomeLivingIcon.astro";
+import KulturFreizeitIcon from "./category/KulturFreizeitIcon.astro";
+import LebensmittelHaushaltIcon from "./category/LebensmittelHaushaltIcon.astro";
+import NoIcon from "./category/NoIcon.astro";
+import ReisenHotelsUebernachtungenIcon from "./category/ReisenHotelsUebernachtungenIcon.astro";
+import SonstigesIcon from "./category/SonstigesIcon.astro";
+import SportOutdoorIcon from "./category/SportOutdoorIcon.astro";
+import UnterhaltungGamingIcon from "./category/UnterhaltungGamingIcon.astro";
+
+interface Props {
+	categoryId: number;
+}
+const { categoryId } = Astro.props;
+
+const SelectedIcon =
+	{
+		1: ElektronikTechnikIcon,
+		2: UnterhaltungGamingIcon,
+		3: LebensmittelHaushaltIcon,
+		4: FashionSchmuckLifestyleIcon,
+		5: BeautyWellnessGesundheitIcon,
+		6: FamilyKidsIcon,
+		7: HomeLivingIcon,
+		8: BaumarktGartenIcon,
+		9: AutoFahrradMotorradIcon,
+		10: GastronomieBarsCafesIcon,
+		11: KulturFreizeitIcon,
+		12: SportOutdoorIcon,
+		13: ReisenHotelsUebernachtungenIcon,
+		14: DienstleistungenFinanzenIcon,
+		15: FloristikIcon,
+		16: SonstigesIcon,
+	}[categoryId] || NoIcon;
+---
+
+<SelectedIcon />

@@ -1,0 +1,12 @@
+---
+import DealHeader from "@components/ui/deal/DealHeader.astro";
+import { getAllDealHeaders } from "@lib/services/deals";
+
+const dealHeaders = await getAllDealHeaders();
+---
+
+<div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">
+	{dealHeaders.map((header) => <DealHeader {header} />)}
+</div>
+<div id="new-deals-button" hx-swap="outerHTML"></div>
+<div id="image-zoom-modal"></div>
