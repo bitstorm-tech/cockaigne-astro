@@ -5,7 +5,7 @@ import { t } from '@lib/services/i18n';
 import MobileMenu from '@components/ui/header/MobileMenu.astro';
 
 const user = Astro.locals.user;
-const { showBadge } = Astro.props
+const { showBadge } = Astro.props;
 ---
 
 <nav id="header" class="h-12 border-b border-b-white border-opacity-25" x-data="{showMenu: false}">
@@ -26,7 +26,7 @@ const { showBadge } = Astro.props
                         <a class="menu-item" href="/logout">Abmelden</a>
                     :
                         <a class="menu-item" href="/login">Login</a>
-                        <a class="menu-item" href="/signup">Registrieren</a>
+                        <a class="menu-item" href="/register">Registrieren</a>
                 }
             </div>
             <div class="flex select-none md:hidden" @click="showMenu = !showMenu">

@@ -2,6 +2,9 @@
 import FilterIcon from "@components/icons/FilterIcon.astro";
 import LocationIcon from "@components/icons/LocationIcon.astro";
 import { t } from "@lib/services/i18n";
+import DealsCountBadge from "./DealsCountBadge.astro";
+import FavoriteDealerCountBadge from "./FavoriteDealerCountBadge.astro";
+import FavoriteDealsCountBadge from "./FavoriteDealsCountBadge.astro";
 
 const { username, userId, lang } = Astro.props;
 ---
@@ -10,13 +13,16 @@ const { username, userId, lang } = Astro.props;
 	<div class="flex w-full justify-between">
 		<div class="m-4 flex flex-col gap-4">
 			<div class="flex gap-2 fill-current text-xs text-[#69828c]">
-				<div id="deals-count-badge"></div>
-				<div hx-get="/favorite-dealers-count-badge" hx-trigger="load" hx-target="this"></div>
-				<div
-					hx-get="/favorite-deals-count-badge"
-					hx-trigger="load, updateFavDealsCountBadge from:body"
-					hx-target="this">
-				</div>
+				<DealsCountBadge count={12} />
+				<FavoriteDealerCountBadge count={3} />
+				<FavoriteDealsCountBadge count={6} />
+				<!-- <div id="deals-count-badge" /> -->
+				<!-- <div hx-get="/favorite-dealers-count-badge" hx-trigger="load" hx-target="this"></div> -->
+				<!-- <div -->
+				<!-- 	hx-get="/favorite-deals-count-badge" -->
+				<!-- 	hx-trigger="load, updateFavDealsCountBadge from:body" -->
+				<!-- 	hx-target="this"> -->
+				<!-- </div> -->
 			</div>
 			<div class="text-2xl">{username}</div>
 			<div class="flex flex-col gap-2 text-sm">
