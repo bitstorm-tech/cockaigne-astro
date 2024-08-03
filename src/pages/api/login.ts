@@ -3,7 +3,7 @@ import { getAccountByEmail } from "@lib/services/account";
 import { encryptJwt } from "@lib/services/auth";
 import { getLanguageFromRequest } from "@lib/services/cookie";
 import type { APIRoute } from "astro";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData();

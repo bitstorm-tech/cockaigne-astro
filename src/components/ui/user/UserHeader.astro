@@ -34,7 +34,7 @@ const { username, userId, lang } = Astro.props;
 			<div class="avatar z-40 cursor-pointer -mt-6 mr-16">
 				<div class="h-24 w-24 rounded-full bg-base-100 ring-2 ring-[#556368]">
 					<div
-						hx-get={"/profile-image/" + userId}
+						hx-get={`/partials/profile-images/${userId}`}
 						hx-target="this"
 						hx-trigger="load once"
 						hx-swap="outerHTML">
