@@ -1,4 +1,4 @@
 export interface Deal {
-    title: string,
-    description: string,
+  title: string;
+  description: string;
 }

@@ -2,16 +2,16 @@
 import DealsIcon from "@components/icons/DealsIcon.astro";
 
 interface Props {
-	count: number;
+  count: number;
 }
 
 const { count } = Astro.props;
 ---
 
 <div
-	id="deals-count-badge"
-	class="badge gap-2 border border-[#2c363a] bg-transparent text-[#69828c]"
-	hx-swap-oob="true">
-	<DealsIcon class="h-3 w-3" />
-	{count}
+  id="deals-count-badge"
+  class="badge gap-2 border border-[#2c363a] bg-transparent text-[#69828c]"
+  hx-swap-oob="true">
+  <DealsIcon class="h-3 w-3" />
+  {count}
 </div>

@@ -8,7 +8,7 @@ const dealHeaders = await getAllDealHeaders();
 ---
 
 <div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">
-	{dealHeaders.map((header) => <DealHeader {header} />)}
+  {dealHeaders.map((header) => <DealHeader {header} />)}
 </div>
 <div id="new-deals-button" hx-swap="outerHTML"></div>
 <div id="image-zoom-modal"></div>

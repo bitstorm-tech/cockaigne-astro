@@ -4,8 +4,8 @@ import DoubleArrowIcon from "@components/icons/DoubleArrowIcon.astro";
 import type { DealHeader } from "@lib/models/deal-header";
 
 interface Props {
-	header: DealHeader;
-	hideName?: boolean;
+  header: DealHeader;
+  hideName?: boolean;
 }
 
 const { header, hideName = false } = Astro.props;
@@ -13,34 +13,34 @@ const dealerPath = `/dealer/${header.dealerId}`;
 ---
 
 <div id={`deal-${header.id}`}>
-	{
-		!hideName && (
-			<div class="flex items-center justify-between bg-[#232b2e] px-2 py-0.5">
-				<a href={dealerPath} class="flex items-center text-sm text-[#b2b2b2]">
-					{header.username}
-				</a>
-				<a href={dealerPath} class="pr-1">
-					<DoubleArrowIcon class="h-3" />
-				</a>
-			</div>
-		)
-	}
-	<div
-		class="flex cursor-pointer items-center justify-between bg-[#2c363a] p-2 pr-3"
-		@click={`openDetailsId = openDetailsId === '${header.id}' ? '' : '${header.id}'`}>
-		<div class="flex items-center gap-2">
-			<DealIcon categoryId={header.categoryId} />
-			<span>{header.title}</span>
-		</div>
-		<!-- @actionButton(user, header, actionButtonType) -->
-	</div>
-	<div
-		class="flex flex-col justify-between bg-[#323e42] p-2"
-		hx-get={`/partials/deals/details/${header.id}`}
-		hx-target={`#details-footer-${header.id}`}
-		hx-trigger="load once"
-		hx-swap="outerHTML"
-		x-show={`openDetailsId === '${header.id}'`}>
-		<div id={`details-footer-${header.id}`}></div>
-	</div>
+  {
+    !hideName && (
+      <div class="flex items-center justify-between bg-[#232b2e] px-2 py-0.5">
+        <a href={dealerPath} class="flex items-center text-sm text-[#b2b2b2]">
+          {header.username}
+        </a>
+        <a href={dealerPath} class="pr-1">
+          <DoubleArrowIcon class="h-3" />
+        </a>
+      </div>
+    )
+  }
+  <div
+    class="flex cursor-pointer items-center justify-between bg-[#2c363a] p-2 pr-3"
+    @click={`openDetailsId = openDetailsId === '${header.id}' ? '' : '${header.id}'`}>
+    <div class="flex items-center gap-2">
+      <DealIcon categoryId={header.categoryId} />
+      <span>{header.title}</span>
+    </div>
+    <!-- @actionButton(user, header, actionButtonType) -->
+  </div>
+  <div
+    class="flex flex-col justify-between bg-[#323e42] p-2"
+    hx-get={`/partials/deals/details/${header.id}`}
+    hx-target={`#details-footer-${header.id}`}
+    hx-trigger="load once"
+    hx-swap="outerHTML"
+    x-show={`openDetailsId === '${header.id}'`}>
+    <div id={`details-footer-${header.id}`}></div>
+  </div>
 </div>
