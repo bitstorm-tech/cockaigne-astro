@@ -8,6 +8,8 @@ import { getUsernameById } from "@lib/services/account";
 
 const user = Astro.locals.user;
 const username = user.isProUser ? await getUsernameById(user.id) : "Basic";
+const useLocationService = false;
+const currentLocation = { lat: 48.137154, lon: 11.576124 };
 ---
 
 <Layout showBadge={true}>
@@ -60,3 +62,28 @@ const username = user.isProUser ? await getUsernameById(user.id) : "Basic";
     <div id="content" class="pt-1"></div>
   </div>
 </Layout>
+
+<script is:inline define:vars={{ useLocationService, currentLocation }}>
+  const streetLabel = document.getElementById("street");
+  const cityLabel = document.getElementById("city");
+  LocationService.addChangeHandler((_, address) => setAddressLabels(address));
+
+  LocationService.location = {
+    lat: currentLocation.Lat,
+    lon: currentLocation.Lon,
+  };
+
+  if (useLocationService) {
+    LocationService.startLocationWatcher();
+  }
+
+  function setAddressLabels(address) {
+    if (!address || address.length == 0) {
+      return;
+    }
+
+    const addressTokens = address.split(",");
+    streetLabel.textContent = addressTokens[0];
+    cityLabel.textContent = addressTokens[1];
+  }
+</script>
