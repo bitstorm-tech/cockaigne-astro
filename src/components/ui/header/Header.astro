@@ -1,46 +1,64 @@
 ---
-import CloseIcon from '@components/icons/CloseIcon.astro';
-import MenuIcon from '@components/icons/MenuIcon.astro';
-import { t } from '@lib/services/i18n';
-import MobileMenu from '@components/ui/header/MobileMenu.astro';
+import CloseIcon from "@components/icons/CloseIcon.astro";
+import MenuIcon from "@components/icons/MenuIcon.astro";
+import MobileMenu from "@components/ui/header/MobileMenu.astro";
+import { t } from "@lib/services/i18n";
 
 const user = Astro.locals.user;
 const { showBadge } = Astro.props;
 ---
 
 <nav id="header" class="h-12 border-b border-b-white border-opacity-25" x-data="{showMenu: false}">
-	<div class="px-4 sm:px-6 lg:px-8">
-		     <div class="flex h-12 items-center justify-between">
-            <div class="flex gap-4">
-                <a href="/"><img class="h-7" src="/images/logo-text.svg" alt="Logo"/></a>
-                {!user.isDealer && showBadge &&
-                        <div class="self-end badge badge-neutral text-xs">
-                            {user.isProUser ? t('pro', user.language) : t('basic', user.language)}
-                        </div>
-                }
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="flex h-12 items-center justify-between">
+      <div class="flex gap-4">
+        <a href="/"><img class="h-7" src="/images/logo-text.svg" alt="Logo" /></a>
+        {
+          !user.isDealer && showBadge && (
+            <div class="self-end badge badge-neutral text-xs">
+              {user.isProUser ? t("pro", user.language) : t("basic", user.language)}
             </div>
-            <div class="hidden gap-6 md:flex">
-                {user.isDealer || user.isProUser ?
-                        <a class="menu-item" href="/settings">{t('settings', user.language)}</a>
-                        <a class="menu-item" href="/contact">Kontaktiere uns</a>
-                        <a class="menu-item" href="/logout">Abmelden</a>
-                    :
-                        <a class="menu-item" href="/login">Login</a>
-                        <a class="menu-item" href="/register">Registrieren</a>
-                }
-            </div>
-            <div class="flex select-none md:hidden" @click="showMenu = !showMenu">
-                <div class="h-8 w-8 cursor-pointer text-[#69828c]">
-                    <span class="sr-only">Open main menu</span>
-                    <div x-show="showMenu === true">
-                        <CloseIcon/>
-                    </div>
-                    <div x-show="showMenu === false">
-                        <MenuIcon/>
-                    </div>
-                </div>
-            </div>
+          )
+        }
+      </div>
+      <div class="hidden gap-6 md:flex">
+        {
+          user.isDealer || user.isProUser ? (
+            <>
+              <a class="menu-item" href="/settings">
+                {t("settings", user.language)}
+              </a>
+              <a class="menu-item" href="/contact">
+                Kontaktiere uns
+              </a>
+              <a class="menu-item" href="/logout">
+                Abmelden
+              </a>
+            </>
+          ) : (
+            <>
+              <a class="menu-item" href="/login">
+                Login
+              </a>
+              <a class="menu-item" href="/register">
+                Registrieren
+              </a>
+            </>
+          )
+        }
+      </div>
+      <div class="flex select-none md:hidden" @click="showMenu = !showMenu">
+        <div class="h-8 w-8 cursor-pointer text-[#69828c]">
+          <span class="sr-only">Open main menu</span>
+          <div x-show="showMenu === true">
+            <CloseIcon />
+          </div>
+          <div x-show="showMenu === false">
+            <MenuIcon />
+          </div>
         </div>
+      </div>
     </div>
-	<MobileMenu user={user}></MobileMenu>
+  </div>
+  <MobileMenu user={user} />
 </nav>

@@ -1,10 +1,10 @@
 ---
 import DealHeader from "@components/ui/deal/DealHeader.astro";
-import { getAllDealHeaders } from "@lib/services/deals";
+import { getDealHeaders } from "@lib/services/deals";
 
 export const partial = true;
 
-const dealHeaders = await getAllDealHeaders();
+const dealHeaders = await getDealHeaders({ state: "active" });
 ---
 
 <div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">

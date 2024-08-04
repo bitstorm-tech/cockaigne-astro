@@ -1,4 +1,4 @@
-import sql from "@lib/persistence/pg.ts";
+import sql from "@lib/services/pg";
 
 const translations = await sql`select * from i18n`;
 console.log("Translations loaded ...");

@@ -1,5 +1,5 @@
 import type { Account } from "@lib/models/account";
-import sql from "@lib/persistence/pg";
+import sql from "@lib/services/pg";
 
 export async function getAccountByEmail(email: string): Promise<Account | undefined> {
   if (email.length === 0) {
