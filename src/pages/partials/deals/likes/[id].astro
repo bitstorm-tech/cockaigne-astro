@@ -1,6 +1,7 @@
 ---
 import LikeIcon from "@components/icons/LikeIcon.astro";
 import { getDealLikes, isDealLikedByUser, toggleDealLike } from "@lib/services/deal";
+import { renderAlertTranslated } from "@lib/htmx/render";
 import logger from "@lib/utils/logger";
 
 export const partial = true;
@@ -14,14 +15,12 @@ if (!id) {
 const user = Astro.locals.user;
 const toggle = new URLSearchParams(Astro.url.search).get("toggle") === "true";
 
-console.log("TOGGLE:", toggle, Astro.url.search);
-
 if (toggle && !user.isProUser) {
   return renderAlertTranslated("info.only_for_pro_member", user.language);
 }
 
 const likes = toggle ? await toggleDealLike(id, user.id) : await getDealLikes(id);
-const isLiked = await isDealLikedByUser(id, user.id);
+const isLiked = user.isProUser ? await isDealLikedByUser(id, user.id) : false;
 ---
 
 <div id={`likes-${id}`} class="flex items-center gap-3">
