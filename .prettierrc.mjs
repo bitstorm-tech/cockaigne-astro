@@ -2,7 +2,6 @@
 export default {
   plugins: ["prettier-plugin-astro"],
   printWidth: 120,
-  pluginSearchDirs: false,
   bracketSameLine: true,
   bracketSpacing: true,
   htmlWhitespaceSensitivity: "ignore",

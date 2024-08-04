@@ -1,11 +1,11 @@
 ---
 import DealsIcon from "@components/icons/DealsIcon.astro";
 import DealHeader from "@components/ui/deal/DealHeader.astro";
-import { getDealHeaders } from "@lib/services/deals";
+import { getDealHeaders, type DealState } from "@lib/services/deal";
 
 export const partial = true;
-
-const dealHeaders = await getDealHeaders({ state: "active" });
+const { state = "active" } = Astro.params as { state: DealState };
+const dealHeaders = await getDealHeaders(state);
 ---
 
 <div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">
