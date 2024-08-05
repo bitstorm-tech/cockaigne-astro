@@ -5,7 +5,7 @@ import { getLanguageFromRequest } from "@lib/services/cookie";
 import type { APIRoute } from "astro";
 import bcrypt from "bcryptjs";
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request }): Promise<Response> => {
   const formData = await request.formData();
   const email = formData.get("email")?.toString();
   const lang = getLanguageFromRequest(request);
