@@ -1,0 +1,12 @@
+---
+import DefaultDealerProfileImage from "@components/icons/DefaultDealerProfileImage.astro";
+import DefaultUserProfileImage from "@components/icons/DefaultUserProfileImage.astro";
+import { getProfileImageUrl } from "@lib/services/imagekit";
+
+export const partial = true;
+const user = Astro.locals.user;
+const imageUrl = user.id && (await getProfileImageUrl(user.id));
+const DefaultImage = user.isDealer ? DefaultDealerProfileImage : DefaultUserProfileImage;
+---
+
+{imageUrl ? <img src={imageUrl} alt="Profile image" /> : <DefaultImage />}

@@ -2,9 +2,9 @@ import type { Category } from "@lib/models/category";
 import type { DealDetails } from "@lib/models/deal-details";
 import type { DealHeader } from "@lib/models/deal-header";
 import sql from "@lib/services/pg";
-import logger from "@lib/utils/logger";
 import dayjs from "dayjs";
 import { getDealImageUrls } from "./imagekit";
+import logger from "./logger";
 
 export type DealState = "active" | "past" | "future" | "template";
 

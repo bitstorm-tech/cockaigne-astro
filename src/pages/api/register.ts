@@ -1,4 +1,4 @@
-import { renderAlertTranslated } from "@lib/htmx/render";
+import { renderAlertTranslated } from "@lib/services/alerts";
 import { getLanguageFromRequest } from "@lib/services/cookie";
 import type { APIRoute } from "astro";
 

@@ -3,7 +3,7 @@ import { getFavoriteDealsCount } from "@lib/services/user";
 
 export const partial = true;
 const user = Astro.locals.user;
-const count = user.isProUser ? getFavoriteDealsCount(user.id) : 0;
+const count = user.id ? getFavoriteDealsCount(user.id) : 0;
 ---
 
 <div class="badge gap-2 border border-[#2c363a] bg-transparent text-[#69828c]">

@@ -19,9 +19,9 @@ export async function getAccountById(id: string): Promise<Account | undefined> {
   return account[0];
 }
 
-export async function getUsernameById(id: string): Promise<string> {
+export async function getUsernameById(id: string): Promise<string | undefined> {
   if (id.length === 0) {
-    return "";
+    return;
   }
 
   const account = await sql<Account[]>`select * from accounts where id = ${id}`;

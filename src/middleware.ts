@@ -4,7 +4,7 @@ import { defineMiddleware } from "astro/middleware";
 
 export const onRequest = defineMiddleware(async (context, next) => {
   context.locals.user = {
-    id: "",
+    id: undefined,
     isDealer: false,
     isProUser: false,
     language: "de",

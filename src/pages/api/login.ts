@@ -1,5 +1,5 @@
-import { renderAlertTranslated } from "@lib/htmx/render";
 import { getAccountByEmail } from "@lib/services/account";
+import { renderAlertTranslated } from "@lib/services/alerts";
 import { encryptJwt } from "@lib/services/auth";
 import { getLanguageFromRequest } from "@lib/services/cookie";
 import type { APIRoute } from "astro";

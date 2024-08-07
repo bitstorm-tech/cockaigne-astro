@@ -1,8 +1,7 @@
 ---
 import LikeIcon from "@components/icons/LikeIcon.astro";
 import { getDealLikes, isDealLikedByUser, toggleDealLike } from "@lib/services/deal";
-import { renderInfoTranslated } from "@lib/htmx/render";
-import logger from "@lib/utils/logger";
+import logger from "@lib/services/logger";
 
 export const partial = true;
 
@@ -19,8 +18,8 @@ if (toggle && !user.isProUser) {
   return renderInfoTranslated("info.only_for_pro_member", user.language);
 }
 
-const likes = toggle ? await toggleDealLike(id, user.id) : await getDealLikes(id);
-const isLiked = user.isProUser ? await isDealLikedByUser(id, user.id) : false;
+const likes = toggle && user.id ? await toggleDealLike(id, user.id) : await getDealLikes(id);
+const isLiked = user.isProUser && user.id ? await isDealLikedByUser(id, user.id) : false;
 ---
 
 <div id={`likes-${id}`} class="flex items-center gap-3">

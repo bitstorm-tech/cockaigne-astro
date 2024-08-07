@@ -1,14 +1,12 @@
 ---
-import FilterIcon from "@components/icons/FilterIcon.astro";
+import DefaultUserProfileImage from "@components/icons/DefaultUserProfileImage.astro";
 import LocationIcon from "@components/icons/LocationIcon.astro";
+import { getUsernameById } from "@lib/services/account";
 import { t } from "@lib/services/i18n";
+import ProfileImage from "@pages/partials/accounts/profile-image.astro";
 
-interface Props {
-  username: string;
-  userId: string;
-  lang: string;
-}
-const { username, userId, lang } = Astro.props;
+const user = Astro.locals.user;
+const username = user.id ? await getUsernameById(user.id) : "Basic";
 ---
 
 <div class="flex h-52 justify-between">
@@ -23,9 +21,9 @@ const { username, userId, lang } = Astro.props;
           hx-target="this">
         </div>
       </div>
-      <div class="text-2xl">{username}</div>
+      <div class="text-2xl">{username || "Basic"}</div>
       <div class="flex flex-col gap-2 text-sm">
-        <div class="font-extrabold">{t("your_location", lang)}</div>
+        <div class="font-extrabold">{t("your_location", user.language)}</div>
         <div class="flex gap-2 items-end">
           <LocationIcon class="h-6" />
           <div class="flex flex-col text-xs">
@@ -39,19 +37,14 @@ const { username, userId, lang } = Astro.props;
       <div class="avatar z-40 cursor-pointer -mt-6 mr-16">
         <div class="h-24 w-24 rounded-full bg-base-100 ring-2 ring-[#556368]">
           <div
-            hx-get={`/partials/profile-images/${userId}`}
+            id="account-profile-image"
+            hx-get="/partials/accounts/profile-image"
             hx-target="this"
-            hx-trigger="load once"
-            hx-swap="outerHTML">
+            hx-trigger="load once">
+            <DefaultUserProfileImage />
           </div>
         </div>
       </div>
-      <button
-        class="btn-primary btn-circle flex w-20 justify-start rounded-r-none rounded-l-full self-end px-0.5"
-        hx-get="/ui/map/filter-modal?redirect-after-save=/user"
-        hx-target="#modal">
-        <FilterIcon class="w-auto h-11 border border-white rounded-full p-1" />
-      </button>
     </div>
   </div>
 </div>

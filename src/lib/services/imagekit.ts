@@ -28,3 +28,15 @@ export async function getDealImageUrls(dealId: string, width?: number): Promise<
       : file.url;
   });
 }
+
+export async function getProfileImageUrl(accountId: string): Promise<string | undefined> {
+  const files = await imagekit.listFiles({
+    path: `${profileImagesFolder}/${accountId}`,
+  });
+
+  if (files.length === 0) {
+    return;
+  }
+
+  return files[0].url;
+}

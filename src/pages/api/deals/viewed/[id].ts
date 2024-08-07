@@ -2,7 +2,7 @@ import { incrementDealViewCount } from "@lib/services/deal";
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async ({ params, locals }): Promise<Response> => {
-  if (params?.id && locals.user.id.length > 0) {
+  if (params.id && locals.user.id) {
     incrementDealViewCount(params.id, locals.user.id);
   }
 

@@ -4,16 +4,13 @@ import DealsIcon from "@components/icons/DealsIcon.astro";
 import HeartIcon from "@components/icons/HeartIcon.astro";
 import UserHeader from "@components/ui/user/UserHeader.astro";
 import Layout from "@layouts/Layout.astro";
-import { getUsernameById } from "@lib/services/account";
 
-const user = Astro.locals.user;
-const username = user.isProUser ? await getUsernameById(user.id) : "Basic";
 const useLocationService = false;
 const currentLocation = { lat: 48.137154, lon: 11.576124 };
 ---
 
 <Layout showBadge={true}>
-  <UserHeader {username} userId={user.id} lang={user.language} />
+  <UserHeader />
   <div x-data="{selectedTab: 0}">
     <div class="tabs tabs-bordered" x-cloak>
       <div
