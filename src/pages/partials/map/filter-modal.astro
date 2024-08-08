@@ -1,0 +1,99 @@
+---
+import Modal from "@layouts/Modal.astro";
+import { getAllCategories } from "@lib/services/deal";
+import { t } from "@lib/services/i18n";
+import { getFilterData } from "@lib/services/user";
+
+export const partial = true;
+
+const user = Astro.locals.user;
+const categories = await getAllCategories();
+const perimeterText = t("perimeter", user.language);
+const redirectAfterSafe = "";
+const filterData = user.id ? await getFilterData(user.id) : undefined;
+---
+
+<Modal>
+  <h1>{t("filter", user.language)}</h1>
+  <form hx-post={`/api/accounts/filter?redirect-after-save=${redirectAfterSafe}`} hx-target="#modal">
+    <div class="form-control">
+      <label id="radius-label" for="radius" class="flex items-center gap-1"></label>
+      <input
+        id="radius"
+        type="range"
+        name="searchRadius"
+        min="500"
+        max="25000"
+        step="500"
+        value={filterData?.searchRadius}
+        oninput="changeRadius(this)"
+      />
+    </div>
+    <hr class="my-4" />
+    <div class="grid grid-cols-2 py-4 gap-2">
+      <button
+        type="button"
+        class="btn-sm btn-primary"
+        hx-post="/api/accounts/filter/select-all"
+        hx-target="#category-list">
+        {t("select_all", user.language)}
+      </button>
+      <button
+        type="button"
+        class="btn-sm btn-primary"
+        hx-post="/api/accounts/filter/deselect-all"
+        hx-target="#category-list">
+        {t("deselect_all", user.language)}
+      </button>
+    </div>
+    <div id="category-list" class="flex flex-col gap-2">
+      {
+        categories.map((category) => (
+          <div class="form-control-horizontal">
+            <input
+              type="checkbox"
+              id={category.name}
+              class="checkbox"
+              name="selectedCategoryIds"
+              value={category.id}
+              checked={filterData?.selectedCategoryIds?.includes(category.id)}
+              oninput="changeSelectedCategories(this)"
+            />
+            <label for={category.name}>{category.name}</label>
+          </div>
+        ))
+      }
+    </div>
+    <div class="modal-action">
+      <button class="btn-primary btn-outline" hx-delete="/api/ui/remove" hx-target="#modal">
+        {t("cancel", user.language)}
+      </button>
+      <button>{t("save", user.language)}</button>
+    </div>
+  </form>
+</Modal>
+
+<script
+  is:inline
+  define:vars={{
+    searchRadius: filterData?.searchRadius,
+    selectedCategoryIds: filterData?.selectedCategoryIds,
+    perimeterText,
+  }}
+>
+  FilterService.searchRadius = searchRadius;
+  FilterService.selectedCategories = selectedCategoryIds;
+
+  const searchRadiusLabel = document.getElementById("radius-label");
+  searchRadiusLabel.textContent = `${perimeterText} ${(searchRadius * 2) / 1000} km`;
+
+  document.changeRadius = function (element) {
+    const newSearchRadius = +element.value;
+    FilterService.searchRadius = newSearchRadius;
+    searchRadiusLabel.textContent = `${perimeterText} ${(newSearchRadius * 2) / 1000} km`;
+  };
+
+  document.changeSelectedCategories = function (element) {
+    FilterService.toggleSelectedCategory(+element.value);
+  };
+</script>

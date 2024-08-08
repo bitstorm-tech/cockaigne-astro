@@ -1,9 +1,9 @@
 ---
 import DefaultUserProfileImage from "@components/icons/DefaultUserProfileImage.astro";
+import FilterIcon from "@components/icons/FilterIcon.astro";
 import LocationIcon from "@components/icons/LocationIcon.astro";
 import { getUsernameById } from "@lib/services/account";
 import { t } from "@lib/services/i18n";
-import ProfileImage from "@pages/partials/accounts/profile-image.astro";
 
 const user = Astro.locals.user;
 const username = user.id ? await getUsernameById(user.id) : "Basic";
@@ -45,6 +45,12 @@ const username = user.id ? await getUsernameById(user.id) : "Basic";
           </div>
         </div>
       </div>
+      <button
+        class="btn-primary btn-circle flex w-20 justify-start rounded-r-none rounded-l-full self-end px-0.5"
+        hx-get="/partials/map/filter-modal?redirect-after-save=/user"
+        hx-target="#modal">
+        <FilterIcon class="w-auto h-11 border border-white rounded-full p-1" />
+      </button>
     </div>
   </div>
 </div>
