@@ -1,0 +1,9 @@
+---
+import { getFavoriteDealsCount } from "@lib/services/user";
+
+export const partial = true;
+const user = Astro.locals.user;
+const count = user.id ? getFavoriteDealsCount(user.id) : 0;
+---
+
+{count}

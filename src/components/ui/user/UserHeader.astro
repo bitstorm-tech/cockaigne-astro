@@ -4,6 +4,9 @@ import FilterIcon from "@components/icons/FilterIcon.astro";
 import LocationIcon from "@components/icons/LocationIcon.astro";
 import { getUsernameById } from "@lib/services/account";
 import { t } from "@lib/services/i18n";
+import DealsCountBadge from "./DealsCountBadge.astro";
+import FavoriteDealersCountBadge from "./FavoriteDealersCountBadge.astro";
+import FavoriteDealsCountBadge from "./FavoriteDealsCountBadge.astro";
 
 const user = Astro.locals.user;
 const username = user.id ? await getUsernameById(user.id) : "Basic";
@@ -13,13 +16,9 @@ const username = user.id ? await getUsernameById(user.id) : "Basic";
   <div class="flex w-full justify-between">
     <div class="m-4 flex flex-col gap-4">
       <div class="flex gap-2 fill-current text-xs text-[#69828c]">
-        <div id="deals-count-badge"></div>
-        <div hx-get="/partials/user/favorite-dealers-count-badge" hx-trigger="load" hx-target="this"></div>
-        <div
-          hx-get="/partials/user/favorite-deals-count-badge"
-          hx-trigger="load, updateFavDealsCountBadge from:body"
-          hx-target="this">
-        </div>
+        <DealsCountBadge />
+        <FavoriteDealersCountBadge />
+        <FavoriteDealsCountBadge />
       </div>
       <div class="text-2xl">{username || "Basic"}</div>
       <div class="flex flex-col gap-2 text-sm">
@@ -27,7 +26,7 @@ const username = user.id ? await getUsernameById(user.id) : "Basic";
         <div class="flex gap-2 items-end">
           <LocationIcon class="h-6" />
           <div class="flex flex-col text-xs">
-            <div id="street">"Suche aktuelle Position ..."</div>
+            <div id="street">Suche aktuelle Position ...</div>
             <div id="city"></div>
           </div>
         </div>

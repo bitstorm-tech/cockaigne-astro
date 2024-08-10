@@ -1,16 +1,13 @@
 ---
-import type { User } from "@lib/models/user";
-import LanguageChooser from "./LanguageChooser.astro";
-import MobileMenuFooter from "./MobileMenuFooter.astro";
-import DealerMenu from "./DealerMenu.astro";
-import ProUserMenu from "./ProUserMenu.astro";
-import BasicUserMenu from "./BasicUserMenu.astro";
+import BasicUserMenu from "@components/ui/header/BasicUserMenu.astro";
+import DealerMenu from "@components/ui/header/DealerMenu.astro";
+import LanguageChooser from "@components/ui/header/LanguageChooser.astro";
+import MobileMenuFooter from "@components/ui/header/MobileMenuFooter.astro";
+import ProUserMenu from "@components/ui/header/ProUserMenu.astro";
 
-interface Props {
-  user: User;
-}
+export const partial = true;
 
-const { user } = Astro.props;
+const user = Astro.locals.user;
 ---
 
 <div

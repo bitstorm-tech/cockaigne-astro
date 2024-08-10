@@ -1,5 +1,4 @@
 ---
-import DealsIcon from "@components/icons/DealsIcon.astro";
 import DealHeader from "@components/ui/deal/DealHeader.astro";
 import { getDealHeaders, type DealState } from "@lib/services/deal";
 
@@ -11,12 +10,8 @@ const dealHeaders = await getDealHeaders(state);
 <div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">
   {dealHeaders.map((header) => <DealHeader {header} />)}
 </div>
-<div
-  id="deals-count-badge"
-  class="badge gap-2 border border-[#2c363a] bg-transparent text-[#69828c]"
-  hx-swap-oob="true">
-  <DealsIcon class="h-3 w-3" />
-  {dealHeaders.length}
-</div>
 <div id="new-deals-button" hx-swap="outerHTML"></div>
 <div id="image-zoom-modal"></div>
+<div id="deals-count-badge-count" hx-swap-oob="true">
+  {dealHeaders.length}
+</div>

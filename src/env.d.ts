@@ -5,3 +5,7 @@ declare namespace App {
     user: import("./lib/models/user").User;
   }
 }
+
+interface Window {
+  Alpine: import("alpinejs").Alpine;
+}
