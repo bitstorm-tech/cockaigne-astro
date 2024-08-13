@@ -1,0 +1,13 @@
+---
+import DealHeaderActionButton from "@components/ui/deal/DealHeaderActionButton.astro";
+import { toggleFavorite } from "@lib/services/user";
+
+export const partial = true;
+
+const id = Astro.params.dealId!;
+const userId = Astro.locals.user.id;
+
+const isFavorite = userId ? await toggleFavorite(userId, id) : false;
+---
+
+<DealHeaderActionButton {isFavorite} {id} />

@@ -4,14 +4,15 @@ import { getDealHeaders, type DealState } from "@lib/services/deal";
 
 export const partial = true;
 const { state = "active" } = Astro.params as { state: DealState };
-const dealHeaders = await getDealHeaders(state);
+const userId = Astro.locals.user.id;
+const dealHeaders = await getDealHeaders(state, userId);
 ---
 
 <div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">
-  {dealHeaders.map((header) => <DealHeader {header} />)}
+	{dealHeaders.map((header) => <DealHeader {header} />)}
 </div>
 <div id="new-deals-button" hx-swap="outerHTML"></div>
 <div id="image-zoom-modal"></div>
 <div id="deals-count-badge-count" hx-swap-oob="true">
-  {dealHeaders.length}
+	{dealHeaders.length}
 </div>

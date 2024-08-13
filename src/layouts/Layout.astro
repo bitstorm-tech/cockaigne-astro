@@ -7,36 +7,36 @@ const { showBadge } = Astro.props;
 
 <!doctype html>
 <html lang="en" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-    <link rel="icon" href="/favicon.svg" />
-    <!-- htmx -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.1/htmx.min.js"
-      integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-      is:inline
-    ></script>
-    <script src="/js/geo.js" is:inline></script>
-    <script src="/js/ui.js" is:inline></script>
-    <title>Cockaigne City</title>
-    <style>
-      @view-transition {
-        navigation: auto;
-      }
-    </style>
-  </head>
-  <body>
-    <Header {showBadge} />
-    <main class="pb-10 md:px-52">
-      <slot />
-    </main>
-    <div id="alert"></div>
-    <div id="toast"></div>
-    <div id="modal"></div>
-    <!-- <div hx-get="/ui/footer" hx-swap="outerHTML" hx-trigger="load"></div> -->
-  </body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+		<link rel="icon" href="/favicon.svg" />
+		<!-- htmx -->
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.1/htmx.min.js"
+			integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+			is:inline>
+		</script>
+		<script src="/js/geo.js" is:inline></script>
+		<script src="/js/ui.js" is:inline></script>
+		<title>Cockaigne City</title>
+		<style>
+			@view-transition {
+				navigation: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<Header {showBadge} />
+		<main class="pb-10 md:px-52">
+			<slot />
+		</main>
+		<div id="alert"></div>
+		<div id="toast"></div>
+		<div id="modal"></div>
+		<!-- <div hx-get="/ui/footer" hx-swap="outerHTML" hx-trigger="load"></div> -->
+	</body>
 </html>

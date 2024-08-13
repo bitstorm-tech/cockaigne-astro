@@ -5,15 +5,15 @@ import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), alpinejs()],
-  devToolbar: {
-    enabled: false,
-  },
-  output: "server",
-  server: {
-    host: true,
-  },
-  adapter: node({
-    mode: "standalone",
-  }),
+	integrations: [tailwind(), alpinejs()],
+	devToolbar: {
+		enabled: false,
+	},
+	output: "server",
+	server: {
+		host: true,
+	},
+	adapter: node({
+		mode: "standalone",
+	}),
 });

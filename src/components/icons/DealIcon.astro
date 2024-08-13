@@ -18,29 +18,29 @@ import SportOutdoorIcon from "./category/SportOutdoorIcon.astro";
 import UnterhaltungGamingIcon from "./category/UnterhaltungGamingIcon.astro";
 
 interface Props {
-  categoryId: number;
+	categoryId: number;
 }
 const { categoryId } = Astro.props;
 
 const SelectedIcon =
-  {
-    1: ElektronikTechnikIcon,
-    2: UnterhaltungGamingIcon,
-    3: LebensmittelHaushaltIcon,
-    4: FashionSchmuckLifestyleIcon,
-    5: BeautyWellnessGesundheitIcon,
-    6: FamilyKidsIcon,
-    7: HomeLivingIcon,
-    8: BaumarktGartenIcon,
-    9: AutoFahrradMotorradIcon,
-    10: GastronomieBarsCafesIcon,
-    11: KulturFreizeitIcon,
-    12: SportOutdoorIcon,
-    13: ReisenHotelsUebernachtungenIcon,
-    14: DienstleistungenFinanzenIcon,
-    15: FloristikIcon,
-    16: SonstigesIcon,
-  }[categoryId] || NoIcon;
+	{
+		1: ElektronikTechnikIcon,
+		2: UnterhaltungGamingIcon,
+		3: LebensmittelHaushaltIcon,
+		4: FashionSchmuckLifestyleIcon,
+		5: BeautyWellnessGesundheitIcon,
+		6: FamilyKidsIcon,
+		7: HomeLivingIcon,
+		8: BaumarktGartenIcon,
+		9: AutoFahrradMotorradIcon,
+		10: GastronomieBarsCafesIcon,
+		11: KulturFreizeitIcon,
+		12: SportOutdoorIcon,
+		13: ReisenHotelsUebernachtungenIcon,
+		14: DienstleistungenFinanzenIcon,
+		15: FloristikIcon,
+		16: SonstigesIcon,
+	}[categoryId] || NoIcon;
 ---
 
 <SelectedIcon />

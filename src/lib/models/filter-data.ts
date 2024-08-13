@@ -1,4 +1,4 @@
 export interface FilterData {
-  selectedCategoryIds: number[];
-  searchRadius: number;
+	selectedCategoryIds: number[];
+	searchRadius: number;
 }

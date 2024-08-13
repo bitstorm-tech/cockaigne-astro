@@ -1,6 +1,6 @@
 export interface DealDetails {
-  description: string;
-  imageUrls: string[];
-  start: string;
-  end: string;
+	description: string;
+	imageUrls: string[];
+	start: string;
+	end: string;
 }

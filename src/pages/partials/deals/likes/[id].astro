@@ -7,15 +7,15 @@ export const partial = true;
 
 const { id } = Astro.params;
 if (!id) {
-  logger.error("Can't toggle deal likes -> missing deal ID");
-  return;
+	logger.error("Can't toggle deal likes -> missing deal ID");
+	return;
 }
 
 const user = Astro.locals.user;
 const toggle = Astro.url.searchParams.get("toggle") === "true";
 
 if (toggle && !user.isProUser) {
-  return renderInfoTranslated("info.only_for_pro_member", user.language);
+	return renderInfoTranslated("info.only_for_pro_member", user.language);
 }
 
 const likes = toggle && user.id ? await toggleDealLike(id, user.id) : await getDealLikes(id);
@@ -23,12 +23,12 @@ const isLiked = user.isProUser && user.id ? await isDealLikedByUser(id, user.id)
 ---
 
 <div id={`likes-${id}`} class="flex items-center gap-3">
-  <button
-    class="clean"
-    hx-get={`/partials/deals/likes/${id}?toggle=true`}
-    hx-target={`#likes-${id}`}
-    hx-swap="outerHTML">
-    <LikeIcon outline={!isLiked} class="h-6" />
-  </button>
-  <span id={`like-count-${id}`} class="text-lg">{likes}</span>
+	<button
+		class="clean"
+		hx-get={`/partials/deals/likes/${id}?toggle=true`}
+		hx-target={`#likes-${id}`}
+		hx-swap="outerHTML">
+		<LikeIcon outline={!isLiked} class="h-6" />
+	</button>
+	<span id={`like-count-${id}`} class="text-lg">{likes}</span>
 </div>

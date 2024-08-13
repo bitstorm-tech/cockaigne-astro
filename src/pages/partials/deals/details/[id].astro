@@ -10,65 +10,65 @@ const user = Astro.locals.user;
 
 const { id } = Astro.params;
 if (!id) {
-  logger.error("Can't get deal details -> missing deal ID");
-  return;
+	logger.error("Can't get deal details -> missing deal ID");
+	return;
 }
 
 const details = await getDealDetails(id);
 if (!details) {
-  logger.error("Can't get deal details -> missing details");
-  return;
+	logger.error("Can't get deal details -> missing details");
+	return;
 }
 ---
 
 <span hx-get={`/api/deals/viewed/${id}`} hx-trigger="intersect once" hx-swap="none" hx-target="this">
-  {details.description}
+	{details.description}
 </span>
 <div class="grid grid-cols-3 gap-1 py-2">
-  {
-    details.imageUrls.map((url, index) => (
-      <img
-        src={url}
-        alt="Deal image"
-        class="h-24 w-full object-cover cursor-pointer"
-        hx-get={`/deal-image-zoom-modal/${id}?index=${index}`}
-        hx-target="#image-zoom-modal"
-        hx-swap="innerHTML"
-      />
-    ))
-  }
+	{
+		details.imageUrls.map((url, index) => (
+			<img
+				src={url}
+				alt="Deal image"
+				class="h-24 w-full object-cover cursor-pointer"
+				hx-get={`/deal-image-zoom-modal/${id}?index=${index}`}
+				hx-target="#image-zoom-modal"
+				hx-swap="innerHTML"
+			/>
+		))
+	}
 </div>
 
 <!-- ------ -->
 <!-- Footer -->
 <!-- ------ -->
 {
-  user.isDealer ? (
-    <>
-      <div class="flex flex-col gap-1 text-xs">
-        <span>
-          {t("from", user.language)}: {details.start}
-        </span>
-        <span>
-          {t("until", user.language)}: {details.end}
-        </span>
-      </div>
-    </>
-  ) : (
-    <>
-      <span class="py-4 text-xs">
-        {t("ends_on", user.language)} {details.end}
-      </span>
-      <div class="flex h-6 justify-between">
-        <div hx-get={`/partials/deals/likes/${id}?toggle=false`} hx-target="this" hx-trigger="load once" />
-        <button
-          class="clean"
-          hx-get={`/ui/deals/report-modal/$${id}`}
-          hx-target={`#report-modal-${id}`}
-          hx-swap="innerHTML">
-          <ReportIcon class="h-6" />
-        </button>
-      </div>
-    </>
-  )
+	user.isDealer ? (
+		<>
+			<div class="flex flex-col gap-1 text-xs">
+				<span>
+					{t("from", user.language)}: {details.start}
+				</span>
+				<span>
+					{t("until", user.language)}: {details.end}
+				</span>
+			</div>
+		</>
+	) : (
+		<>
+			<span class="py-4 text-xs">
+				{t("ends_on", user.language)} {details.end}
+			</span>
+			<div class="flex h-6 justify-between">
+				<div hx-get={`/partials/deals/likes/${id}?toggle=false`} hx-target="this" hx-trigger="load once" />
+				<button
+					class="clean"
+					hx-get={`/ui/deals/report-modal/$${id}`}
+					hx-target={`#report-modal-${id}`}
+					hx-swap="innerHTML">
+					<ReportIcon class="h-6" />
+				</button>
+			</div>
+		</>
+	)
 }

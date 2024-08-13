@@ -1,3 +1,3 @@
 export function DELETE(): Response {
-  return new Response();
+	return new Response();
 }

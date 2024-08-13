@@ -1,29 +1,29 @@
 ---
-import { t } from "@lib/services/i18n";
-import MobileMenuEntry from "./MobileMenuEntry.astro";
+import AtIcon from "@components/icons/AtIcon.astro";
 import CogIcon from "@components/icons/CogIcon.astro";
+import LogoutIcon from "@components/icons/LogoutIcon.astro";
 import MoneyIcon from "@components/icons/MoneyIcon.astro";
 import SubManagementIcon from "@components/icons/SubManagementIcon.astro";
-import AtIcon from "@components/icons/AtIcon.astro";
-import LogoutIcon from "@components/icons/LogoutIcon.astro";
+import { t } from "@lib/services/i18n";
+import MobileMenuEntry from "./MobileMenuEntry.astro";
 
 const { lang } = Astro.props;
 ---
 
 <MobileMenuEntry href="/settings" text={t("settings", lang)}>
-  <CogIcon slot="icon" />
+	<CogIcon slot="icon" />
 </MobileMenuEntry>
 <MobileMenuEntry href="/pricing" text={t("pricing", lang)}>
-  <MoneyIcon slot="icon" />
+	<MoneyIcon slot="icon" />
 </MobileMenuEntry>
 <MobileMenuEntry
-  href="https://billing.stripe.com/p/login/test_4gw9AKfJh5rw9QQeUU"
-  text={t("manage_subscription", lang)}>
-  <SubManagementIcon slot="icon" />
+	href="https://billing.stripe.com/p/login/test_4gw9AKfJh5rw9QQeUU"
+	text={t("manage_subscription", lang)}>
+	<SubManagementIcon slot="icon" />
 </MobileMenuEntry>
 <MobileMenuEntry href="/contact" text={t("contact_us", lang)}>
-  <AtIcon slot="icon" />
+	<AtIcon slot="icon" />
 </MobileMenuEntry>
 <MobileMenuEntry href="/api/logout" text={t("logout", lang)}>
-  <LogoutIcon slot="icon" />
+	<LogoutIcon slot="icon" />
 </MobileMenuEntry>

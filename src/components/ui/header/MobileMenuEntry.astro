@@ -2,17 +2,17 @@
 const { href, text } = Astro.props;
 
 function target(href: string): string {
-  if (href.includes("stripe")) {
-    return "_blank";
-  }
+	if (href.includes("stripe")) {
+		return "_blank";
+	}
 
-  return "";
+	return "";
 }
 ---
 
 <a class="flex justify-start items-center gap-4" href={href} target={target(href)}>
-  <div class="shrink h-6 w-6">
-    <slot name="icon" />
-  </div>
-  {text}
+	<div class="shrink h-6 w-6">
+		<slot name="icon" />
+	</div>
+	{text}
 </a>

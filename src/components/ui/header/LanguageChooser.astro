@@ -6,13 +6,13 @@ const { lang } = Astro.props;
 ---
 
 <div class="flex gap-4">
-  {t("language", lang)}:
-  <div class="flex gap-2">
-    <a class="link w-10" href="/language-set/de">
-      <FlagDeIcon />
-    </a>
-    <a class="link w-10" href="/language-set/en">
-      <FlagUkIcon />
-    </a>
-  </div>
+	{t("language", lang)}:
+	<div class="flex gap-2">
+		<a class="link w-10" href="/language-set/de">
+			<FlagDeIcon />
+		</a>
+		<a class="link w-10" href="/language-set/en">
+			<FlagUkIcon />
+		</a>
+	</div>
 </div>
