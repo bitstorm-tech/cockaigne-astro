@@ -6,7 +6,12 @@ interface Props {
 const { isFavorite, id } = Astro.props;
 ---
 
-<button class="clean" @click.stop hx-target="this" hx-get={`/partials/deals/favorites/${id}?favorite=${isFavorite}`}>
+<button
+	class="clean"
+	@click.stop
+	hx-target="this"
+	hx-swap="outerHTML"
+	hx-get={`/partials/deals/favorites/${id}?favorite=${isFavorite}`}>
 	{
 		isFavorite ? (
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93.22094 127.76471" class="h-6" fill="#b2b2b2">
