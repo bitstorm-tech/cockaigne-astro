@@ -8,20 +8,20 @@ export const partial = true;
 
 const user = Astro.locals.user;
 
-const { id } = Astro.params;
-if (!id) {
+const dealId = Astro.params.dealId;
+if (!dealId) {
 	logger.error("Can't get deal details -> missing deal ID");
 	return;
 }
 
-const details = await getDealDetails(id);
+const details = await getDealDetails(dealId);
 if (!details) {
 	logger.error("Can't get deal details -> missing details");
 	return;
 }
 ---
 
-<span hx-get={`/api/deals/viewed/${id}`} hx-trigger="intersect once" hx-swap="none" hx-target="this">
+<span hx-get=`/api/deals/viewed/${dealId}` hx-trigger="intersect once" hx-swap="none" hx-target="this">
 	{details.description}
 </span>
 <div class="grid grid-cols-3 gap-1 py-2">
@@ -31,7 +31,7 @@ if (!details) {
 				src={url}
 				alt="Deal image"
 				class="h-24 w-full object-cover cursor-pointer"
-				hx-get={`/partials/deals/images/modal/${id}?index=${index}`}
+				hx-get=`/partials/deals/images/modal/${dealId}?index=${index}`
 				hx-target="#image-zoom-modal"
 				hx-swap="innerHTML"
 			/>
@@ -60,11 +60,11 @@ if (!details) {
 				{t("ends_on", user.language)} {details.end}
 			</span>
 			<div class="flex h-6 justify-between">
-				<div hx-get={`/partials/deals/likes/${id}?toggle=false`} hx-target="this" hx-trigger="load once" />
+				<div hx-get=`/partials/deals/likes/${dealId}?toggle=false` hx-target="this" hx-trigger="load once" />
 				<button
 					class="clean"
-					hx-get={`/ui/deals/report-modal/$${id}`}
-					hx-target={`#report-modal-${id}`}
+					hx-get=`/partials/deals/reports/modal/${dealId}?title=${details.title}`
+					hx-target="#modal"
 					hx-swap="innerHTML">
 					<ReportIcon class="h-6" />
 				</button>

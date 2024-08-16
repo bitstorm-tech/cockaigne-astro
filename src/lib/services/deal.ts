@@ -48,6 +48,7 @@ export async function getDealDetails(dealId: string): Promise<DealDetails | unde
 	const imageUrls = await getDealImageUrls(dealId, 400);
 
 	const dealDetails: DealDetails = {
+		title: result[0].title,
 		description: result[0].description,
 		imageUrls,
 		start: startDate.format("DD.MM.YYYY"),
@@ -57,7 +58,7 @@ export async function getDealDetails(dealId: string): Promise<DealDetails | unde
 	return dealDetails;
 }
 
-export async function incrementDealViewCount(dealId: string, userId: string): Promise<void> {
+export async function incrementDealViewCount(dealId: string, userId: string) {
 	await sql`insert into deal_clicks (deal_id, account_id) values (${dealId}, ${userId}) on conflict do nothing`;
 }
 
@@ -86,4 +87,20 @@ export async function getDealLikes(dealId: string): Promise<number> {
 export async function isDealLikedByUser(dealId: string, userId: string): Promise<boolean> {
 	const result = await sql`select exists(select user_id from likes where deal_id = ${dealId} and user_id = ${userId})`;
 	return result[0].exists;
+}
+
+export async function saveDealReport(userId: string, dealId: string, reportMessage: string) {
+	await sql`insert into reported_deals (reporter_id, deal_id, reason) 
+				values (${userId}, ${dealId}, ${reportMessage}) 
+				on conflict do nothing`;
+}
+
+export async function getDealReportMessage(userId: string, dealId: string): Promise<string> {
+	const result = await sql`select reason from reported_deals where reporter_id = ${userId} and deal_id = ${dealId}`;
+
+	if (result.length === 0) {
+		return "";
+	}
+
+	return result[0].reason;
 }
