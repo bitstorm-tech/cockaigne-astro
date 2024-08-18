@@ -6,34 +6,55 @@ import dayjs from "dayjs";
 import { getDealImageUrls } from "./imagekit";
 import logger from "./logger";
 
-export type DealState = "active" | "past" | "future" | "template";
-
-const stateToTableMap = new Map<DealState, string>([
-	["active", "active_deals_view"],
-	["past", "past_deals_view"],
-	["future", "future_deals_view"],
-	["template", "deals"],
-]);
+export type DealState = "active" | "past" | "future" | "template" | "favorite-deals" | "favorite-dealers";
 
 export async function getAllCategories(): Promise<Category[]> {
 	return await sql`select * from categories`;
 }
 
 export async function getDealHeaders(state: DealState, userId?: string, dealerId?: string): Promise<DealHeader[]> {
-	const table = stateToTableMap.get(state);
-	if (!table) {
-		logger.error(`Invalid deal state: ${state}`);
-		return [];
+	switch (state) {
+		case "active":
+			return getActiveDealHeaders(userId, dealerId);
+		case "past":
+			return [];
+		case "future":
+			return [];
+		case "template":
+			return [];
+		case "favorite-deals":
+			return getFavoriteDealsDealHeaders(userId!);
+		case "favorite-dealers":
+			return getFavoriteDealersDealHeaders(userId!);
 	}
+}
 
+export async function getActiveDealHeaders(userId?: string, dealerId?: string): Promise<DealHeader[]> {
 	const withDealerId = (dealerId: string | undefined) => (dealerId ? sql`where dealer_id = ${dealerId}` : sql``);
 
 	return await sql<DealHeader[]>`
-	select d.id, d.dealer_id, d.title, d.category_id, d.start, a.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
-  	from ${sql(table)} d 
-	join accounts a on d.dealer_id = a.id
-	left join favorite_deals f on f.deal_id = d.id 
-	${withDealerId(dealerId)}`;
+		select d.id, d.dealer_id, d.title, d.category_id, d.start, a.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+  		from active_deals_view d 
+		join accounts a on d.dealer_id = a.id
+		left join favorite_deals f on f.deal_id = d.id 
+		${withDealerId(dealerId)}`;
+}
+
+export async function getFavoriteDealersDealHeaders(userId: string): Promise<DealHeader[]> {
+	return await sql<DealHeader[]>`
+		select d.id, d.dealer_id, d.title, d.category_id, d.start, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+	 	from active_deals_view d
+		join favorite_dealers_view fd on fd.dealer_id = d.dealer_id
+		left join favorite_deals f on f.deal_id = d.id
+		where f.user_id = ${userId}`;
+}
+
+export async function getFavoriteDealsDealHeaders(userId: string): Promise<DealHeader[]> {
+	return await sql<DealHeader[]>`
+		select d.id, d.dealer_id, d.title, d.category_id, d.start, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+	 	from active_deals_view d
+		left join favorite_deals f on f.deal_id = d.id
+		where f.user_id = ${userId}`;
 }
 
 export async function getDealDetails(dealId: string): Promise<DealDetails | undefined> {
