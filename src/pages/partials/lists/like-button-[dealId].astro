@@ -5,8 +5,8 @@ import logger from "@lib/services/logger";
 
 export const partial = true;
 
-const { id } = Astro.params;
-if (!id) {
+const { dealId } = Astro.params;
+if (!dealId) {
 	logger.error("Can't toggle deal likes -> missing deal ID");
 	return;
 }
@@ -18,17 +18,17 @@ if (toggle && !user.isProUser) {
 	return renderInfoTranslated("info.only_for_pro_member", user.language);
 }
 
-const likes = toggle && user.id ? await toggleDealLike(id, user.id) : await getDealLikes(id);
-const isLiked = user.isProUser && user.id ? await isDealLikedByUser(id, user.id) : false;
+const likes = toggle && user.id ? await toggleDealLike(dealId, user.id) : await getDealLikes(dealId);
+const isLiked = user.isProUser && user.id ? await isDealLikedByUser(dealId, user.id) : false;
 ---
 
-<div id={`likes-${id}`} class="flex items-center gap-3">
+<div id={`likes-${dealId}`} class="flex items-center gap-3">
 	<button
 		class="clean"
-		hx-get={`/partials/deals/likes/${id}?toggle=true`}
-		hx-target={`#likes-${id}`}
+		hx-get={`/partials/lists/like-button-${dealId}?toggle=true`}
+		hx-target={`#likes-${dealId}`}
 		hx-swap="outerHTML">
 		<LikeIcon outline={!isLiked} class="h-6" />
 	</button>
-	<span id={`like-count-${id}`} class="text-lg">{likes}</span>
+	<span id={`like-count-${dealId}`} class="text-lg">{likes}</span>
 </div>

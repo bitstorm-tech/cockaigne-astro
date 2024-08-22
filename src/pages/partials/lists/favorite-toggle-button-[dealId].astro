@@ -1,0 +1,18 @@
+---
+import FavoriteToggleButton from "@components/ui/deal/FavoriteToggleButton.astro";
+import { toggleFavorite } from "@lib/services/user";
+
+export const partial = true;
+
+const dealId = Astro.params.dealId!;
+const userId = Astro.locals.user.id;
+
+const isFavorite = userId ? await toggleFavorite(userId, dealId) : false;
+
+const remove = Astro.url.searchParams.get("remove")?.toLowerCase() === "true";
+if (remove) {
+	Astro.response.headers.append("hx-retarget", `#deal-${dealId}`);
+}
+---
+
+{!remove && <FavoriteToggleButton {isFavorite} {dealId} />}

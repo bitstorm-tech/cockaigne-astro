@@ -11,7 +11,7 @@ import Layout from "@layouts/Layout.astro";
 	<div x-data="{selectedTab: 0}">
 		<div class="tabs tabs-bordered" x-cloak>
 			<div
-				hx-get="/partials/deals/headers/active"
+				hx-get="/partials/lists/active"
 				hx-target="#content"
 				hx-trigger="click, load"
 				class="tab"
@@ -25,7 +25,7 @@ import Layout from "@layouts/Layout.astro";
 				</div>
 			</div>
 			<div
-				hx-get="/partials/deals/headers/favorite-dealers"
+				hx-get="/partials/lists/favorite-dealers"
 				hx-target="#content"
 				hx-trigger="click"
 				class="tab"
@@ -39,7 +39,7 @@ import Layout from "@layouts/Layout.astro";
 				</div>
 			</div>
 			<div
-				hx-get="/partials/deals/headers/favorite-deals"
+				hx-get="/partials/lists/favorite-deals"
 				hx-target="#content"
 				hx-trigger="click"
 				class="tab"

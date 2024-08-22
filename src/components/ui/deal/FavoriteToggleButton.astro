@@ -1,9 +1,10 @@
 ---
 interface Props {
 	isFavorite: boolean;
-	id: string;
+	dealId: string;
+	removeFavoriteOnClick?: boolean;
 }
-const { isFavorite, id } = Astro.props;
+const { isFavorite, dealId, removeFavoriteOnClick = false } = Astro.props;
 ---
 
 <button
@@ -11,7 +12,7 @@ const { isFavorite, id } = Astro.props;
 	@click.stop
 	hx-target="this"
 	hx-swap="outerHTML"
-	hx-get={`/partials/deals/favorites/${id}?favorite=${isFavorite}`}>
+	hx-get={`/partials/lists/favorite-toggle-button-${dealId}?remove=${removeFavoriteOnClick}`}>
 	{
 		isFavorite ? (
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93.22094 127.76471" class="h-6" fill="#b2b2b2">

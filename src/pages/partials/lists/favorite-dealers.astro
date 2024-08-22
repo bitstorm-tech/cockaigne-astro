@@ -1,0 +1,17 @@
+---
+import DealHeader from "@components/ui/deal/DealHeader.astro";
+import { getFavoriteDealersDealHeaders } from "@lib/services/deal";
+
+export const partial = true;
+const userId = Astro.locals.user.id;
+const dealHeaders = userId ? await getFavoriteDealersDealHeaders(userId) : [];
+---
+
+<div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">
+	{dealHeaders.map((header) => <DealHeader {header} />)}
+</div>
+<div id="new-deals-button" hx-swap="outerHTML"></div>
+<div id="image-zoom-modal"></div>
+<div id="deals-count-badge-count" hx-swap-oob="true">
+	{dealHeaders.length}
+</div>

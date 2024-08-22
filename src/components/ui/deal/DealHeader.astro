@@ -2,7 +2,6 @@
 import DealIcon from "@components/icons/DealIcon.astro";
 import DoubleArrowIcon from "@components/icons/DoubleArrowIcon.astro";
 import type { DealHeader } from "@lib/models/deal-header";
-import DealHeaderActionButton from "./DealHeaderActionButton.astro";
 
 interface Props {
 	header: DealHeader;
@@ -11,6 +10,7 @@ interface Props {
 
 const { header, hideName = false } = Astro.props;
 const dealerPath = `/dealer/${header.dealerId}`;
+console.log("DealHeaderUrl:", Astro.url.href);
 ---
 
 <div id={`deal-${header.id}`}>
@@ -33,12 +33,11 @@ const dealerPath = `/dealer/${header.dealerId}`;
 			<DealIcon categoryId={header.categoryId} />
 			<span>{header.title}</span>
 		</div>
-		<!-- @actionButton(user, header, actionButtonType) -->
-		<DealHeaderActionButton isFavorite={header.isFavorite} id={header.id} />
+		<slot />
 	</div>
 	<div
 		class="flex flex-col justify-between bg-[#323e42] p-2"
-		hx-get={`/partials/deals/details/${header.id}`}
+		hx-get={`/partials/lists/deal-details-${header.id}`}
 		hx-target={`#details-footer-${header.id}`}
 		hx-trigger="load once"
 		hx-swap="outerHTML"

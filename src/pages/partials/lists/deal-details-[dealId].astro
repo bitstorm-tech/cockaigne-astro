@@ -31,7 +31,7 @@ if (!details) {
 				src={url}
 				alt="Deal image"
 				class="h-24 w-full object-cover cursor-pointer"
-				hx-get=`/partials/deals/images/modal/${dealId}?index=${index}`
+				hx-get=`/partials/lists/image-modal-${dealId}?index=${index}`
 				hx-target="#image-zoom-modal"
 				hx-swap="innerHTML"
 			/>
@@ -60,10 +60,10 @@ if (!details) {
 				{t("ends_on", user.language)} {details.end}
 			</span>
 			<div class="flex h-6 justify-between">
-				<div hx-get=`/partials/deals/likes/${dealId}?toggle=false` hx-target="this" hx-trigger="load once" />
+			<div hx-get=`/partials/lists/like-button-${dealId}?toggle=false` hx-target="this" hx-trigger="load once" />
 				<button
 					class="clean"
-					hx-get=`/partials/deals/reports/modal/${dealId}?title=${details.title}`
+					hx-get=`/partials/lists/report-modal-${dealId}?title=${details.title}`
 					hx-target="#modal"
 					hx-swap="innerHTML">
 					<ReportIcon class="h-6" />
