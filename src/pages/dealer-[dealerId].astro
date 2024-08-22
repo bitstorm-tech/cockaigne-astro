@@ -1,0 +1,60 @@
+---
+import DealsIcon from "@components/icons/DealsIcon.astro";
+import ImagesIcon from "@components/icons/ImagesIcon.astro";
+import RatingIcon from "@components/icons/RatingIcon.astro";
+import DealerHeader from "@components/ui/dealer/DealerHeader.astro";
+import Layout from "@layouts/Layout.astro";
+
+const dealerId = Astro.params.dealerId!;
+---
+
+<Layout>
+	<DealerHeader {dealerId} />
+	<div x-data="{selectedTab: 0}">
+		<div class="tabs tabs-bordered" x-cloak>
+			<div
+				hx-get={`/partials/lists/active?hide_name=true&dealer_id=${dealerId}`}
+				hx-target="#content"
+				hx-trigger="click, load"
+				class="tab"
+				:class="selectedTab === 0 ? 'tab-active' : ''"
+				@click="selectedTab = 0">
+				<div x-show="selectedTab === 0">
+					<DealsIcon class="h-8 pb-2" />
+				</div>
+				<div x-show="selectedTab !== 0">
+					<DealsIcon class="h-8 pb-2" outline={true} />
+				</div>
+			</div>
+			<div
+				hx-get={`/partials/lists/dealer-images-${dealerId}/`}
+				hx-target="#content"
+				hx-trigger="click"
+				class="tab"
+				:class="selectedTab === 1 ? 'tab-active' : ''"
+				@click="selectedTab = 1">
+				<div x-show="selectedTab === 1">
+					<ImagesIcon class="h-8 pb-2" />
+				</div>
+				<div x-show="selectedTab !== 1">
+					<ImagesIcon class="h-8 pb-2" outline={true} />
+				</div>
+			</div>
+			<div
+				hx-get={`/partials/lists/dealer-ratings-${dealerId}`}
+				hx-target="#content"
+				hx-trigger="click"
+				class="tab"
+				:class="selectedTab === 2 ? 'tab-active' : ''"
+				@click="selectedTab = 2">
+				<div x-show="selectedTab === 2">
+					<RatingIcon class="h-8 pb-2" />
+				</div>
+				<div x-show="selectedTab !== 2">
+					<RatingIcon class="h-8 pb-2" outline={true} />
+				</div>
+			</div>
+		</div>
+		<div id="content" class="pt-1"></div>
+	</div>
+</Layout>

@@ -1,5 +1,9 @@
 ---
-const { outline, class: clazz } = Astro.props;
+interface Props {
+	outline?: boolean
+	class?: string
+}
+const { outline = false, class: clazz } = Astro.props;
 ---
 {outline ?
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 141.73228 141.73228" class={clazz}>
