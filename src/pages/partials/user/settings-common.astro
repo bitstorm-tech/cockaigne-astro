@@ -11,7 +11,7 @@ if (!id) {
 const account = await getAccountById(id);
 ---
 
-<form class="flex flex-col gap-4" hx-post="/settings-user-common" hx-target="closest #content">
+<form class="flex flex-col gap-4" hx-post="/api/accounts/update-data" hx-target="closest #content">
 	<div class="form-control">
 		<label for="username">{t("username", lang)}</label>
 		<input id="username" type="text" name="username" value={account!.username} />

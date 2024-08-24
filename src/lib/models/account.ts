@@ -21,3 +21,7 @@ export interface Account {
 	changeEmailCode?: string;
 	newEmail?: string;
 }
+
+export interface AccountUpdate {
+	username?: string;
+}

@@ -11,7 +11,7 @@ const DefaultImage = isDealer ? DefaultDealerProfileImage : DefaultUserProfileIm
 <form
 	class="flex flex-col gap-4"
 	enctype="multipart/form-data"
-	hx-post="/api/accounts/profile-image"
+	hx-post="/api/accounts/update-profile-image"
 	x-data="{ newImage: null, deleteImageFlag: false }">
 	<div class="grid grid-cols-2 gap-4">
 		<button type="button" class="btn btn-primary" @click="deleteImage($data)">{t("delete", lang)}</button>
