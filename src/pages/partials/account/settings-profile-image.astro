@@ -1,0 +1,52 @@
+---
+import DefaultDealerProfileImage from "@components/icons/DefaultDealerProfileImage.astro";
+import DefaultUserProfileImage from "@components/icons/DefaultUserProfileImage.astro";
+import { t } from "@lib/services/i18n";
+
+export const partial = true;
+const { language: lang, isDealer } = Astro.locals.user;
+const DefaultImage = isDealer ? DefaultDealerProfileImage : DefaultUserProfileImage;
+---
+
+<form
+	class="flex flex-col gap-4"
+	enctype="multipart/form-data"
+	hx-post="/api/accounts/profile-image"
+	x-data="{ newImage: null, deleteImageFlag: false }">
+	<div class="grid grid-cols-2 gap-4">
+		<button type="button" class="btn btn-primary" @click="deleteImage($data)">{t("delete", lang)}</button>
+		<button type="button" class="btn btn-primary" @click="input.click()">{t("change", lang)}</button>
+	</div>
+	<div
+		x-show="!newImage && !deleteImageFlag"
+		hx-get="/partials/account/profile-image"
+		hx-target="this"
+		hx-trigger="load once">
+	</div>
+	<img x-show="newImage" x-bind:src="newImage" />
+	<div x-show="deleteImageFlag && !newImage">
+		<DefaultImage />
+	</div>
+	<div class="grid grid-cols-2 gap-4">
+		<a class="btn" href="/">{t("cancel", lang)}</a>
+		<button>{t("save", lang)}</button>
+	</div>
+	<input id="input" name="profile-image" type="file" @change="showImage($event, $data)" hidden />
+	<input id="delete" name="delete-image" type="text" :value="deleteImageFlag" hidden />
+</form>
+
+<script is:inline>
+	function showImage(event, data) {
+		const file = event.target.files[0];
+		if (file) {
+			data.deleteImageFlag = false;
+			const URL = window.URL || window.webkitURL;
+			data.newImage = URL.createObjectURL(file);
+		}
+	}
+
+	function deleteImage(data) {
+		data.newImage = null;
+		data.deleteImageFlag = true;
+	}
+</script>

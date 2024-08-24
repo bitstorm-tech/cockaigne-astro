@@ -17,7 +17,7 @@ const dealerId = Astro.params.dealerId!;
 				hx-target="#content"
 				hx-trigger="click, load"
 				class="tab"
-				:class="selectedTab === 0 ? 'tab-active' : ''"
+				x-bind:class="selectedTab === 0 ? 'tab-active' : ''"
 				@click="selectedTab = 0">
 				<div x-show="selectedTab === 0">
 					<DealsIcon class="h-8 pb-2" />
@@ -31,7 +31,7 @@ const dealerId = Astro.params.dealerId!;
 				hx-target="#content"
 				hx-trigger="click"
 				class="tab"
-				:class="selectedTab === 1 ? 'tab-active' : ''"
+				x-bind:class="selectedTab === 1 ? 'tab-active' : ''"
 				@click="selectedTab = 1">
 				<div x-show="selectedTab === 1">
 					<ImagesIcon class="h-8 pb-2" />
@@ -45,7 +45,7 @@ const dealerId = Astro.params.dealerId!;
 				hx-target="#content"
 				hx-trigger="click"
 				class="tab"
-				:class="selectedTab === 2 ? 'tab-active' : ''"
+				x-bind:class="selectedTab === 2 ? 'tab-active' : ''"
 				@click="selectedTab = 2">
 				<div x-show="selectedTab === 2">
 					<RatingIcon class="h-8 pb-2" />

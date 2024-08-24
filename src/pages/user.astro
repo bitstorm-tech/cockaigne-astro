@@ -15,7 +15,7 @@ import Layout from "@layouts/Layout.astro";
 				hx-target="#content"
 				hx-trigger="click, load"
 				class="tab"
-				:class="selectedTab === 0 ? 'tab-active' : ''"
+				x-bind:class="selectedTab === 0 ? 'tab-active' : ''"
 				@click="selectedTab = 0">
 				<div x-show="selectedTab === 0">
 					<DealsIcon class="h-8 pb-2" />
@@ -29,7 +29,7 @@ import Layout from "@layouts/Layout.astro";
 				hx-target="#content"
 				hx-trigger="click"
 				class="tab"
-				:class="selectedTab === 1 ? 'tab-active' : ''"
+				x-bind:class="selectedTab === 1 ? 'tab-active' : ''"
 				@click="selectedTab = 1">
 				<div x-show="selectedTab === 1">
 					<HeartIcon class="h-8 pb-2" />
@@ -43,7 +43,7 @@ import Layout from "@layouts/Layout.astro";
 				hx-target="#content"
 				hx-trigger="click"
 				class="tab"
-				:class="selectedTab === 2 ? 'tab-active' : ''"
+				x-bind:class="selectedTab === 2 ? 'tab-active' : ''"
 				@click="selectedTab = 2">
 				<div x-show="selectedTab === 2">
 					<BookmarkBoxedIcon class="h-8 pb-2" outline={false} />

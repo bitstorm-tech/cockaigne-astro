@@ -1,0 +1,62 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { t } from "@lib/services/i18n";
+
+const { user } = Astro.locals;
+---
+
+<Layout>
+	<div class="p-4" x-data="{selectedTab: 0}">
+		<div class="tabs tabs-bordered" x-cloak>
+			{
+				user.isDealer ? (
+					<>
+						<div
+							hx-get="/settings-dealer-common"
+							hx-target="#content"
+							hx-trigger="click"
+							class="tab"
+							x-bind:class="selectedTab === 0 ? 'tab-active' : ''"
+							@click="selectedTab = 0">
+							{t("common", user.language)}
+						</div>
+						<div
+							hx-get="/settings-dealer-address"
+							hx-target="#content"
+							hx-trigger="click"
+							class="tab"
+							x-bind:class="selectedTab === 2 ? 'tab-active' : ''"
+							@click="selectedTab = 2">
+							{t("address", user.language)}
+						</div>
+					</>
+				) : (
+					<div
+						hx-get="/partials/user/settings-common"
+						hx-target="#content"
+						hx-trigger="click"
+						class="tab"
+						x-bind:class="selectedTab === 0 ? 'tab-active' : ''"
+						@click="selectedTab = 0">
+						{t("common", user.language)}
+					</div>
+				)
+			}
+			<div
+				hx-get="/partials/account/settings-profile-image"
+				hx-target="#content"
+				hx-trigger="click"
+				class="tab"
+				x-bind:class="selectedTab === 1 ? 'tab-active' : ''"
+				@click="selectedTab = 1">
+				{t("profile_picture", user.language)}
+			</div>
+		</div>
+		<div
+			id="content"
+			class="pt-8"
+			hx-trigger="load once"
+			hx-get={user.isDealer ? "/partials/dealer/settings-common" : "/partials/user/settings-common"}>
+		</div>
+	</div>
+</Layout>
