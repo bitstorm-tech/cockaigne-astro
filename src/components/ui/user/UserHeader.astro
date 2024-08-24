@@ -35,22 +35,23 @@ const currentLocation = { lat: 48.137154, lon: 11.576124 };
 			</div>
 		</div>
 		<div class="flex flex-col gap-8">
-			<div class="avatar z-40 cursor-pointer -mt-6 mr-16">
+			<div class="avatar z-40 -mt-6 mr-16 cursor-pointer">
 				<div class="h-24 w-24 rounded-full bg-base-100 ring-2 ring-[#556368]">
 					<div
 						id="account-profile-image"
 						hx-get="/partials/account/profile-image"
 						hx-target="this"
+						hx-swap="outerHTML"
 						hx-trigger="load once">
 						<DefaultUserProfileImage />
 					</div>
 				</div>
 			</div>
 			<button
-				class="btn-primary btn-circle flex w-20 justify-start rounded-r-none rounded-l-full self-end px-0.5"
+				class="btn-circle btn-primary flex w-20 justify-start self-end rounded-l-full rounded-r-none px-0.5"
 				hx-get="/partials/map/filter-modal?redirect-after-save=/user"
 				hx-target="#modal">
-				<FilterIcon class="w-auto h-11 border border-white rounded-full p-1" />
+				<FilterIcon class="h-11 w-auto rounded-full border border-white p-1" />
 			</button>
 		</div>
 	</div>

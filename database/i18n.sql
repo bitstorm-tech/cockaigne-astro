@@ -99,6 +99,8 @@ values
   ('change', 'Ändern', 'Change'),
   ('city', 'Ort', 'City'),
   ('common', 'Allgemein', 'General'),
+  ('confirm_email_change_title', 'Änderung der E-Mail bestätigen', 'Confirm e-mail change'),
+  ('confirm_email_change_description', 'Um deine neue E-Mail-Adresse zu aktivieren, gib hier bitte deine alte E-Mail-Adresse an.', 'To activate your new e-mail address, please enter your old e-mail address here.'),
   ('contact_us', 'Kontaktiere uns', 'Contact us'),
   ('contact_us_description', 'Hast du Fragen, Anmerkungen oder Lob? Oder willst du sonst etwas los werden? Schreib uns gerne eine Narchricht!', 'Do you have any questions, comments or praise? Or do you have something else to say? Feel free to write us a message!'),
   ('contact_us_restriction', 'Auch wenn wir uns riesig über jedes Feedback freuen, kannst du uns nur alle 5 Minuten eine neue Nachricht schicken.', 'Even though we are always delighted to receive feedback, you can only send us a new message every 5 minutes.'),

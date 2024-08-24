@@ -1,0 +1,23 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { t } from "@lib/services/i18n";
+
+const { language } = Astro.locals.user;
+---
+
+<Layout>
+	<form class="flex flex-col gap-6 p-6" hx-post="/api/accounts/send-email-change-email">
+		<h1 class="text-center">{t("email_change", language)}</h1>
+		<span>
+			{t("email_change_description", language)}
+		</span>
+		<div class="form-control">
+			<label for="email">E-Mail</label>
+			<input id="email" name="email" type="email" />
+		</div>
+		<div class="grid grid-cols-2 gap-4">
+			<a class="btn btn-primary" href="/settings">{t("back", language)}</a>
+			<button class="btn btn-warning">{t("send", language)}</button>
+		</div>
+	</form>
+</Layout>

@@ -34,6 +34,7 @@ if (!account) {
 					id="account-profile-image"
 					hx-get="/partials/account/profile-image"
 					hx-target="this"
+					hx-swap="outerHTML"
 					hx-trigger="load once">
 					<DefaultDealerProfileImage />
 				</div>
