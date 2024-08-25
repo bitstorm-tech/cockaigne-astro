@@ -1,5 +1,6 @@
 ---
 import { getAccountById } from "@lib/services/account";
+import { notForBasicUser } from "@lib/services/asserts";
 import { renderErrorPageTranslated } from "@lib/services/error";
 import { t } from "@lib/services/i18n";
 
@@ -7,7 +8,7 @@ export const partial = true;
 const { language: lang, id } = Astro.locals.user;
 
 if (!id) {
-	return renderErrorPageTranslated("", lang);
+	return notForBasicUser("common-user-settings");
 }
 
 const account = await getAccountById(id);
@@ -27,7 +28,7 @@ if (!account) {
 		<input id="email" type="email" value={account.email} disabled />
 	</div>
 	<a class="btn btn-primary" href="/email-change">{t("email_change", lang)}</a>
-	<button type="button" class="btn btn-primary" hx-post="/api/account/password-change-email">
+	<button type="button" class="btn btn-primary" hx-post="/api/accounts/send-password-change-email">
 		{t("password_change", lang)}
 	</button>
 	<div class="grid grid-cols-2 gap-4">

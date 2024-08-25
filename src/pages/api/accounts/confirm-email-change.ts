@@ -12,5 +12,5 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 		return renderAlertTranslated("alert.can_t_change_email", locals.user.language);
 	}
 
-	return renderInfoTranslated("info.changes_saved", locals.user.language);
+	return renderInfoTranslated("info.email_changed", locals.user.language);
 };

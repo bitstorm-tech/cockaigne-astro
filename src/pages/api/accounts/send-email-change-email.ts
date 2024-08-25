@@ -1,5 +1,6 @@
 import { prepareEmailChange } from "@lib/services/account";
 import { renderAlertTranslated, renderInfoTranslated } from "@lib/services/alerts";
+import { createBaseUrl } from "@lib/services/http";
 import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ locals, request, url }): Promise<Response> => {
@@ -10,7 +11,7 @@ export const POST: APIRoute = async ({ locals, request, url }): Promise<Response
 		return renderAlertTranslated("alert.invalid_email", locals.user.language);
 	}
 
-	const baseUrl = `${url.protocol}//${url.host}`;
+	const baseUrl = createBaseUrl(url);
 	const error = await prepareEmailChange(locals.user.id!, newEmail, baseUrl);
 
 	if (error) {
