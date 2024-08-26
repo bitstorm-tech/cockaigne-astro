@@ -1,4 +1,5 @@
-import { Err, Ok, type Result } from "ts-results-es";
+import { None, Some, type Option } from "ts-results-es";
+import logger from "./logger";
 
 export interface NominatimResponse {
 	lon: number;
@@ -34,20 +35,25 @@ export async function getLocationFromAddress(
 	houseNumber: string,
 	city: string,
 	zipCode: number,
-): Promise<Result<Point, string>> {
+): Promise<Option<Point>> {
 	city = encodeURIComponent(city);
 	street = encodeURIComponent(street);
 	houseNumber = encodeURIComponent(houseNumber);
-	const query = `https://nominatim.openstreetmap.org/search?format=json&street=${houseNumber},${street}&city=${city}&postalcode=${zipCode}`;
+	const query = `
+		https://nominatim.openstreetmap.org/search?format=json
+		&street=${houseNumber},${street}
+		&city=${city}
+		&postalcode=${zipCode}`;
 
 	const response = await fetch(query);
 	const nominatimResponse = (await response.json()) as NominatimResponse[];
 
 	if (nominatimResponse.length === 0) {
-		return Err(
+		logger.warn(
 			`Found no location for address: street=${street} houseNumber=${houseNumber} city=${city} zipCode=${zipCode}`,
 		);
+		return None;
 	}
 
-	return Ok(Point.fromNominatimResponse(nominatimResponse[0]));
+	return Some(Point.fromNominatimResponse(nominatimResponse[0]));
 }

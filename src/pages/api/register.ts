@@ -18,7 +18,7 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 
 	if (account.isDealer) {
 		const location = await getLocationFromAddress(account.street!, account.houseNumber!, account.city!, account.zip!);
-		if (location.isErr()) {
+		if (location.isNone()) {
 			return renderAlertTranslated("alert.invalid_address", account.language);
 		}
 
