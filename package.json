@@ -8,6 +8,7 @@
 		"build": "astro check && astro build",
 		"preview": "astro preview",
 		"astro": "astro",
+		"check": "astro check",
 		"ncu": "ncu -u && bun i"
 	},
 	"dependencies": {
@@ -15,7 +16,7 @@
 		"@astrojs/check": "0.9.3",
 		"@astrojs/node": "8.3.3",
 		"@astrojs/tailwind": "5.1.0",
-		"@getbrevo/brevo": "^2.2.0",
+		"@getbrevo/brevo": "2.2.0",
 		"@types/alpinejs": "3.13.10",
 		"@types/bcryptjs": "2.4.6",
 		"alpinejs": "3.14.1",
@@ -24,16 +25,17 @@
 		"daisyui": "4.12.10",
 		"dayjs": "1.11.13",
 		"imagekit": "5.1.0",
-		"jose": "5.7.0",
+		"jose": "5.8.0",
 		"leaflet": "1.9.4",
 		"npm-check-updates": "17.1.0",
 		"postgres": "3.4.4",
 		"prettier": "3.3.3",
 		"prettier-plugin-astro": "0.14.1",
 		"prettier-plugin-astro-organize-imports": "0.4.9",
-		"prettier-plugin-organize-imports": "^4.0.0",
-		"prettier-plugin-tailwindcss": "^0.6.6",
+		"prettier-plugin-organize-imports": "4.0.0",
+		"prettier-plugin-tailwindcss": "0.6.6",
 		"tailwindcss": "3.4.10",
+		"ts-results-es": "4.2.0",
 		"typescript": "5.5.4",
 		"winston": "3.14.2"
 	}

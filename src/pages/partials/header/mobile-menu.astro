@@ -19,7 +19,7 @@ const user = Astro.locals.user;
 	<div class="flex flex-col gap-5 p-6 sm:px-3">
 		{user.isDealer && <DealerMenu lang={user.language} />}
 		{user.isProUser && <ProUserMenu lang={user.language} />}
-		{!user.isProUser && !user.isDealer && <BasicUserMenu lang={user.language} />}
+		{user.isBasicUser && <BasicUserMenu lang={user.language} />}
 		<LanguageChooser lang={user.language} />
 		<!--<button onclick="LocationService.toggleLocationServiceSimulation();">-->
 		<!--  Toggle Walk Simulator-->

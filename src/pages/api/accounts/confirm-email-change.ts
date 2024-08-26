@@ -1,5 +1,6 @@
 import { changeEmail } from "@lib/services/account";
 import { renderAlertTranslated, renderInfoTranslated } from "@lib/services/alerts";
+import logger from "@lib/services/logger";
 import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request, locals }): Promise<Response> => {
@@ -9,6 +10,7 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 
 	const error = await changeEmail(oldMail, code);
 	if (error) {
+		logger.error(error.stack);
 		return renderAlertTranslated("alert.can_t_change_email", locals.user.language);
 	}
 

@@ -72,6 +72,7 @@ values
   ('alert.message_delay', 'Du kannst uns nur alle 5 Minuten eine neue Nachricht schreiben, bitte versuche es später noch einmal.', 'You can only send us a new message every 5 minutes, please try again later.'),
   ('alert.not_your_statistics', 'Sie sind nicht berechtigt die Statistiken dieses Deals zu sehen!', 'You are not authorized to see the statistics of this deal!'),
   ('alert.password_repeat_not_matching', 'Das Passwort und die Wiederholung stimmen nicht überein', 'The password and the repetition do not match'),
+  ('alert.provide_category', 'Bitte eine Branche auswählen', 'Please select an industry'),
   ('alert.provide_city', 'Bitte eine Stadt angeben', 'Please enter a city'),
   ('alert.provide_email', 'Bitte eine gültige E-Mail angeben', 'Please enter a valid e-mail address'),
   ('alert.provide_house_number', 'Bitte eine Hausnummer angeben', 'Please enter a house number'),

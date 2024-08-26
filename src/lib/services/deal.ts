@@ -34,9 +34,9 @@ export async function getActiveDealHeaders(userId?: string, dealerId?: string): 
 
 	return await sql<DealHeader[]>`
 		select d.id, d.dealer_id, d.title, d.category_id, d.start, a.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
-  		from active_deals_view d 
+  		from active_deals_view d
 		join accounts a on d.dealer_id = a.id
-		left join favorite_deals f on f.deal_id = d.id 
+		left join favorite_deals f on f.deal_id = d.id
 		${withDealerId(dealerId)}`;
 }
 
@@ -106,13 +106,14 @@ export async function getDealLikes(dealId: string): Promise<number> {
 }
 
 export async function isDealLikedByUser(dealId: string, userId: string): Promise<boolean> {
-	const result = await sql`select exists(select user_id from likes where deal_id = ${dealId} and user_id = ${userId})`;
-	return result[0].exists;
+	const [result] = await sql`select true from likes where deal_id = ${dealId} and user_id = ${userId} limit 1`;
+
+	return !!result;
 }
 
 export async function saveDealReport(userId: string, dealId: string, reportMessage: string) {
-	await sql`insert into reported_deals (reporter_id, deal_id, reason) 
-				values (${userId}, ${dealId}, ${reportMessage}) 
+	await sql`insert into reported_deals (reporter_id, deal_id, reason)
+				values (${userId}, ${dealId}, ${reportMessage})
 				on conflict do nothing`;
 }
 

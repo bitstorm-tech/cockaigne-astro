@@ -1,5 +1,6 @@
 ---
 import LikeIcon from "@components/icons/LikeIcon.astro";
+import { renderInfoTranslated } from "@lib/services/alerts";
 import { getDealLikes, isDealLikedByUser, toggleDealLike } from "@lib/services/deal";
 import logger from "@lib/services/logger";
 
@@ -14,7 +15,7 @@ if (!dealId) {
 const user = Astro.locals.user;
 const toggle = Astro.url.searchParams.get("toggle") === "true";
 
-if (toggle && !user.isProUser) {
+if (toggle && user.isBasicUser) {
 	return renderInfoTranslated("info.only_for_pro_member", user.language);
 }
 

@@ -42,10 +42,9 @@ export async function updateFilter(userId: string, categoryIds: number[], search
 }
 
 export async function toggleFavorite(userId: string, dealId: string): Promise<boolean> {
-	const result =
-		await sql`select exists(select * from favorite_deals where deal_id = ${dealId} and user_id = ${userId})`;
+	const [result] = await sql`select true from favorite_deals where deal_id = ${dealId} and user_id = ${userId} limit 1`;
 
-	const isFavorite = result[0].exists;
+	const isFavorite = !!result;
 	if (isFavorite) {
 		await sql`delete from favorite_deals where deal_id=${dealId} and user_id=${userId}`;
 	} else {

@@ -7,6 +7,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		id: undefined,
 		isDealer: false,
 		isProUser: false,
+		isBasicUser: true,
 		language: "de",
 	};
 
@@ -24,6 +25,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			context.locals.user.id = jwtPayload.sub;
 			context.locals.user.isDealer = jwtPayload.isDealer;
 			context.locals.user.isProUser = jwtPayload.isProUser;
+			context.locals.user.isBasicUser = !context.locals.user.isProUser;
 		}
 	}
 

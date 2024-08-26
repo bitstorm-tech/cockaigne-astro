@@ -1,3 +1,5 @@
+import type { Point } from "@lib/services/geo";
+
 export interface Account {
 	id: string;
 	username: string;
@@ -13,13 +15,15 @@ export interface Account {
 	zip?: number;
 	phone?: string;
 	taxId?: string;
+	defaultCategory?: number;
 	useLocationService: boolean;
 	searchRadiusInMeter: number;
-	location: string;
+	location: Point;
 	active: boolean;
 	changePasswordCode?: string;
 	changeEmailCode?: string;
 	newEmail?: string;
+	activationCode?: number;
 }
 
 export interface AccountUpdate {

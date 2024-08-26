@@ -1,18 +1,21 @@
 ---
 import { getAllCategories } from "@lib/services/deal";
+import { t } from "@lib/services/i18n";
 
 export const partial = true;
 
 const categories = await getAllCategories();
-const emptyOptionText = "Foobar";
-const selectedId = 2;
+const translationKey = Astro.url.searchParams.get("translation_key") || "category_select";
+const selectedId = Astro.url.searchParams.get("selected") || -1;
+const { language } = Astro.locals.user;
+const emptyOptionText = t(translationKey, language);
 ---
 
 <select class="w-full" name="category">
 	<option selected disabled hidden value="-1">{emptyOptionText} ...</option>
 	{
 		categories.map((category) => (
-			<option value={category.id} selected?={category.id == selectedId}>
+			<option value={category.id} selected={category.id == selectedId}>
 				{category.name}
 			</option>
 		))

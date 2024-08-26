@@ -13,7 +13,6 @@ export const POST: APIRoute = async ({ locals, request, url }): Promise<Response
 
 	const baseUrl = createBaseUrl(url);
 	const error = await prepareEmailChange(locals.user.id!, newEmail, baseUrl);
-
 	if (error) {
 		return renderAlertTranslated("alert.email_already_used", locals.user.language);
 	}

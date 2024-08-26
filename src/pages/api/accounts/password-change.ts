@@ -17,7 +17,6 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 	}
 
 	const error = await changePassword(newPassword, code);
-
 	if (error) {
 		return renderAlertTranslated("alert.can_t_change_password", locals.user.language);
 	}
