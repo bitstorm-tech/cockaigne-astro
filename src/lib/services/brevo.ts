@@ -3,6 +3,7 @@ import logger from "./logger";
 
 const changeEmailTemplateId = +import.meta.env.BREVO_CHANGE_EMAIL_TEMPLATE_ID;
 const changePasswordTemplateId = +import.meta.env.BREVO_CHANGE_PASSWORD_TEMPLATE_ID;
+const activateAccountTemplateId = +import.meta.env.BREVO_ACTIVATE_ACCOUNT_TEMPLATE_ID;
 const brevoApi = new TransactionalEmailsApi();
 brevoApi.setApiKey(TransactionalEmailsApiApiKeys.apiKey, import.meta.env.BREVO_API_KEY);
 
@@ -20,6 +21,15 @@ export async function sendPasswordChangeEmail(toEmail: string, passwordChangeCod
 	};
 
 	sendEmail(changePasswordTemplateId, toEmail, params);
+}
+
+export async function sendActivationEmail(toEmail: string, activationCode: number, baseUrl: string) {
+	const params = {
+		ActivationCode: activationCode,
+		ActivationUrl: `${baseUrl}/registration-complete?email=${toEmail}&code=${activationCode}`,
+	};
+
+	sendEmail(activateAccountTemplateId, toEmail, params);
 }
 
 async function sendEmail(templateId: number, toEmail: string, params?: any) {

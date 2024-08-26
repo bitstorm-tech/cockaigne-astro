@@ -1,6 +1,7 @@
 import { getAccountByEmail } from "@lib/services/account";
 import { renderAlertTranslated } from "@lib/services/alerts";
 import { encryptJwt } from "@lib/services/auth";
+import logger from "@lib/services/logger";
 import type { APIRoute } from "astro";
 import bcrypt from "bcryptjs";
 
@@ -14,6 +15,11 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 	const account = await getAccountByEmail(email);
 	if (!account) {
 		return renderAlertTranslated("alert.invalid_username_or_password", locals.user.language);
+	}
+
+	if (!account.active) {
+		logger.warn(`Not yet activated account ${account.id} tried to login`);
+		return renderAlertTranslated("alert.account_not_activated", locals.user.language);
 	}
 
 	const password = formData.get("password")?.toString() || "";

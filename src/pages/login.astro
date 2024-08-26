@@ -9,7 +9,7 @@ const lang = user.language;
 ---
 
 <Layout showBadge={false}>
-	<form hx-post="/api/login" hx-target="#alert" class="pt-1/3 m-4 flex flex-col gap-4 p-6 pt-18">
+	<form hx-post="/api/login" hx-target="#alert" class="pt-1/3 pt-18 m-4 flex flex-col gap-4 p-6">
 		<h1 class="text-center">{t("login", lang)}</h1>
 		<div class="form-control">
 			<label for="email">{t("email", lang)}</label>
@@ -23,14 +23,14 @@ const lang = user.language;
 		<a class="btn btn-primary" type="button" href="/user">
 			{t("continue_as_basic_user", lang)}
 		</a>
-		<div class="pt-10 text-sm text-center">
-			<a href="/register">{t("signup", lang)}</a>
+		<div class="pt-10 text-center text-sm">
+			<a href="/registration">{t("signup", lang)}</a>
 			<span>/</span>
 			<a href="/send-password-change-email">{t("password_reset", lang)}</a>
 			<span>/</span>
 			<a href="/signup-complete">{t("account_activate", lang)}</a>
 		</div>
-		<div class="flex gap-2 justify-center mt-4">
+		<div class="mt-4 flex justify-center gap-2">
 			<a class="link w-10" href="/language-set/de"><FlagDeIcon /></a>
 			<a class="link w-10" href="/language-set/en"><FlagUkIcon /></a>
 		</div>

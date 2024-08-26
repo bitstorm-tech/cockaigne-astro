@@ -1,12 +1,14 @@
 import type { Account } from "@lib/models/account";
 import { accountExists, insertAccount } from "@lib/services/account";
 import { renderAlertTranslated } from "@lib/services/alerts";
+import { sendActivationEmail } from "@lib/services/brevo";
 import { getLocationFromAddress, Point } from "@lib/services/geo";
+import { createBaseUrl, redirect } from "@lib/services/http";
 import logger from "@lib/services/logger";
 import type { APIRoute } from "astro";
 import { None, Some, type Option } from "ts-results-es";
 
-export const POST: APIRoute = async ({ request, locals }): Promise<Response> => {
+export const POST: APIRoute = async ({ request, locals, url }): Promise<Response> => {
 	const formData = await request.formData();
 	const account = extractAccountFromForm(formData);
 	account.language = locals.user.language ? locals.user.language : account.language;
@@ -31,7 +33,10 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 		return renderAlertTranslated("alert.can_t_create_account", account.language);
 	}
 
-	return new Response();
+	const baseUrl = createBaseUrl(url);
+	sendActivationEmail(account.email, account.activationCode!, baseUrl);
+
+	return redirect("/registration-complete");
 };
 
 function extractAccountFromForm(formData: FormData): Account {

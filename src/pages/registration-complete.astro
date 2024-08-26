@@ -1,0 +1,40 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { t } from "@lib/services/i18n";
+
+const { language } = Astro.locals.user;
+const code = Astro.url.searchParams.get("code") || "";
+const email = Astro.url.searchParams.get("email") || "";
+---
+
+<Layout>
+	<div class="flex flex-col gap-6">
+		<form class="flex flex-col gap-6 p-6" hx-post="/api/accounts/activate" x-data={`{code: '${code}'}`}>
+			<h1 class="text-center">{t("signup_complete", language)}</h1>
+			<span>
+				{t("activation_code_description", language)}
+			</span>
+			<div class="form-control">
+				<label for="code">{t("activation_code", language)}</label>
+				<input id="code" name="code" type="text" maxlength="6" class="text-center tracking-[1rem]" x-model="code" />
+			</div>
+			<div class="grid grid-cols-2 gap-4">
+				<a href="/" class="btn btn-outline btn-primary">{t("back", language)}</a>
+				<button class="btn btn-warning" :disabled="!code?.length">{t("activate", language)}</button>
+			</div>
+		</form>
+		<form class="flex flex-col gap-6 p-6" hx-post="/api/send-activation-email" x-data={`{email: '${email}'}`}>
+			<span class="text-xs">
+				{t("activation_code_send_new_description", language)}
+				<a href="mailto:support@cockaigne.city" class="italic">Support-Team</a>.
+			</span>
+			<div class="form-control">
+				<label for="email">{t("email", language)}</label>
+				<input id="email" name="email" type="email" x-model="email" />
+			</div>
+			<button class="btn btn-primary" :disabled="!email?.length">
+				{t("activation_code_send_new", language)}
+			</button>
+		</form>
+	</div>
+</Layout>
