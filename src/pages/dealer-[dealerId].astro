@@ -6,9 +6,10 @@ import DealerHeader from "@components/ui/dealer/DealerHeader.astro";
 import Layout from "@layouts/Layout.astro";
 
 const dealerId = Astro.params.dealerId!;
+const { user } = Astro.locals;
 ---
 
-<Layout>
+<Layout showBadge={!user.isDealer}>
 	<DealerHeader {dealerId} />
 	<div x-data="{selectedTab: 0}">
 		<div class="tabs tabs-bordered" x-cloak>

@@ -115,11 +115,15 @@ export async function changeEmail(oldEmail: string, code: string): Promise<Error
 	}
 }
 
-export async function preparePasswordChange(accountId: string, baseUrl: string): Promise<Error | undefined> {
+export async function preparePasswordChange(
+	baseUrl: string,
+	accountId?: string,
+	email?: string,
+): Promise<Error | undefined> {
 	const [account] = await sql<Account[]>`
 		update accounts
 		set change_password_code = gen_random_uuid()
-		where id = ${accountId} returning email, change_password_code`;
+		where id = ${accountId || sql`uuid_nil()`} or email ilike ${email || ""} returning email, change_password_code`;
 
 	if (!account) {
 		return Error(`No account found for ID ${accountId}`);

@@ -6,7 +6,7 @@ interface Props {
 	showBadge?: boolean;
 }
 
-const { showBadge = true } = Astro.props;
+const { showBadge = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -22,8 +22,8 @@ const { showBadge = true } = Astro.props;
 			integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
-			is:inline
-		></script>
+			is:inline>
+		</script>
 		<script src="/js/geo.js" is:inline></script>
 		<script src="/js/ui.js" is:inline></script>
 		<title>Cockaigne City</title>

@@ -1,19 +1,22 @@
 import { preparePasswordChange } from "@lib/services/account";
-import { renderInfoTranslated } from "@lib/services/alerts";
-import { notForBasicUser } from "@lib/services/asserts";
+import { renderAlertTranslated, renderInfoTranslated } from "@lib/services/alerts";
 import { createBaseUrl } from "@lib/services/http";
 import logger from "@lib/services/logger";
 import type { APIRoute } from "astro";
 
-export const POST: APIRoute = async ({ locals, url }): Promise<Response> => {
-	if (!locals.user.id) {
-		return notForBasicUser("send-password-change-email");
+export const POST: APIRoute = async ({ request, locals, url }): Promise<Response> => {
+	const formData = await request.formData();
+	const email = formData.get("email")?.toString().trim();
+
+	if (!locals.user.id && !email) {
+		return renderAlertTranslated("alert.provide_email", locals.user.language);
 	}
 
 	const baseUrl = createBaseUrl(url);
-	const error = await preparePasswordChange(locals.user.id, baseUrl);
+	const error = await preparePasswordChange(baseUrl, locals.user.id, email);
 	if (error) {
 		logger.error(error.stack);
+		return renderAlertTranslated("alert.can_t_change_password", locals.user.language);
 	}
 
 	return renderInfoTranslated("info.send_change_pw_email", locals.user.language);

@@ -4,7 +4,7 @@ import { t } from "@lib/services/i18n";
 const lang = Astro.locals.user.language;
 ---
 
-<Layout showBadge={false}>
+<Layout>
 	<form class="flex flex-col gap-4 p-6" hx-post="/api/registration" hx-target="#alert" x-data="{isDealer: false}">
 		<h1 class="text-center">{t("signup", lang)}</h1>
 		<div class="form-control-horizontal">
