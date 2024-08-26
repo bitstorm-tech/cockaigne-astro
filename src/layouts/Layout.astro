@@ -1,5 +1,6 @@
 ---
-import Header from "@components/ui/header/Header.astro";
+import Footer from "@components/ui/layout/Footer.astro";
+import Header from "@components/ui/layout/Header.astro";
 import "../tailwind.css";
 
 interface Props {
@@ -22,8 +23,8 @@ const { showBadge = false } = Astro.props;
 			integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
-			is:inline>
-		</script>
+			is:inline
+		></script>
 		<script src="/js/geo.js" is:inline></script>
 		<script src="/js/ui.js" is:inline></script>
 		<title>Cockaigne City</title>
@@ -41,6 +42,7 @@ const { showBadge = false } = Astro.props;
 		<div id="alert"></div>
 		<div id="toast"></div>
 		<div id="modal"></div>
+		<Footer />
 		<!-- <div hx-get="/ui/footer" hx-swap="outerHTML" hx-trigger="load"></div> -->
 	</body>
 </html>

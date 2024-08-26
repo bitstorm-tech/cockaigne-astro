@@ -1,0 +1,34 @@
+---
+import DealsOverviewIcon from "@components/icons/DealsOverviewIcon.astro";
+import HomeIcon from "@components/icons/HomeIcon.astro";
+import MapIcon from "@components/icons/MapIcon.astro";
+import TopDealsIcon from "@components/icons/TopDealsIcon.astro";
+
+const { isDealer } = Astro.locals.user;
+const activeUrl = Astro.url.pathname.split("/").pop();
+const isHomeUrl = activeUrl?.startsWith("dealer") || activeUrl?.startsWith("user");
+---
+
+<footer class="fixed bottom-0 left-0 right-0 h-10 border-t border-t-white border-opacity-25 bg-dark">
+	<div class="flex h-full items-center justify-around">
+		<a href="/">
+			<HomeIcon class="h-6" outline={!isHomeUrl} />
+		</a>
+		{
+			isDealer ? (
+				<a href="/deal-overview">
+					<DealsOverviewIcon class="h-6" outline={activeUrl !== "deal-overview"} />
+				</a>
+			) : (
+				<>
+					<a href="/top-deals">
+						<TopDealsIcon class="h-6" outline={activeUrl !== "top-deals"} />
+					</a>
+					<a href="/map">
+						<MapIcon class="h-6" outline={activeUrl !== "map"} />
+					</a>
+				</>
+			)
+		}
+	</div>
+</footer>
