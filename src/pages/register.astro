@@ -30,21 +30,21 @@ const lang = Astro.locals.user.language;
 		<div class="flex flex-col gap-4" x-show="!isDealer">
 			<div class="form-control">
 				<label for="age">{t("age", lang)}</label>
-				<div id="age" class="join grid grid-cols-3 grid-rows-2 w-full">
-					<input class="join-item btn btn-sm" type="radio" value="1" name="age" aria-label="bis 18" checked />
-					<input class="join-item btn btn-sm" type="radio" value="2" name="age" aria-label="19 - 29" />
-					<input class="join-item btn btn-sm" type="radio" value="3" name="age" aria-label="30 - 39" />
-					<input class="join-item btn btn-sm" type="radio" value="4" name="age" aria-label="40 - 49" />
-					<input class="join-item btn btn-sm" type="radio" value="5" name="age" aria-label="50 - 59" />
-					<input class="join-item btn btn-sm" type="radio" value="6" name="age" aria-label="60+" />
+				<div id="age" class="join grid w-full grid-cols-3 grid-rows-2">
+					<input class="btn join-item btn-sm" type="radio" value="1" name="age" aria-label="bis 18" checked />
+					<input class="btn join-item btn-sm" type="radio" value="2" name="age" aria-label="19 - 29" />
+					<input class="btn join-item btn-sm" type="radio" value="3" name="age" aria-label="30 - 39" />
+					<input class="btn join-item btn-sm" type="radio" value="4" name="age" aria-label="40 - 49" />
+					<input class="btn join-item btn-sm" type="radio" value="5" name="age" aria-label="50 - 59" />
+					<input class="btn join-item btn-sm" type="radio" value="6" name="age" aria-label="60+" />
 				</div>
 			</div>
 			<div class="form-control">
 				<label for="gender">{t("gender", lang)}</label>
-				<div id="gender" class="join grid grid-cols-3 w-full">
-					<input class="join-item btn btn-sm" type="radio" value="f" name="gender" aria-label="Frau" checked />
-					<input class="join-item btn btn-sm" type="radio" value="m" name="gender" aria-label="Mann" />
-					<input class="join-item btn btn-sm" type="radio" value="-" name="gender" aria-label="Egal" />
+				<div id="gender" class="join grid w-full grid-cols-3">
+					<input class="btn join-item btn-sm" type="radio" value="f" name="gender" aria-label="Frau" checked />
+					<input class="btn join-item btn-sm" type="radio" value="m" name="gender" aria-label="Mann" />
+					<input class="btn join-item btn-sm" type="radio" value="-" name="gender" aria-label="Egal" />
 				</div>
 			</div>
 		</div>
@@ -88,8 +88,8 @@ const lang = Astro.locals.user.language;
 			</div>
 		</div>
 		<div class="form-control-horizontal pt-10">
-			<input id="agb" type="checkbox" class="checkbox" name="agb" />
-			<label for="agb" class="cursor-pointer">
+			<input id="terms" type="checkbox" class="checkbox" name="terms" />
+			<label for="terms" class="cursor-pointer">
 				{t("accept_terms_and_privacy_1", lang)}
 				<a class="link" href="#">{t("terms", lang)}</a>
 				{t("and", lang)}
@@ -98,7 +98,7 @@ const lang = Astro.locals.user.language;
 			</label>
 		</div>
 		<div class="mt-4 grid grid-cols-2 gap-2">
-			<a class="btn btn-primary btn-outline" href="/">{t("cancel", lang)}</a>
+			<a class="btn btn-outline btn-primary" href="/">{t("cancel", lang)}</a>
 			<button>{t("signup", lang)}</button>
 		</div>
 	</form>

@@ -1,27 +1,25 @@
 import { getAccountByEmail } from "@lib/services/account";
 import { renderAlertTranslated } from "@lib/services/alerts";
 import { encryptJwt } from "@lib/services/auth";
-import { getLanguageFromRequest } from "@lib/services/cookie";
 import type { APIRoute } from "astro";
 import bcrypt from "bcryptjs";
 
-export const POST: APIRoute = async ({ request }): Promise<Response> => {
+export const POST: APIRoute = async ({ request, locals }): Promise<Response> => {
 	const formData = await request.formData();
 	const email = formData.get("email")?.toString();
-	const lang = getLanguageFromRequest(request);
 	if (!email) {
-		return renderAlertTranslated("alert.invalid_username_or_password", lang);
+		return renderAlertTranslated("alert.invalid_username_or_password", locals.user.language);
 	}
 
 	const account = await getAccountByEmail(email);
 	if (!account) {
-		return renderAlertTranslated("alert.invalid_username_or_password", lang);
+		return renderAlertTranslated("alert.invalid_username_or_password", locals.user.language);
 	}
 
 	const password = formData.get("password")?.toString() || "";
 	const passwordCorrect = await bcrypt.compare(password, account.password);
 	if (!passwordCorrect) {
-		return renderAlertTranslated("alert.invalid_username_or_password", lang);
+		return renderAlertTranslated("alert.invalid_username_or_password", locals.user.language);
 	}
 
 	const jwt = await encryptJwt(account.id, account.isDealer, !account.isDealer);
