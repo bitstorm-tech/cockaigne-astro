@@ -1,0 +1,12 @@
+---
+import ImageZoomModal from "@components/layout/ImageZoomModal.astro";
+import { getDealerImageUrls } from "@lib/services/imagekit";
+
+export const partial = true;
+
+const { dealerId = "" } = Astro.params;
+const index = Number(Astro.url.searchParams.get("index") || 0);
+const imageUrls = await getDealerImageUrls(dealerId);
+---
+
+<ImageZoomModal startIndex={index} {imageUrls} />

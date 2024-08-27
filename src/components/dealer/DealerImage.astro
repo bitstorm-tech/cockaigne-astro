@@ -31,7 +31,7 @@ const { dealerId, url, index, isOwner } = Astro.props;
 		src={url}
 		alt="Dealer image"
 		class="h-48 w-full object-cover"
-		hx-get={`/dealer-image-zoom-modal/${dealerId}?index=${index}`}
+		hx-get={`/partials/dealer/image-modal-${dealerId}?index=${index}`}
 		hx-target="#image-zoom-modal"
 	/>
 </div>

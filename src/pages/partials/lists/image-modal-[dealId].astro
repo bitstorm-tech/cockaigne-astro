@@ -1,32 +1,12 @@
 ---
-import Modal from "@layouts/Modal.astro";
+import ImageZoomModal from "@components/layout/ImageZoomModal.astro";
 import { getDealImageUrls } from "@lib/services/imagekit";
 
 export const partial = true;
 
-const dealId = Astro.params.dealId || "";
+const { dealId = "" } = Astro.params;
 const imageUrls = await getDealImageUrls(dealId, 800);
-const startIndex = Astro.url.searchParams.get("index") || 0;
-const maxIndex = imageUrls.length - 1;
+const startIndex = Number(Astro.url.searchParams.get("index") || 0);
 ---
 
-<Modal>
-	<div x-data=`{currentIndex: ${startIndex}, maxIndex: ${maxIndex}}`>
-		<div class="mb-2 grid grid-cols-1">
-			{imageUrls.map((url, i) => <img src={url} alt="Deal image" x-show={`currentIndex === ${i}`} />)}
-		</div>
-		<div class="flex items-center justify-between">
-			<button class="btn-circle btn-primary" @click="previousIndex($data)">&lt;</button>
-			<button class="btn-circle btn-primary" @click="nextIndex($data)">&gt;</button>
-		</div>
-	</div>
-
-	<script is:inline>
-		function nextIndex(data) {
-			data.currentIndex = data.currentIndex >= data.maxIndex ? 0 : data.currentIndex + 1;
-		}
-		function previousIndex(data) {
-			data.currentIndex = data.currentIndex === 0 ? data.maxIndex : data.currentIndex - 1;
-		}
-	</script>
-</Modal>
+<ImageZoomModal {startIndex} {imageUrls} />
