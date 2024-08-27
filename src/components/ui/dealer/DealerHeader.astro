@@ -2,6 +2,7 @@
 import DefaultDealerProfileImage from "@components/icons/DefaultDealerProfileImage.astro";
 import NewDealIcon from "@components/icons/NewDealIcon.astro";
 import { getAccountById } from "@lib/services/account";
+import { getCategory } from "@lib/services/deal";
 import { t } from "@lib/services/i18n";
 
 interface Props {
@@ -12,20 +13,18 @@ const user = Astro.locals.user;
 const { dealerId } = Astro.params;
 const account = await getAccountById(dealerId!);
 const isOwner = user.id === dealerId;
-const googleMapsLink = "";
-
-if (!account) {
-	return;
-}
+const { street = "", houseNumber = "", zip = "", city = "", username = "", defaultCategory = -1 } = account ?? {};
+const googleMapsLink = `https://maps.google.com/?q=${street} ${houseNumber}, ${zip} ${city}`;
+const category = await getCategory(defaultCategory);
 ---
 
 <div class="flex h-52 justify-between">
 	<div class="m-4 flex flex-col">
 		<span class="text-xs text-[#6a828c]"><b>{t("category", user.language)}</b></span>
-		<span class="text-xs font-extralight italic text-[#6a828c]">{"category"}</span>
-		<span class="pb-2 pt-8 text-xl">{account.username}</span>
-		<span class="text-xs">{account.street} {account.houseNumber}</span>
-		<span class="text-xs">{account.zip} {account.city}</span>
+		<span class="text-xs font-extralight italic text-[#6a828c]">{category?.name}</span>
+		<span class="pb-2 pt-8 text-xl">{username}</span>
+		<span class="text-xs">{street} {houseNumber}</span>
+		<span class="text-xs">{zip} {city}</span>
 	</div>
 	<div class="-mt-6 mr-16 flex flex-col items-center gap-2">
 		<div class="avatar z-40 cursor-pointer">

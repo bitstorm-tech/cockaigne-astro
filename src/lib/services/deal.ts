@@ -12,6 +12,17 @@ export async function getAllCategories(): Promise<Category[]> {
 	return await sql`select * from categories`;
 }
 
+export async function getCategory(id: number): Promise<Category | undefined> {
+	const [result] = await sql<Category[]>`select * from categories where id = ${id}`;
+
+	if (!result) {
+		logger.warn(`Can't find category with ID ${id}`);
+		return;
+	}
+
+	return result;
+}
+
 export async function getDealHeaders(state: DealState, userId?: string, dealerId?: string): Promise<DealHeader[]> {
 	switch (state) {
 		case "active":

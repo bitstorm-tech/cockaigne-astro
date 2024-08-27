@@ -3,6 +3,7 @@ import sql from "@lib/services/pg";
 import bcrypt from "bcryptjs";
 import { Err, Ok, Result } from "ts-results-es";
 import { sendEmailChangeEmail, sendPasswordChangeEmail } from "./brevo";
+import logger from "./logger";
 
 export async function accountExists(email: string, username: string): Promise<boolean> {
 	const [result] =
@@ -19,30 +20,36 @@ export async function activateAccount(code: string): Promise<boolean> {
 }
 
 export async function getAccountByEmail(email: string): Promise<Account | undefined> {
-	if (!email?.length) {
+	const [account] = await sql<Account[]>`select * from accounts where email ilike ${email}`;
+
+	if (!account) {
+		logger.warn(`Can't find account by email ${email}`);
 		return;
 	}
 
-	const accounts = await sql<Account[]>`select * from accounts where email ilike ${email}`;
-	return accounts[0];
+	return account;
 }
 
 export async function getAccountById(id: string): Promise<Account | undefined> {
-	if (!id?.length) {
+	const [account] = await sql<Account[]>`select * from accounts where id = ${id}`;
+
+	if (!account) {
+		logger.warn(`Can't find account by ID ${id}`);
 		return;
 	}
 
-	const account = await sql<Account[]>`select * from accounts where id = ${id}`;
-	return account[0];
+	return account;
 }
 
 export async function getUsernameById(id: string): Promise<string | undefined> {
-	if (!id?.length) {
+	const [account] = await sql<Account[]>`select * from accounts where id = ${id}`;
+
+	if (!account) {
+		logger.warn(`Can't get username by ID ${id}`);
 		return;
 	}
 
-	const account = await sql<Account[]>`select * from accounts where id = ${id}`;
-	return account[0]?.username;
+	return account.username;
 }
 
 export async function insertAccount(account: Account): Promise<Result<number, string>> {
