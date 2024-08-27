@@ -1,0 +1,54 @@
+---
+import type { Rating } from "@lib/models/rating";
+
+interface Props {
+	rating: Rating;
+}
+
+const { username, userId, created, dealerId, stars, text, canEdit } = Astro.props.rating;
+---
+
+<div class="flex flex-col">
+	<div class="flex items-center justify-between border-y border-base-300 bg-[#232b2e] py-2 pl-24 pr-4">
+		<div class="avatar absolute left-4 z-50 cursor-pointer pt-6">
+			<div class="h-14 w-14 rounded-full bg-base-100 ring-2 ring-[#556368]">
+				<div hx-get={`/partials/account/profile-image-${userId}`} hx-target="this" hx-trigger="load once"></div>
+			</div>
+		</div>
+		<div class="flex gap-2 text-sm">
+			<div class="flex flex-col">
+				<span>{username}</span>
+				<span class="text-xs">{created}</span>
+			</div>
+		</div>
+		{
+			canEdit && (
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="h-4 w-4 cursor-pointer"
+					hx-get={`/partials/dealer/rating-modal-${dealerId}`}
+					hx-target="#rating-modal">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+					/>
+				</svg>
+			)
+		}
+		<div id="stars" class="rating rating-sm">
+			<input type="radio" class="mask mask-star" disabled checked={stars == 1} />
+			<input type="radio" class="mask mask-star" disabled checked={stars == 2} />
+			<input type="radio" class="mask mask-star" disabled checked={stars == 3} />
+			<input type="radio" class="mask mask-star" disabled checked={stars == 4} />
+			<input type="radio" class="mask mask-star" disabled checked={stars == 5} />
+		</div>
+	</div>
+	<div class="bg-base-100 p-2 pt-6 text-sm">
+		{text}
+	</div>
+</div>
