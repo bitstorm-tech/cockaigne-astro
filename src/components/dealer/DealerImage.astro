@@ -8,7 +8,7 @@ interface Props {
 const { dealerId, url, index, isOwner } = Astro.props;
 ---
 
-<div class="relative">
+<div id={`${dealerId}-${index}`} class="relative">
 	{
 		isOwner && (
 			<svg
@@ -17,8 +17,9 @@ const { dealerId, url, index, isOwner } = Astro.props;
 				viewBox="0 0 24 24"
 				stroke-width="2"
 				class="absolute right-1 top-1 h-5 w-5 stroke-warning"
-				hx-delete={"/dealer-images?image-url=" + url}
-				hx-target="#dealer-image-list-root">
+				hx-delete={`/partials/dealer/delete-image?image-url=${url}`}
+				hx-target={`#${dealerId}-${index}`}
+				hx-swap="outerHTML">
 				<path
 					stroke-linecap="round"
 					stroke-linejoin="round"

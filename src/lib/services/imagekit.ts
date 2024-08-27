@@ -1,4 +1,5 @@
 import ImageKit from "imagekit";
+import logger from "./logger";
 
 const imagekit = new ImageKit({
 	publicKey: import.meta.env.IMAGEKIT_PUBLIC_KEY,
@@ -67,8 +68,19 @@ export async function deleteProfileImage(accountId: string): Promise<DeleteProfi
 	}
 
 	await imagekit.deleteFile(files[0].fileId);
+}
 
-	return;
+export async function deleteDealerImage(dealerId: string, imageName: string) {
+	const files = await imagekit.listFiles({
+		path: `${dealerImagesFolder}/${dealerId}`,
+		searchQuery: `name="${imageName}"`,
+	});
+
+	if (files.length === 0) {
+		logger.error(`Can't delete dealer image ${dealerId}/${imageName}`);
+	}
+
+	await imagekit.deleteFile(files[0].fileId);
 }
 
 export async function saveProfileImage(accountId: string, image: File) {

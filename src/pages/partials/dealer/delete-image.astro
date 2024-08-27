@@ -1,0 +1,13 @@
+---
+import { deleteDealerImage } from "@lib/services/imagekit";
+
+const { id } = Astro.locals.user;
+const url = Astro.url.searchParams.get("image-url") || "";
+const imageName = url.split("/").pop()?.split("?").shift();
+
+if (!id || !imageName) {
+	return;
+}
+
+deleteDealerImage(id, imageName);
+---
