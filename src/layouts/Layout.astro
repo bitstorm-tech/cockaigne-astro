@@ -5,9 +5,10 @@ import "../tailwind.css";
 
 interface Props {
 	showBadge?: boolean;
+	showFooter?: boolean;
 }
 
-const { showBadge = false } = Astro.props;
+const { showBadge = false, showFooter = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -23,8 +24,8 @@ const { showBadge = false } = Astro.props;
 			integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
-			is:inline
-		></script>
+			is:inline>
+		</script>
 		<script src="/js/geo.js" is:inline></script>
 		<script src="/js/ui.js" is:inline></script>
 		<title>Cockaigne City</title>
@@ -42,7 +43,7 @@ const { showBadge = false } = Astro.props;
 		<div id="alert"></div>
 		<div id="toast"></div>
 		<div id="modal"></div>
-		<Footer />
+		{showFooter && <Footer />}
 		<!-- <div hx-get="/ui/footer" hx-swap="outerHTML" hx-trigger="load"></div> -->
 	</body>
 </html>

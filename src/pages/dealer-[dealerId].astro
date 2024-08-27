@@ -9,7 +9,7 @@ const dealerId = Astro.params.dealerId!;
 const { user } = Astro.locals;
 ---
 
-<Layout showBadge={!user.isDealer}>
+<Layout showBadge={!user.isDealer} showFooter={true}>
 	<DealerHeader {dealerId} />
 	<div x-data="{selectedTab: 0}">
 		<div class="tabs tabs-bordered" x-cloak>
