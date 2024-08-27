@@ -13,7 +13,15 @@ const user = Astro.locals.user;
 const { dealerId } = Astro.params;
 const account = await getAccountById(dealerId!);
 const isOwner = user.id === dealerId;
-const { street = "", houseNumber = "", zip = "", city = "", username = "", defaultCategory = -1 } = account ?? {};
+const {
+	street = "",
+	houseNumber = "",
+	zip = "",
+	city = "",
+	username = "",
+	phone = 0,
+	defaultCategory = -1,
+} = account ?? {};
 const googleMapsLink = `https://maps.google.com/?q=${street} ${houseNumber}, ${zip} ${city}`;
 const category = await getCategory(defaultCategory);
 ---
@@ -53,7 +61,7 @@ const category = await getCategory(defaultCategory);
 					<a
 						class="btn btn-circle btn-primary btn-sm flex w-12 justify-start rounded-r-none"
 						target="_blank"
-						href={`tel: ${account.phone}`}>
+						href={`tel: ${phone}`}>
 						<svg class="h-8" viewBox="0 0 141.73228 141.73228" fill="#dbdce6">
 							<path d="M71.22406,129.95778a60.64112,60.64112,0,1,1,60.63379-60.6416A60.70672,60.70672,0,0,1,71.22406,129.95778Zm0-116.28223a55.64112,55.64112,0,1,0,55.63379,55.64063A55.70032,55.70032,0,0,0,71.22406,13.67555Z" />
 							<path d="M105.12817,98.4173l-3.17836,3.12189-.0707-.0707a17.664,17.664,0,0,1-4.5344,2.58509,18.72574,18.72574,0,0,1-4.63338,1.15834c-.7345.08476-17.55866,1.65273-38.43689-19.22551C39.15956,70.87153,33.5939,59.74021,35.063,47.56357a19.04157,19.04157,0,0,1,1.1442-4.61924,18.46343,18.46343,0,0,1,2.58509-4.56268l-.08475-.08475,3.13594-3.15008a5.78385,5.78385,0,0,1,8.179-.15545L61.15381,46.12269a5.79611,5.79611,0,0,1-.14131,8.179L59.162,56.15223l-3.77163,3.75749c.19779.339.39557.7063.60741,1.07359A55.98186,55.98186,0,0,0,65.773,74.50193,55.79475,55.79475,0,0,0,79.2634,84.24885c.38134.22606.74863.42385,1.10179.62155l5.60808-5.608a5.80925,5.80925,0,0,1,8.17894-.15536l11.13133,11.13132A5.79631,5.79631,0,0,1,105.12817,98.4173Z" />
