@@ -1,1 +1,50 @@
-<h1>Dealer Images</h1>
+---
+import DealerImage from "@components/dealer/DealerImage.astro";
+import PlusIcon from "@components/icons/PlusIcon.astro";
+import { t } from "@lib/services/i18n";
+import { getDealerImageUrls } from "@lib/services/imagekit";
+
+export const partial = true;
+
+const { user } = Astro.locals;
+const dealerId = Astro.params.dealerId!;
+const isOwner = dealerId === user.id;
+const imageUrls = await getDealerImageUrls(dealerId);
+---
+
+<div id="dealer-image-list-root">
+	{
+		imageUrls.length === 0 && (
+			<span id="hint" class="flex justify-around p-8 text-center">
+				{isOwner ? (
+					<>{t("dealer_images_add", user.language)}</>
+				) : (
+					<>{t("dealer_images_no_images_yet", user.language)}</>
+				)}
+			</span>
+		)
+	}
+	<div id="dealer-image-list" class="grid grid-cols-3 gap-1">
+		{imageUrls.map((url, index) => <DealerImage {url} {index} {isOwner} {dealerId} />)}
+	</div>
+	{
+		isOwner && (
+			<div class="absolute bottom-16 right-4">
+				<button class="btn btn-circle p-2" @click="input.click()">
+					<PlusIcon />
+				</button>
+			</div>
+		)
+	}
+	<input
+		id="input"
+		name="image"
+		type="file"
+		hx-target="#dealer-image-list"
+		hx-swap="beforeend"
+		hx-post={`/partials/dealer/upload-image-${imageUrls.length}`}
+		hx-encoding="multipart/form-data"
+		hidden
+	/>
+</div>
+<div id="image-zoom-modal"></div>

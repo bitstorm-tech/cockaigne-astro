@@ -44,6 +44,18 @@ export async function getProfileImageUrl(accountId: string): Promise<string | un
 	return files[0].url;
 }
 
+export async function getDealerImageUrls(dealerId: string): Promise<string[]> {
+	const files = await imagekit.listFiles({
+		path: `${dealerImagesFolder}/${dealerId}`,
+	});
+
+	if (files.length === 0) {
+		return [];
+	}
+
+	return files.map((file) => file.url);
+}
+
 export async function deleteProfileImage(accountId: string): Promise<DeleteProfileImageError | undefined> {
 	const files = await imagekit.listFiles({
 		path: `${profileImagesFolder}`,
@@ -68,4 +80,17 @@ export async function saveProfileImage(accountId: string, image: File) {
 		useUniqueFileName: false,
 		file,
 	});
+}
+
+export async function saveDealerImage(dealerId: string, image: File): Promise<string> {
+	const file = Buffer.from(await image.arrayBuffer());
+
+	const result = await imagekit.upload({
+		folder: `${dealerImagesFolder}/${dealerId}`,
+		fileName: `${Date.now()}`,
+		useUniqueFileName: false,
+		file,
+	});
+
+	return result.url;
 }

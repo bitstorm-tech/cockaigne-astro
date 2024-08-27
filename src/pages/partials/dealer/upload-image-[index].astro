@@ -1,0 +1,14 @@
+---
+import DealerImage from "@components/dealer/DealerImage.astro";
+import { saveDealerImage } from "@lib/services/imagekit";
+
+export const partial = true;
+
+const index = Number(Astro.params.index);
+const { id } = Astro.locals.user;
+const formData = await Astro.request.formData();
+const image = formData.get("image")?.valueOf() as File;
+const url = await saveDealerImage(id!, image);
+---
+
+<DealerImage {url} dealerId={id!} isOwner={true} {index} />
