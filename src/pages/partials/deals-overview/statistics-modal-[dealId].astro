@@ -1,0 +1,53 @@
+---
+import Modal from "@layouts/Modal.astro";
+import { getDealStatistics } from "@lib/services/dealer";
+import dayjs from "dayjs";
+
+const { dealId = "" } = Astro.params;
+const { id } = Astro.locals.user;
+
+const statistics = await getDealStatistics(dealId);
+
+if (statistics?.dealerId !== id) {
+	// not allowed to see statistics
+	return new Response();
+}
+---
+
+<Modal>
+	<div class="m-6">
+		<h1 class="text-center">Deal Statistiken</h1>
+		{
+			statistics ? (
+				<table class="table-auto">
+					<tr>
+						<th class="p-4 text-start">Titel</th>
+						<td>{statistics.title}</td>
+					</tr>
+					<tr>
+						<th class="p-4 text-start">Start</th>
+						<td>{dayjs(statistics.start).format("DD.MM.YYYY")}</td>
+					</tr>
+					<tr>
+						<th class="p-4 text-start">Dauer</th>
+						<td>{`${statistics.durationInHours / 8} Tag(e)`}</td>
+					</tr>
+					<tr>
+						<th class="p-4 text-start">Aufrufe</th>
+						<td>{statistics.clickCount}</td>
+					</tr>
+					<tr>
+						<th class="p-4 text-start">Likes</th>
+						<td>{statistics.likeCount}</td>
+					</tr>
+					<tr>
+						<th class="p-4 text-start">Favoriten</th>
+						<td>{statistics.favoriteCount}</td>
+					</tr>
+				</table>
+			) : (
+				<div>Fehler</div>
+			)
+		}
+	</div>
+</Modal>

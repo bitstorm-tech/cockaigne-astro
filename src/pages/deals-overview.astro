@@ -1,7 +1,50 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import { t } from "@lib/services/i18n";
+
+const { language } = Astro.locals.user;
 ---
 
 <Layout showFooter={true}>
-	<h1>Deals-Overview</h1>
+	<div class="flex flex-col gap-8">
+		<div class="flex flex-col gap-4 p-3">
+			<a href="/deal/new" class="btn btn-warning">{t("deal_create", language)}</a>
+			<div class="grid grid-cols-2 gap-4">
+				<a href="/templates" class="btn btn-primary">{t("templates", language)}</a>
+				<!-- <div hx-get="/dealer-subscription-summary" hx-trigger="load" hx-target="this" hx-swap="outerHTML"></div> -->
+			</div>
+		</div>
+		<div x-data="{selectedTab: 0}">
+			<div class="tabs tabs-bordered">
+				<div
+					hx-get="/partials/deals-overview/list-active"
+					hx-target="#content"
+					hx-trigger="click, load"
+					@click="selectedTab = 0"
+					class="tab"
+					:class="selectedTab === 0 ? 'tab-active' :''">
+					{t("active", language)}
+				</div>
+				<div
+					hx-get="/partials/deals-overview/list-future"
+					hx-target="#content"
+					hx-trigger="click"
+					@click="selectedTab = 1"
+					class="tab"
+					:class="selectedTab === 1 ? 'tab-active' :''">
+					{t("planed", language)}
+				</div>
+				<div
+					hx-get="/partials/deals-overview/list-past"
+					hx-target="#content"
+					hx-trigger="click"
+					@click="selectedTab = 2"
+					class="tab"
+					:class="selectedTab === 2 ? 'tab-active' :''">
+					{t("past", language)}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="content" class="pt-1"></div>
 </Layout>

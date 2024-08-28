@@ -1,3 +1,5 @@
+import type { DealHeader } from "@lib/models/deal-header";
+import type { DealStatistics } from "@lib/models/deal-statistics";
 import type { Rating, RatingUpsert } from "@lib/models/rating";
 import logger from "./logger";
 import sql from "./pg";
@@ -54,4 +56,15 @@ export async function toggleDealerFavorite(userId: string, dealerId: string): Pr
 	}
 
 	return !isFavorite;
+}
+
+export async function getDealHeadersByState(dealerId: string, state: string): Promise<DealHeader[]> {
+	const view = `${state}_deals_view`;
+	return await sql<DealHeader[]>`select * from ${sql(view)} where dealer_id = ${dealerId}`;
+}
+
+export async function getDealStatistics(dealId: string): Promise<DealStatistics | undefined> {
+	const [result] = await sql<DealStatistics[]>`select * from statistics_view where deal_id=${dealId}`;
+
+	return result;
 }

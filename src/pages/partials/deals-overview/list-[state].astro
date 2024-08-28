@@ -1,0 +1,30 @@
+---
+import DealHeader from "@components/deal/DealHeader.astro";
+import StatisticsIcon from "@components/icons/StatisticsIcon.astro";
+import { getDealHeadersByState } from "@lib/services/dealer";
+
+export const partial = true;
+
+const { state = "" } = Astro.params;
+const { id = "" } = Astro.locals.user;
+
+const dealHeaders = await getDealHeadersByState(id, state);
+---
+
+<div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">
+	{
+		dealHeaders.map((header) => (
+			<DealHeader {header} hideName={true}>
+				<button
+					class="clean"
+					@click.stop
+					hx-get={`/partials/deals-overview/statistics-modal-${header.id}`}
+					hx-target="#statistics-modal">
+					<StatisticsIcon />
+				</button>
+			</DealHeader>
+		))
+	}
+</div>
+<div id="image-zoom-modal"></div>
+<div id="statistics-modal"></div>
