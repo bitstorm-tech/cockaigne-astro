@@ -4,9 +4,10 @@ import DefaultUserProfileImage from "@components/icons/DefaultUserProfileImage.a
 import { getProfileImageUrl } from "@lib/services/imagekit";
 
 export const partial = true;
-const user = Astro.locals.user;
-const imageUrl = user.id && (await getProfileImageUrl(user.id));
-const DefaultImage = user.isDealer ? DefaultDealerProfileImage : DefaultUserProfileImage;
+const { id, isDealer } = Astro.locals.user;
+const searchParamId = Astro.url.searchParams.get("id");
+const imageUrl = id && (await getProfileImageUrl(searchParamId || id));
+const DefaultImage = isDealer ? DefaultDealerProfileImage : DefaultUserProfileImage;
 ---
 
 {imageUrl ? <img src={imageUrl} alt="Profile image" /> : <DefaultImage />}

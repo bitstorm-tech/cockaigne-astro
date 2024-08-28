@@ -1,0 +1,25 @@
+---
+import DealerRatingList from "@components/dealer/DealerRatingList.astro";
+import type { RatingUpsert } from "@lib/models/rating";
+import { deleteDealerRating, saveDealerRating, updateDealerRating } from "@lib/services/dealer";
+
+const { operation = "create" } = Astro.params;
+const { id = "" } = Astro.locals.user;
+const formData = await Astro.request.formData();
+const dealerId = formData.get("dealer-id")?.toString() || "";
+const stars = Number(formData.get("stars")?.toString());
+const text = formData.get("text")?.toString() || "";
+
+const ratingInsert: RatingUpsert = {
+	dealerId,
+	userId: id!,
+	stars,
+	text,
+};
+
+if (operation === "create") await saveDealerRating(ratingInsert);
+if (operation === "update") await updateDealerRating(ratingInsert);
+if (operation === "delete") await deleteDealerRating(id, dealerId);
+---
+
+<DealerRatingList {dealerId} />

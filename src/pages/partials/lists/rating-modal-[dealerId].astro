@@ -1,0 +1,60 @@
+---
+import Modal from "@layouts/Modal.astro";
+import { getDealerRating } from "@lib/services/dealer";
+import { t } from "@lib/services/i18n";
+
+export const partial = true;
+
+const { dealerId = "" } = Astro.params;
+const { language, id = "" } = Astro.locals.user;
+let rating = await getDealerRating(dealerId, id);
+const canEdit = rating?.userId === id;
+
+if (!rating) {
+	rating = {
+		dealerId,
+		userId: id,
+		username: "",
+		stars: 5,
+		text: "",
+	};
+}
+---
+
+<Modal>
+	<form hx-target="#rating-list" hx-swapp="outerHTML">
+		<div class="grid grid-cols-1 gap-4 py-4">
+			<div class="form-control">
+				<label for="stars">{t("rating", language)}</label>
+				<div id="stars" class="rating rating-lg gap-4">
+					<input type="radio" name="stars" class="mask mask-star" value="1" checked={rating.stars == 1} />
+					<input type="radio" name="stars" class="mask mask-star" value="2" checked={rating.stars == 2} />
+					<input type="radio" name="stars" class="mask mask-star" value="3" checked={rating.stars == 3} />
+					<input type="radio" name="stars" class="mask mask-star" value="4" checked={rating.stars == 4} />
+					<input type="radio" name="stars" class="mask mask-star" value="5" checked={rating.stars == 5} />
+				</div>
+			</div>
+			<div class="form-control">
+				<label for="text">{t("rating_text", language)}</label>
+				<textarea name="text" id="text" rows="3">{rating.text}</textarea>
+			</div>
+			<input type="text" name="dealer-id" value={rating.dealerId} hidden />
+		</div>
+		<div class="modal-action">
+			<div class="flex gap-2">
+				{
+					canEdit ? (
+						<>
+							<button class="btn-primary btn-outline" hx-post={`/api/dealer/delete-rating`}>
+								{t("delete", language)}
+							</button>
+							<button hx-post={`/api/dealer/update-rating`}>{t("change", language)}</button>
+						</>
+					) : (
+						<button hx-post={`/api/dealer/create-rating`}>{t("rate", language)}</button>
+					)
+				}
+			</div>
+		</div>
+	</form>
+</Modal>

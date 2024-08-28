@@ -1,4 +1,4 @@
-import type { Rating } from "@lib/models/rating";
+import type { Rating, RatingUpsert } from "@lib/models/rating";
 import logger from "./logger";
 import sql from "./pg";
 
@@ -13,6 +13,29 @@ export async function getDealerRating(dealerId: string, userId: string): Promise
 	}
 
 	return rating;
+}
+
+export async function getAllDealerRatings(dealerId: string): Promise<Rating[]> {
+	return await sql<Rating[]>`
+		select *, a.username from dealer_ratings
+		join accounts a on a.id = user_id
+		where dealer_id = ${dealerId}
+		order by created desc`;
+}
+
+export async function saveDealerRating(rating: RatingUpsert) {
+	await sql`insert into dealer_ratings ${sql(rating)} on conflict do nothing`;
+}
+
+export async function deleteDealerRating(userId: string, dealerId: string) {
+	await sql`delete from dealer_ratings where user_id = ${userId} and dealer_id = ${dealerId}`;
+}
+
+export async function updateDealerRating(rating: RatingUpsert) {
+	await sql`
+		update dealer_ratings
+		set ${sql(rating, "text", "stars")}
+		where user_id = ${rating.userId} and dealer_id = ${rating.dealerId}`;
 }
 
 export async function isDealerFavorite(userId: string, dealerId: string): Promise<boolean> {

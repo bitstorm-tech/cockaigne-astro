@@ -4,6 +4,12 @@ export interface Rating {
 	stars: number;
 	text: string;
 	username: string;
-	canEdit: boolean;
 	created?: Date;
+}
+
+export interface RatingUpsert {
+	dealerId: string;
+	userId: string;
+	text: string;
+	stars: number;
 }
