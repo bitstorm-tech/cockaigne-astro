@@ -1,0 +1,12 @@
+---
+import DealerFavoriteButton from "@components/dealer/DealerFavoriteButton.astro";
+import { toggleDealerFavorite } from "@lib/services/dealer";
+
+export const partial = true;
+
+const { id } = Astro.locals.user;
+const { dealerId = "" } = Astro.params;
+const isFavorite = id ? await toggleDealerFavorite(id, dealerId) : false;
+---
+
+<DealerFavoriteButton {dealerId} {isFavorite} />

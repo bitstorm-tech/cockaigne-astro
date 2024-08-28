@@ -1,15 +1,16 @@
 ---
-export const partial = true;
+interface Props {
+	dealerId: string;
+	isFavorite: boolean;
+}
 
-const { dealerId } = Astro.params;
-const isFavorite = false;
+const { dealerId, isFavorite } = Astro.props;
 ---
 
 <a
-	id="dealer-header-favorite-button"
 	class="btn btn-circle btn-warning flex w-20 items-center justify-start rounded-r-none"
-	hx-post={`/dealer-favorite-toggle/${dealerId}`}
-	hx-target="#dealer-header-favorite-button"
+	hx-post={`/partials/dealer/toggle-favorite-${dealerId}`}
+	hx-target="this"
 	hx-swap="outerHTML">
 	{
 		isFavorite ? (
