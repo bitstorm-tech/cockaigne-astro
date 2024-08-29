@@ -4,7 +4,7 @@ export interface DealStatistics {
 	title: string;
 	start: Date;
 	durationInHours: number;
-	likeCount: number;
-	favoriteCount: number;
-	clickCount: number;
+	likecount: number;
+	favoritecount: number;
+	clickcount: number;
 }
