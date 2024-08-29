@@ -19,10 +19,10 @@ export async function getDealerRating(dealerId: string, userId: string): Promise
 
 export async function getAllDealerRatings(dealerId: string): Promise<Rating[]> {
 	return await sql<Rating[]>`
-		select *, a.username from dealer_ratings
+		select *, a.username from dealer_ratings r
 		join accounts a on a.id = user_id
 		where dealer_id = ${dealerId}
-		order by created desc`;
+		order by r.created desc`;
 }
 
 export async function saveDealerRating(rating: RatingUpsert) {
