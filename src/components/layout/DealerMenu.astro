@@ -11,7 +11,7 @@ const { lang } = Astro.props;
 ---
 
 <MobileMenuEntry href="/settings" text={t("settings", lang)}>
-	<CogIcon slot="icon" />
+	<CogIcon slot="icon" outline={true} />
 </MobileMenuEntry>
 <MobileMenuEntry href="/pricing" text={t("pricing", lang)}>
 	<MoneyIcon slot="icon" />

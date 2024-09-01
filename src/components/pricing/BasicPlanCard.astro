@@ -1,0 +1,18 @@
+---
+interface Props {
+	title: string;
+	price: string;
+}
+
+const { title, price } = Astro.props;
+---
+
+<div class="text-100 card w-full bg-neutral shadow-xl">
+	<div class="card-body gap-6">
+		<span class="card-title w-full justify-between">
+			<span>{title}</span>
+			<span class="text-sm">{price}</span>
+		</span>
+		<slot />
+	</div>
+</div>

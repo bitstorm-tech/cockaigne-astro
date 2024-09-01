@@ -1,13 +1,20 @@
-export type SubscriptionState = "ACTIVE" | "CANCELED";
+export type SubscriptionState = "ACTIVE" | "CANCELED" | "WAITING_FOR_ACTIVATION";
 
 export interface Subscription {
 	id: string;
 	accountId: string;
-	planId: number;
+	planId: string;
 	stripeSubscriptionId: string;
 	stripeTrackingId: string;
-	state: Subscription;
+	state: SubscriptionState;
 	created: Date;
 	activated: Date;
 	canceled: Date;
+}
+
+export interface SubscriptionInsert {
+	accountId: string;
+	planId: string;
+	stripeTrackingId: string;
+	state: SubscriptionState;
 }

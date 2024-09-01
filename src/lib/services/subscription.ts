@@ -1,6 +1,20 @@
-import type { Subscription } from "@lib/models/subscription";
+import type { Subscription, SubscriptionInsert } from "@lib/models/subscription";
 import dayjs from "dayjs";
 import sql from "./pg";
+
+export async function insertSubscription(insert: SubscriptionInsert) {
+	await sql`insert into subscriptions ${sql(insert)}`;
+}
+
+export async function getPriceId(planId: string): Promise<string | undefined> {
+	const [result] = await sql`select stripe_price_id from plans where id = ${planId}`;
+
+	if (!result) {
+		return;
+	}
+
+	return result.stripePriceId;
+}
 
 export async function hasActiveSubscription(dealerId: string): Promise<boolean> {
 	const [result] =
