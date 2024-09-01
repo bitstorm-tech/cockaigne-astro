@@ -1,5 +1,6 @@
 ---
 import DealHeader from "@components/deal/DealHeader.astro";
+import CogIcon from "@components/icons/CogIcon.astro";
 import StatisticsIcon from "@components/icons/StatisticsIcon.astro";
 import { getDealHeadersByState } from "@lib/services/dealer";
 
@@ -15,6 +16,9 @@ const dealHeaders = await getDealHeadersByState(id, state);
 	{
 		dealHeaders.map((header) => (
 			<DealHeader {header} hideName={true}>
+				<a class="clean" @click.stop href={`/deal-editor?id=${header.id}`}>
+					<CogIcon class="h-6 w-6" />
+				</a>
 				<button
 					class="clean"
 					@click.stop

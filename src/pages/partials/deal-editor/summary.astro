@@ -1,0 +1,118 @@
+---
+import Modal from "@layouts/Modal.astro";
+import { renderAlertTranslated } from "@lib/services/alerts";
+import { getDealSummary } from "@lib/services/deal";
+import { t } from "@lib/services/i18n";
+import dayjs from "dayjs";
+
+export const partial = true;
+
+const { language } = Astro.locals.user;
+const formData = await Astro.request.formData();
+
+if (!formData.get("title")) {
+	return renderAlertTranslated("alert.enter_title", language);
+}
+
+if (!formData.get("description")) {
+	return renderAlertTranslated("alert.enter_description", language);
+}
+
+const summary = await getDealSummary(formData);
+---
+
+<Modal>
+	<h2>{t("deal_summary", language)}</h2>
+	<div class="flex flex-col gap-4">
+		<div class="grid grid-cols-3">
+			<span>{t("start", language)}:</span>
+			<span class="col-span-2">{dayjs(summary.start).format("DD.MM.YYYY HH:mm")}</span>
+			<span>{t("end", language)}:</span>
+			<span class="col-span-2">{dayjs(summary.end).format("DD.MM.YYYY HH:mm")}</span>
+			<span>{t("duration", language)}:</span>
+			<span class="col-span-2">{`${summary.duration} ${summary.duration > 1 ? "Tage" : "Tag"}`}</span>
+		</div>
+	</div>
+	<div class="my-8">
+		<hr />
+	</div>
+	<div class="flex flex-col">
+		{
+			() => {
+				if (summary.freeDaysLeft > 0) {
+					if (summary.price > 0) {
+						return (
+							<>
+								<span class="text-xl">
+									{t("costs", language)}: {summary.price / 100} €
+								</span>
+								<span class="text-xs">
+									{t("deal_summary_no_free_days_left", language)}:
+									<a class="underline" href="/pricing">
+										{t("subscription_subscribe", language)}
+									</a>
+								</span>
+							</>
+						);
+					} else {
+						return (
+							<>
+								<span class="text-xl">{t("costs", language)}: 0 €</span>
+								<span class="text-xs">
+									{t("free_days_left", language)}: {summary.freeDaysLeft}
+								</span>
+							</>
+						);
+					}
+				} else if (summary.priceWithDiscount > 0) {
+					return (
+						<>
+							<span class="text-xl">
+								{t("costs", language)}: <span class="line-through">{summary.price / 100}</span>{" "}
+								{summary.priceWithDiscount} €
+							</span>
+							<span class="text-xs">
+								{t("deal_summary_active_voucher", language)} {summary.discount}%!
+							</span>
+						</>
+					);
+				} else {
+					return (
+						<>
+							<span class="text-xl">
+								{t("costs", language)}: {summary.price / 100} €
+							</span>
+							<span class="text-xs">
+								{t("save_money", language)} {t("and", language)}
+								<a href="/pricing" class="link" target="_blank">
+									{t("subscribe", language)}
+								</a>
+							</span>
+						</>
+					);
+				}
+			}
+		}
+	</div>
+	{
+		summary.error && (
+			<div class="flex flex-col gap-4 text-red-500 italic">
+				<span>{t("deal_summary_error_1", language)}</span>
+				<span>{t("deal_summary_error_2", language)}</span>
+				<span>
+					{t("deal_summary_error_3", language)}
+					<a class="underline" href="mailto:support@cockaigne.city">
+						{t("deal_summary_error_4", language)}
+					</a>
+					!
+				</span>
+			</div>
+		)
+	}
+	<div class="mt-8 grid grid-cols-2 gap-2">
+		<button class="btn-primary" hx-delete="/api/ui/remove" hx-target="#summary-modal">
+			{t("deal_rework", language)}
+		</button>
+		<button class="btn-warning">{t("deal_start_now", language)}</button>
+	</div>
+</Modal>

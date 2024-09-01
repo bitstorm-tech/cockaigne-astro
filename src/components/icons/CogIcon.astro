@@ -1,4 +1,12 @@
-<svg viewBox="0 0 141.73228 141.73228">
+---
+interface Props {
+	class?: string;
+}
+
+const { class: clazz } = Astro.props;
+---
+
+<svg viewBox="0 0 141.73228 141.73228" class={clazz}>
 	<defs>
 		<style>
 			.b0bafdda-106e-4208-ba46-7bbca70c68f6 {

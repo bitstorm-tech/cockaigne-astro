@@ -1,8 +1,11 @@
 import type { Category } from "@lib/models/category";
+import type { Deal } from "@lib/models/deal";
 import type { DealDetails } from "@lib/models/deal-details";
 import type { DealHeader } from "@lib/models/deal-header";
+import type { Summary } from "@lib/models/deal-summary";
 import sql from "@lib/services/pg";
 import dayjs from "dayjs";
+import { getFreeDaysLeft, getHighestVoucherDiscount, hasActiveSubscription } from "./dealer";
 import { getDealImageUrls } from "./imagekit";
 import logger from "./logger";
 
@@ -90,6 +93,16 @@ export async function getDealDetails(dealId: string): Promise<DealDetails | unde
 	return dealDetails;
 }
 
+export async function getDeal(dealId: string): Promise<Deal | undefined> {
+	const [result] = await sql<Deal[]>`select * from deals where id = ${dealId}`;
+
+	if (!result) {
+		logger.warn(`Can't find deal with ID ${dealId}`);
+	}
+
+	return result;
+}
+
 export async function incrementDealViewCount(dealId: string, userId: string) {
 	await sql`insert into deal_clicks (deal_id, account_id) values (${dealId}, ${userId}) on conflict do nothing`;
 }
@@ -136,4 +149,67 @@ export async function getDealReportMessage(userId: string, dealId: string): Prom
 	}
 
 	return result[0].reason;
+}
+
+export async function getDealSummary(formData: FormData): Promise<Summary> {
+	const startInstantly = formData.get("startInstantly")?.toString() === "on";
+	const startDate = dayjs(startInstantly ? dayjs().toDate() : formData.get("startDate")?.toString());
+	const duration = calculateDuration(formData);
+	const dealerId = formData.get("dealerId")?.toString() || "";
+	const price = await calculatePrice(dealerId, duration);
+
+	return {
+		start: startDate.toDate(),
+		end: startDate.add(duration, "day").toDate(),
+		duration,
+		price: price.price,
+		priceWithDiscount: price.priceWithDiscount,
+		discount: price.discount,
+		freeDaysLeft: price.freeDaysLeft,
+		error: false,
+	};
+}
+
+function calculateDuration(formData: FormData): number {
+	const startInstantly = formData.get("startInstantly")?.toString() === "on";
+	const ownEndDate = formData.get("ownEndDate")?.toString() === "on";
+	const startDate = dayjs(startInstantly ? dayjs().toDate() : formData.get("startDate")?.toString());
+	const endDate = dayjs(formData.get("endDate")?.toString());
+
+	if (ownEndDate) {
+		const startDateWithoutTime = dayjs(startDate.format("YYYY-MM-DD"));
+		return endDate.diff(startDateWithoutTime, "day");
+	}
+
+	return Number(formData.get("duration")?.toString());
+}
+
+export async function calculatePrice(
+	dealerId: string,
+	duration: number,
+): Promise<{ price: number; priceWithDiscount: number; discount: number; freeDaysLeft: number }> {
+	const result = {
+		price: 0,
+		priceWithDiscount: 0,
+		discount: 0,
+		freeDaysLeft: 0,
+	};
+
+	const hasActiveSub = await hasActiveSubscription(dealerId);
+
+	if (hasActiveSub) {
+		const freeDaysLeft = (await getFreeDaysLeft(dealerId)) - duration;
+
+		result.freeDaysLeft = Math.max(0, freeDaysLeft);
+
+		if (freeDaysLeft < 0) {
+			result.price = 499 * -freeDaysLeft;
+		}
+
+		return result;
+	}
+
+	result.discount = await getHighestVoucherDiscount(dealerId);
+
+	return result;
 }

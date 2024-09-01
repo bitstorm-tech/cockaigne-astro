@@ -2,7 +2,6 @@
 import DealerRatingList from "@components/dealer/DealerRatingList.astro";
 
 const { dealerId = "" } = Astro.params;
-const alreadyRated = false;
 ---
 
-<DealerRatingList {alreadyRated} {dealerId} />
+<DealerRatingList {dealerId} />

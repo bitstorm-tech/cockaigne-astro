@@ -32,7 +32,9 @@ const dealerPath = `/dealer-${header.dealerId}`;
 			<DealIcon categoryId={header.categoryId} />
 			<span>{header.title}</span>
 		</div>
-		<slot />
+		<div class="flex flex-row gap-2">
+			<slot />
+		</div>
 	</div>
 	<div
 		class="flex flex-col justify-between bg-[#323e42] p-2"

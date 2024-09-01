@@ -1,0 +1,240 @@
+---
+import Layout from "@layouts/Layout.astro";
+import type { Deal } from "@lib/models/deal";
+import { getDeal } from "@lib/services/deal";
+import { getDefaultCategoryId } from "@lib/services/dealer";
+import { t } from "@lib/services/i18n";
+import { getDealImageUrls } from "@lib/services/imagekit";
+import dayjs from "dayjs";
+
+function editCreatedDeal(deal: Deal): boolean {
+	return !!deal.id && !deal.template;
+}
+
+function calculateEndDate(deal: Deal): string {
+	const endDate = dayjs(deal.start).add(deal.durationInHours / 24, "days");
+	return endDate.format("YYYY-MM-DD");
+}
+
+const { language, id = "" } = Astro.locals.user;
+const dealId = Astro.url.searchParams.get("id");
+const deal: Deal = (dealId && (await getDeal(dealId))) || {
+	id: "",
+	dealerId: id,
+	title: "",
+	description: "",
+	categoryId: await getDefaultCategoryId(id),
+	durationInHours: 24,
+	start: dayjs().add(1, "hour").toDate(),
+	template: false,
+	startInstantly: false,
+	ownEndDate: false,
+};
+
+const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) => `'${url}'`);
+---
+
+<Layout>
+	<form
+		class="flex flex-col gap-4 p-4"
+		hx-post={`/deals?from_template=${deal.id}`}
+		hx-encoding="multipart/form-data"
+		hx-target="#alert"
+		x-data={`{
+			startInstantly: ${deal.startInstantly},
+			ownEndDate: ${deal.ownEndDate},
+			runtime: ${deal.durationInHours / 24},
+			imagePreviewUrls: [${imagePreviewUrls}],
+		}`}>
+		{deal.template && <h1 class="text-center">{t("template", language)}</h1>}
+		<!-- ----- -->
+		<!-- Title -->
+		<!-- ----- -->
+		<div class="form-control">
+			<label for="title">{t("title", language)}</label>
+			<input id="title" type="text" name="title" value={deal.title} />
+		</div>
+		<!------------------>
+		<!-- Description  -->
+		<!------------------>
+		<div class="form-control">
+			<label for="description">{t("description", language)}</label>
+			<textarea id="description" class="h-32" rows="10" name="description">{deal.description}</textarea>
+		</div>
+		<!------------------------->
+		<!-- Category selection  -->
+		<!------------------------->
+		<div class="form-control">
+			<label for="category-select">{t("category", language)}</label>
+			<div
+				id="category-select"
+				hx-get={`/partials/category-select?translation_key=category_select&selected=${deal.categoryId}`}
+				hx-trigger="load once"
+				hx-target="this">
+			</div>
+		</div>
+		<!------------------->
+		<!-- Add pictures  -->
+		<!------------------->
+		<span class="label-text">
+			{t("images_add", language)}
+			<span class="text-xs">({t("optional", language)})</span>
+			:
+		</span>
+		<input id="deleteImage0" name="deleteImage0" type="checkbox" hidden />
+		<input id="deleteImage1" name="deleteImage1" type="checkbox" hidden />
+		<input id="deleteImage2" name="deleteImage2" type="checkbox" hidden />
+		<input id="dealerId" name="dealerId" type="text" value={deal.dealerId} hidden />
+		<div class="grid grid-cols-3 gap-2">
+			<div>
+				<button
+					x-show="!imagePreviewUrls[0]"
+					@click.prevent="$refs.fileInput0.click()"
+					class="btn-outline btn-primary h-24 w-full">
+					+
+				</button>
+				<img
+					x-show="imagePreviewUrls[0]"
+					:src="imagePreviewUrls[0]"
+					@click="remove($refs.fileInput0, 0)"
+					class="h-24 w-full object-cover"
+					alt="Deal image 1"
+				/>
+				<input x-ref="fileInput0" type="file" hidden @change="add($event, 0)" name="image0" />
+			</div>
+			<div>
+				<button
+					x-show="!imagePreviewUrls[1]"
+					@click.prevent="$refs.fileInput1.click()"
+					class="btn-outline btn-primary h-24 w-full">
+					+
+				</button>
+				<img
+					x-show="imagePreviewUrls[1]"
+					:src="imagePreviewUrls[1]"
+					@click="remove($refs.fileInput1, 1)"
+					class="h-24 w-full object-cover"
+					alt="Deal image 1"
+				/>
+				<input x-ref="fileInput1" type="file" hidden @change="add($event, 1)" name="image1" />
+			</div>
+			<div>
+				<button
+					x-show="!imagePreviewUrls[2]"
+					@click.prevent="$refs.fileInput2.click()"
+					class="btn-outline btn-primary h-24 w-full">
+					+
+				</button>
+				<img
+					x-show="imagePreviewUrls[2]"
+					:src="imagePreviewUrls[2]"
+					@click="remove($refs.fileInput2, 2)"
+					class="h-24 w-full object-cover"
+					alt="Deal image 1"
+				/>
+				<input x-ref="fileInput2" type="file" hidden @change="add($event, 2)" name="image2" />
+			</div>
+		</div>
+		<!--------------------------------------------------------------------------->
+		<!-- Switch between start date or start instatnly and end date or runtime  -->
+		<!--------------------------------------------------------------------------->
+		<div class={`flex gap-6 ${editCreatedDeal(deal) ? "hidden" : ""}`}>
+			<div class="form-control-horizontal">
+				<input id="start-immediately" type="checkbox" class="checkbox" name="startInstantly" x-model="startInstantly" />
+				<label for="start-immediately" class="cursor-pointer">{t("start_immediately", language)}</label>
+			</div>
+			<div class="form-control-horizontal">
+				<input id="runtime" type="checkbox" class="checkbox" name="ownEndDate" x-model="ownEndDate" />
+				<label for="runtime" class="cursor-pointer">{t("runtime_individual", language)}</label>
+			</div>
+		</div>
+		<!------------------------------------>
+		<!-- Start date or start instantly  -->
+		<!------------------------------------>
+		<div class={`form-control ${editCreatedDeal(deal) ? "hidden" : ""}`} x-show="!startInstantly">
+			<label for="start-date-input">{t("start", language)}</label>
+			<input
+				id="start-date-input"
+				type="datetime-local"
+				name="startDate"
+				value={dayjs(deal.start).format("YYYY-MM-DDTHH:mm")}
+			/>
+		</div>
+		<div class={`py-6 text-sm ${editCreatedDeal(deal) ? "hidden" : ""}`} x-show="startInstantly">
+			<span>{t("deal_start_description", language)}</span>
+		</div>
+		<!----------------------------------------->
+		<!-- End date or runtime 1, 2 or 3 days  -->
+		<!----------------------------------------->
+		<div class={`flex select-none gap-4 ${editCreatedDeal(deal) ? "hidden" : ""}`}>
+			<div class="form-control w-full" x-show="ownEndDate">
+				<label for="duration-input">{t("end", language)}</label>
+				<input id="duration-input" type="date" name="endDate" value={calculateEndDate(deal)} />
+			</div>
+			<div class="form-control w-full py-3" x-show="!ownEndDate">
+				<label for="duration" class="text-sm">{t("runtime", language)}</label>
+				<div class="flex items-center gap-2">
+					<span x-text="runtime"></span>
+					<span>{t("days", language)}</span>
+					<input id="duration" name="duration" type="range" min="1" max="10" step="1" x-model="runtime" />
+				</div>
+			</div>
+		</div>
+		<!------------------------------------>
+		<!-- Save additionally as template  -->
+		<!------------------------------------>
+		{
+			!deal.template && !editCreatedDeal(deal) && (
+				<div class="form-control-horizontal pt-10">
+					<input id="template" type="checkbox" class="checkbox" name="template" />
+					<label for="template">{t("save_additionally_as_template", language)}</label>
+				</div>
+			)
+		}
+		<!--------------------->
+		<!-- Save and cancel -->
+		<!--------------------->
+		<div class="flex gap-2">
+			<a href="/" class="btn btn-outline btn-primary flex-1">{t("cancel", language)}</a>
+			{
+				deal.template ||
+					(editCreatedDeal(deal) && (
+						<button
+							type="submit"
+							class="btn btn-primary flex-1"
+							hx-post={"/deal-update/" + deal.id}
+							hx-encoding="multipart/form-data">
+							{t("save_changes", language)}
+						</button>
+					))
+			}
+			{
+				!editCreatedDeal(deal) && (
+					<button class="flex-1" hx-post="/partials/deal-editor/summary" hx-target="#summary-modal">
+						{t("create", language)}
+					</button>
+				)
+			}
+		</div>
+		<div id="summary-modal"></div>
+	</form>
+	<script is:inline>
+		function add(event, index) {
+			const file = event.target.files[0];
+
+			if (!file) {
+				return;
+			}
+
+			const URL = window.URL || window.webkitURL;
+			this.imagePreviewUrls[index] = URL.createObjectURL(file);
+			document.getElementById(`deleteImage${index}`).checked = false;
+		}
+
+		function remove(input, index) {
+			this.imagePreviewUrls[index] = null;
+			input.value = null;
+			document.getElementById(`deleteImage${index}`).checked = true;
+		}
+	</script>
+</Layout>
