@@ -26,6 +26,12 @@ export interface Account {
 	activationCode?: number;
 }
 
-export interface AccountUpdate {
+export interface UserAccountUpdate {
 	username?: string;
+}
+
+export interface DealerAccountUpdate extends UserAccountUpdate {
+	phone?: string;
+	taxId?: string;
+	defaultCategory?: number;
 }

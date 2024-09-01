@@ -12,7 +12,7 @@ const { user } = Astro.locals;
 				user.isDealer ? (
 					<>
 						<div
-							hx-get="/settings-dealer-common"
+							hx-get="/partials/dealer/settings-common"
 							hx-target="#content"
 							hx-trigger="click"
 							class="tab"
@@ -21,7 +21,7 @@ const { user } = Astro.locals;
 							{t("common", user.language)}
 						</div>
 						<div
-							hx-get="/settings-dealer-address"
+							hx-get="/partials/dealer/settings-address"
 							hx-target="#content"
 							hx-trigger="click"
 							class="tab"

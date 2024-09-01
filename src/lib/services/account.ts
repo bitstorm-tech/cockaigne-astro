@@ -1,4 +1,4 @@
-import type { Account, AccountUpdate } from "@lib/models/account";
+import type { Account, DealerAccountUpdate, UserAccountUpdate } from "@lib/models/account";
 import sql from "@lib/services/pg";
 import bcrypt from "bcryptjs";
 import { Err, Ok, Result } from "ts-results-es";
@@ -78,7 +78,10 @@ function generateActivationCode(): number {
 	return +randomNumber.toString().padEnd(6, "0");
 }
 
-export async function updateAccount(accountId: string, update: AccountUpdate): Promise<Error | undefined> {
+export async function updateAccount(
+	accountId: string,
+	update: UserAccountUpdate | DealerAccountUpdate,
+): Promise<Error | undefined> {
 	if (update.username) {
 		const [result] =
 			await sql`select true from accounts where username ilike ${update.username} and id != ${accountId} limit 1`;
@@ -87,7 +90,7 @@ export async function updateAccount(accountId: string, update: AccountUpdate): P
 		}
 	}
 
-	await sql`update accounts set ${sql(update, "username")} where id = ${accountId}`;
+	await sql`update accounts set ${sql(update)} where id = ${accountId}`;
 }
 
 export async function prepareEmailChange(

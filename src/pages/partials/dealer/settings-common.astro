@@ -1,0 +1,45 @@
+---
+import { getAccountById } from "@lib/services/account";
+import { t } from "@lib/services/i18n";
+
+export const partial = true;
+
+const { language, id = "" } = Astro.locals.user;
+const account = await getAccountById(id);
+---
+
+<form class="flex flex-col gap-4" hx-post="/api/accounts/update-data" hx-target="closest #content">
+	<div class="form-control">
+		<label for="username">{t("username", language)}</label>
+		<input id="username" type="text" name="username" value={account?.username} />
+	</div>
+	<div class="form-control">
+		<label for="email">{t("email", language)}</label>
+		<input id="email" type="email" value={account?.email} disabled />
+	</div>
+	<a class="btn btn-primary" href="/email-change">{t("email_change", language)}</a>
+	<div class="form-control">
+		<label for="phone">{t("phone", language)}</label>
+		<input id="phone" type="text" name="phone" value={account?.phone} />
+	</div>
+	<div class="form-control">
+		<label for="tax-id">{t("tax_id", language)}</label>
+		<input id="tax-id" type="text" name="tax-id" value={account?.taxId} />
+	</div>
+	<div class="form-control">
+		<label for="category-select">{t("industry", language)}</label>
+		<div
+			id="category-select"
+			hx-get={`/partials/category-select?translation_key=industry_select&selected=${account?.defaultCategory}`}
+			hx-trigger="load once"
+			hx-target="this">
+		</div>
+	</div>
+	<button type="button" class="btn btn-primary" hx-post="/api/accounts/send-password-change-email">
+		{t("password_change", language)}
+	</button>
+	<div class="grid grid-cols-2 gap-4">
+		<a class="btn btn-primary" href="/">{t("cancel", language)}</a>
+		<button>{t("save", language)}</button>
+	</div>
+</form>
