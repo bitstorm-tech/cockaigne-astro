@@ -11,7 +11,12 @@ const { language } = Astro.locals.user;
 			<a href="/deal-editor" class="btn btn-warning">{t("deal_create", language)}</a>
 			<div class="grid grid-cols-2 gap-4">
 				<a href="/templates" class="btn btn-primary">{t("templates", language)}</a>
-				<!-- <div hx-get="/dealer-subscription-summary" hx-trigger="load" hx-target="this" hx-swap="outerHTML"></div> -->
+				<div
+					hx-get="/partials/deals-overview/subscription-summary"
+					hx-trigger="load"
+					hx-target="this"
+					hx-swap="outerHTML">
+				</div>
 			</div>
 		</div>
 		<div x-data="{selectedTab: 0}">

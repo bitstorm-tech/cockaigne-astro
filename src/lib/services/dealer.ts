@@ -1,7 +1,6 @@
 import type { DealHeader } from "@lib/models/deal-header";
 import type { DealStatistics } from "@lib/models/deal-statistics";
 import type { Rating, RatingUpsert } from "@lib/models/rating";
-import type { Subscription } from "@lib/models/subscription";
 import logger from "./logger";
 import sql from "./pg";
 
@@ -13,35 +12,6 @@ export async function getDefaultCategoryId(dealerId: string): Promise<number> {
 	}
 
 	return result.defaultCategory;
-}
-
-export async function hasActiveSubscription(dealerId: string): Promise<boolean> {
-	const [result] =
-		await sql`select true from subscriptions where account_id = ${dealerId} and state = 'ACTIVE' limit 1`;
-
-	return !!result;
-}
-
-export async function getActiveSubscription(dealerId: string): Promise<Subscription | undefined> {
-	const [result] = await sql<Subscription[]>`
-		select * from subscriptions where account_id = ${dealerId} and state = 'ACTIVE' limit 1`;
-
-	if (!result) {
-		return;
-	}
-
-	return result;
-}
-
-export async function getFreeDaysLeft(dealerId: string): Promise<number> {
-	return 0;
-}
-
-export async function getHighestVoucherDiscount(dealerId: string): Promise<number> {
-	const [result] = await sql`
-		select coalesce(max(discount_in_percent), 0) as discount from active_vouchers_view where account_id = ${dealerId}`;
-
-	return result.discount;
 }
 
 export async function getDealerRating(dealerId: string, userId: string): Promise<Rating | undefined> {

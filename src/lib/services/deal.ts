@@ -5,9 +5,9 @@ import type { DealHeader } from "@lib/models/deal-header";
 import type { Summary } from "@lib/models/deal-summary";
 import sql from "@lib/services/pg";
 import dayjs from "dayjs";
-import { getFreeDaysLeft, getHighestVoucherDiscount, hasActiveSubscription } from "./dealer";
 import { getDealImageUrls } from "./imagekit";
 import logger from "./logger";
+import { getFreeDaysLeft, getHighestVoucherDiscount, hasActiveSubscription } from "./subscription";
 
 export type DealState = "active" | "past" | "future" | "template" | "favorite-deals" | "favorite-dealers";
 
