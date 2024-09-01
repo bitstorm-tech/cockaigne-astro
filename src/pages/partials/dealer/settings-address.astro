@@ -1,5 +1,70 @@
 ---
+import { getAccountById } from "@lib/services/account";
+import { t } from "@lib/services/i18n";
+import "leaflet/dist/leaflet.css";
+
 export const partial = true;
+
+const { language, id = "" } = Astro.locals.user;
+const account = await getAccountById(id);
 ---
 
-<h1>Address</h1>
+<form class="flex flex-col gap-4">
+	<div class="grid grid-cols-3 gap-3">
+		<div class="col-span-2">
+			<div class="form-control">
+				<label for="street">{t("street", language)}</label>
+				<input id="street" type="text" name="street" value={account?.street} />
+			</div>
+		</div>
+		<div class="form-control">
+			<label for="housenumber">{t("house_number", language)}</label>
+			<input id="housenumber" type="text" name="housenumber" value={account?.houseNumber} />
+		</div>
+	</div>
+	<div class="grid grid-cols-3 gap-3">
+		<div class="col-span-2">
+			<div class="form-control">
+				<label for="city">{t("city", language)}</label>
+				<input id="city" type="text" name="city" value={account?.city} />
+			</div>
+		</div>
+		<div class="form-control">
+			<label for="zip">{t("zipcode", language)}</label>
+			<input id="zip" type="text" name="zip" value={account?.zip} />
+		</div>
+	</div>
+	<i>
+		{t("location_change_description", language)}
+	</i>
+	<button class="btn btn-primary" type="button" onclick="searchLocation()">{t("show_on_map", language)}</button>
+	<div id="map" class="h-64 w-full"></div>
+	<div class="grid grid-cols-2 gap-4">
+		<button class="btn btn-primary">{t("cancel", language)}</button>
+		<button hx-post="/api/accounts/update-address">{t("save", language)}</button>
+	</div>
+</form>
+<script is:inline define:vars={{ ...account }}>
+	let marker;
+	const map = L.map("map", { attributionControl: false });
+
+	getPosition(`${street} ${houseNumber}, ${zip} ${city}`).then((position) => {
+		map.setView(position, 17);
+		L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+			maxZoom: 20,
+		}).addTo(map);
+
+		marker = L.marker(position);
+		map.addLayer(marker);
+	});
+
+	document.searchLocation = async function () {
+		const street = document.getElementById("street").value;
+		const housenumber = document.getElementById("housenumber").value;
+		const city = document.getElementById("city").value;
+		const zip = document.getElementById("zip").value;
+		const position = await getPosition(`${street} ${housenumber}, ${zip} ${city}`);
+		map.setView(position);
+		marker.setLatLng(position);
+	};
+</script>

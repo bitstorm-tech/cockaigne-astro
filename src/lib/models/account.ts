@@ -35,3 +35,10 @@ export interface DealerAccountUpdate extends UserAccountUpdate {
 	taxId?: string;
 	defaultCategory?: number;
 }
+
+export interface AddressUpdate {
+	street: string;
+	houseNumber: string;
+	city: string;
+	zip: number;
+}
