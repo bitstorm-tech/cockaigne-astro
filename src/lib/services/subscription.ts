@@ -6,6 +6,10 @@ export async function insertSubscription(insert: SubscriptionInsert) {
 	await sql`insert into subscriptions ${sql(insert)}`;
 }
 
+export async function cancelSubscription(trackingId: string) {
+	await sql`delete from subscriptions where stripe_tracking_id = ${trackingId} and state = 'WAITING_FOR_ACTIVATION'`;
+}
+
 export async function getPriceId(planId: string): Promise<string | undefined> {
 	const [result] = await sql`select stripe_price_id from plans where id = ${planId}`;
 
