@@ -3,6 +3,7 @@ import sql from "@lib/services/pg";
 import bcrypt from "bcryptjs";
 import { Err, Ok, Result } from "ts-results-es";
 import { sendEmailChangeEmail, sendPasswordChangeEmail } from "./brevo";
+import { Point } from "./geo";
 import logger from "./logger";
 
 export async function accountExists(email: string, username: string): Promise<boolean> {
@@ -20,7 +21,10 @@ export async function activateAccount(code: string): Promise<boolean> {
 }
 
 export async function getAccountByEmail(email: string): Promise<Account | undefined> {
-	const [account] = await sql<Account[]>`select * from accounts where email ilike ${email}`;
+	const [account] = await sql<Account[]>`
+		select *, st_astext(location) as location
+		from accounts
+		where email ilike ${email}`;
 
 	if (!account) {
 		logger.warn(`Can't find account by email ${email}`);
@@ -31,12 +35,17 @@ export async function getAccountByEmail(email: string): Promise<Account | undefi
 }
 
 export async function getAccountById(id: string): Promise<Account | undefined> {
-	const [account] = await sql<Account[]>`select * from accounts where id = ${id}`;
+	const [account] = await sql<Account[]>`
+		select *, st_astext(location) as location
+		from accounts
+		where id = ${id}`;
 
 	if (!account) {
 		logger.warn(`Can't find account by ID ${id}`);
 		return;
 	}
+
+	account.location = Point.fromWkt(account.location.toString());
 
 	return account;
 }

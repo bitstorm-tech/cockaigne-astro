@@ -1,7 +1,133 @@
 ---
+import CurrentLocationIcon from "@components/icons/CurrentLocationIcon.astro";
+import FilterIcon from "@components/icons/FilterIcon.astro";
+import MapPinIcon from "@components/icons/MapPinIcon.astro";
 import Layout from "@layouts/Layout.astro";
+import { getAccountById } from "@lib/services/account";
+
+const { id = "" } = Astro.locals.user;
+const account = await getAccountById(id);
 ---
 
 <Layout showBadge={true} showFooter={true}>
-	<h1>Map</h1>
+	<div>
+		<div id="map" class="absolute bottom-10 left-0 right-0 top-12 z-0"></div>
+		<div class="absolute right-4 top-16 flex gap-2">
+			<button
+				class="btn-primary flex w-12 items-center justify-center rounded-full"
+				hx-get="/ui/map/location-modal"
+				hx-target="#modal">
+				<MapPinIcon />
+			</button>
+			<button
+				class="btn-primary flex w-12 items-center justify-center rounded-full p-3"
+				hx-get="/ui/map/filter-modal?redirect-after-save=/map"
+				hx-target="#modal">
+				<FilterIcon />
+			</button>
+			<button
+				class="btn-primary flex w-12 items-center justify-center rounded-full p-3"
+				onclick="jumpToCurrentLocation()">
+				<CurrentLocationIcon />
+			</button>
+		</div>
+		<div id="modal"></div>
+		<div
+			id="search-address-indicator"
+			class="absolute bottom-12 left-4 right-4 flex items-center justify-center gap-4 rounded-xl bg-success p-4 text-primary">
+			<span class="loading loading-ring loading-lg"></span>
+			<span>Ermittle aktuelle Position ...</span>
+		</div>
+	</div>
 </Layout>
+<script
+	is:inline
+	define:vars={{
+		currentLocation: account?.location,
+		useLocationService: account?.useLocationService,
+		searchRadius: account?.searchRadiusInMeter,
+	}}
+>
+	const map = L.map("map", { attributionControl: false });
+	const markerLayer = L.layerGroup();
+	const dealLayer = L.layerGroup();
+	markerLayer.addTo(map);
+	dealLayer.addTo(map);
+	let address = "";
+	let determineLocation = false;
+
+	LocationService.addChangeHandler((newLocation) => {
+		map.setView(LocationService.location);
+		drawCurrentPosition(newLocation, searchRadius);
+		determineLocation = false;
+		hideElementById("search-address-indicator");
+	});
+
+	FilterService.addSearchRadiusChangeListener((newRadius) => {
+		drawCurrentPosition(LocationService.location, newRadius);
+	});
+
+	LocationService.location = {
+		lon: currentLocation.lon,
+		lat: currentLocation.lat,
+	};
+
+	showElementById("search-address-indicator");
+	map.setView(LocationService.location, 15);
+
+	if (useLocationService) {
+		determineLocation = true;
+		LocationService.startLocationWatcher();
+		address = "Suche aktuelle Position ...";
+	} else {
+		getAddress(LocationService.location).then((adr) => {
+			address = adr;
+			hideElementById("search-address-indicator");
+		});
+	}
+
+	L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+		maxZoom: 20,
+	}).addTo(map);
+
+	map.on("moveend", function () {
+		const extend = map.getBounds().toBBoxString();
+		updateDealsOnMap(extend);
+	});
+
+	map.on("click", function (event) {
+		LocationService.location = { lat: event.latlng.lat, lon: event.latlng.lng };
+	});
+
+	async function updateDealsOnMap(extent) {
+		const res = await fetch("/api/deals/filter?extent=" + extent);
+		const deals = await res.json();
+		const zoomLevel = map.getZoom();
+		const radius = Math.pow(2, 13 - zoomLevel) * 150;
+		dealLayer.clearLayers();
+
+		for (const deal of deals) {
+			const coordinates = { lat: deal.Location.Lat, lon: deal.Location.Lon };
+			const color = deal.Color;
+			L.circle(coordinates, { color, fillOpacity: 0.7, radius }).addTo(dealLayer);
+		}
+	}
+
+	async function searchAddress() {
+		if (useLocationService) return;
+		determineLocation = true;
+		LocationService.location = await getPosition(address);
+		map.setView(location);
+		determineLocation = false;
+	}
+
+	window.jumpToCurrentLocation = function () {
+		map.setView(LocationService.location);
+	};
+
+	function drawCurrentPosition(center, radius) {
+		markerLayer.clearLayers();
+		L.marker(center).addTo(markerLayer);
+		L.circle(center, radius, { color: "teal", fillOpacity: 0.1 }).addTo(markerLayer);
+	}
+</script>

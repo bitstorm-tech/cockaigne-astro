@@ -9,8 +9,8 @@ export interface NominatimResponse {
 
 export class Point {
 	constructor(
-		private lon: number,
-		private lat: number,
+		public lon: number,
+		public lat: number,
 	) {}
 
 	static fromNominatimResponse(response: NominatimResponse): Point {
@@ -19,6 +19,20 @@ export class Point {
 
 	static centerOfGermany(): Point {
 		return new Point(10.447683, 51.163361);
+	}
+
+	static fromWkt(wkt: string): Point {
+		const match = wkt.match(/POINT\(([-+]?\d*\.?\d+)\s([-+]?\d*\.?\d+)\)/);
+
+		if (!match) {
+			logger.error(`Can't convert WKT '${wkt}' to Point`);
+			return new Point(0, 0);
+		}
+
+		const lon = parseFloat(match[1]);
+		const lat = parseFloat(match[2]);
+
+		return new Point(lon, lat);
 	}
 
 	toWkt(): string {

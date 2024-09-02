@@ -55,7 +55,7 @@ const LocationService = {
 		const form = new FormData();
 		form.set("lon", newLocation.lon);
 		form.set("lat", newLocation.lat);
-		fetch("/api/accounts/location", {
+		fetch("/api/accounts/update-location", {
 			method: "POST",
 			body: form,
 		});
