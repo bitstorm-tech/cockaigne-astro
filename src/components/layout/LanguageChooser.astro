@@ -8,10 +8,10 @@ const { lang } = Astro.props;
 <div class="flex gap-4">
 	{t("language", lang)}:
 	<div class="flex gap-2">
-		<a class="link w-10" href="/language-set/de">
+		<a class="link w-10" hx-get="/api/accounts/change-language?lang=de">
 			<FlagDeIcon />
 		</a>
-		<a class="link w-10" href="/language-set/en">
+		<a class="link w-10" hx-get="/api/accounts/change-language?lang=en">
 			<FlagUkIcon />
 		</a>
 	</div>

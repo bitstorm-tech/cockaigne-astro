@@ -93,6 +93,10 @@ export async function updateAccount(
 	await sql`update accounts set ${sql(update)} where id = ${accountId}`;
 }
 
+export async function changeLanguage(accountId: string, language: string) {
+	await sql`update accounts set language = ${language} where id = ${accountId}`;
+}
+
 export async function prepareEmailChange(
 	accountId: string,
 	newEmail: string,

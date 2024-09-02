@@ -31,7 +31,7 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 	const jwt = await encryptJwt(account.id, account.isDealer, !account.isDealer);
 	const headers = new Headers();
 	headers.append("Set-Cookie", `jwt=${jwt}; HttpOnly; Path=/`);
-	headers.append("Set-Cookie", `lang=de; HttpOnly; Path=/`);
+	headers.append("Set-Cookie", `lang=${account.language}; HttpOnly; Path=/`);
 	const redirection = account.isDealer ? `/dealer-${account.id}` : "/user";
 	headers.append("HX-Redirect", redirection);
 

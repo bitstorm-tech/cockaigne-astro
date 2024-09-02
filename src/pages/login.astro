@@ -31,8 +31,8 @@ const lang = user.language;
 			<a href="/registration-complete">{t("account_activate", lang)}</a>
 		</div>
 		<div class="mt-4 flex justify-center gap-2">
-			<a class="link w-10" href="/language-set/de"><FlagDeIcon /></a>
-			<a class="link w-10" href="/language-set/en"><FlagUkIcon /></a>
+			<a class="link w-10" hx-get="/api/accounts/change-language?lang=de"><FlagDeIcon /></a>
+			<a class="link w-10" hx-get="/api/accounts/change-language?lang=en"><FlagUkIcon /></a>
 		</div>
 	</form>
 </Layout>
