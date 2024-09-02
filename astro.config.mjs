@@ -1,5 +1,5 @@
 import alpinejs from "@astrojs/alpinejs";
-import node from "@astrojs/node";
+import netlify from "@astrojs/netlify";
 import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 
@@ -13,7 +13,5 @@ export default defineConfig({
 	server: {
 		host: true,
 	},
-	adapter: node({
-		mode: "standalone",
-	}),
+	adapter: netlify(),
 });
