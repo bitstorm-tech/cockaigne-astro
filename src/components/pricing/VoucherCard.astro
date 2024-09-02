@@ -1,0 +1,30 @@
+---
+import { t } from "@lib/services/i18n";
+
+const { language } = Astro.locals.user;
+const activeVouchers: string[] = [];
+---
+
+<form id="voucher" class="text-100 card w-full bg-neutral shadow-xl">
+	<div class="card-body gap-6">
+		<span class="card-title">{t("vouchers", language)}</span>
+		{
+			activeVouchers.length > 0 && (
+				<div>
+					<div class="text-sm pb-2">{t("voucher_already_activated", language)}:</div>
+					<!-- <ul class="text-xs">for _, voucher := range activeVouchers {<li>{redeemedVoucherInfo(voucher)}</li>}</ul> -->
+				</div>
+			)
+		}
+		<!-- if err {(<i class="text-red-500">{t("voucher_error_cannot_show", language)}</i>)} -->
+		<div class="form-control">
+			<label for="voucher-code">{t("voucher_code", language)}</label>
+			<input id="voucher-code" name="voucher-code" type="text" class="text-100" />
+		</div>
+		<div class="card-actions justify-end">
+			<button hx-post="/voucher-redeem" hx-target="#voucher" hx-swap="outerHTML" class="btn btn-warning">
+				{t("redeem", language)}
+			</button>
+		</div>
+	</div>
+</form>

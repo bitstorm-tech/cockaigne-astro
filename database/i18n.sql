@@ -154,6 +154,7 @@ values
   ('industry', 'Branche', 'Industry'),
   ('industry_select', 'Branche auswählen', 'Select industry'),
   ('info.changes_saved', 'Einstellungen erfolgreich geändert', 'Changes saved successfully'),
+  ('info.contact_message_send', 'Wir haben deine Nachricht erhalten. Vielen Dank dafür!', 'We have received your message. Thank you very much!'),
   ('info.email_changed', 'E-Mail erfolgireich geändert', 'E-mail changed successfully'),
   ('info.only_for_pro_member', 'Diese Funktion steht nur PRO-Mitglieder zur Verfügung', 'This function is only available to PRO members'),
   ('info.password_changed', 'Passwort erfolgreich geändert', 'Password changed successfully'),

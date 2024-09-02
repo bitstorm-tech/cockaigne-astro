@@ -1,0 +1,28 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { t } from "@lib/services/i18n";
+
+const { language } = Astro.locals.user;
+---
+
+<Layout>
+	<form
+		class="flex flex-col gap-6 p-6"
+		hx-post="/api/contact-messages"
+		x-data={`{message: '', messageTranslateion: '${t("message", language)}'}`}>
+		<span>
+			{t("contact_us_description", language)}
+		</span>
+		<span class="text-xs">
+			{t("contact_us_restriction", language)}
+		</span>
+		<div class="form-control">
+			<label for="message" x-text="`${messageTranslateion} (${message.length} / 1000)`"></label>
+			<textarea id="message" name="message" x-model="message" rows="10" maxlength="1000"></textarea>
+		</div>
+		<div class="grid grid-cols-2 gap-4">
+			<a class="btn btn-primary" href="/">{t("back", language)}</a>
+			<button :disabled="message.length === 0">{t("send", language)}</button>
+		</div>
+	</form>
+</Layout>
