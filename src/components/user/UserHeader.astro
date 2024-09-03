@@ -2,16 +2,16 @@
 import DefaultUserProfileImage from "@components/icons/DefaultUserProfileImage.astro";
 import FilterIcon from "@components/icons/FilterIcon.astro";
 import LocationIcon from "@components/icons/LocationIcon.astro";
-import { getUsernameById } from "@lib/services/account";
+import { getLocation, getUsernameById } from "@lib/services/account";
 import { t } from "@lib/services/i18n";
 import DealsCountBadge from "./DealsCountBadge.astro";
 import FavoriteDealersCountBadge from "./FavoriteDealersCountBadge.astro";
 import FavoriteDealsCountBadge from "./FavoriteDealsCountBadge.astro";
 
-const user = Astro.locals.user;
-const username = user.id ? await getUsernameById(user.id) : "Basic";
+const { id = "", language } = Astro.locals.user;
+const username = id === "" ? await getUsernameById(id) : "Basic";
 const useLocationService = false;
-const currentLocation = { lat: 48.137154, lon: 11.576124 };
+const currentLocation = await getLocation(id);
 ---
 
 <div class="flex h-52 justify-between">
@@ -24,7 +24,7 @@ const currentLocation = { lat: 48.137154, lon: 11.576124 };
 			</div>
 			<div class="text-2xl">{username || "Basic"}</div>
 			<div class="flex flex-col gap-2 text-sm">
-				<div class="font-extrabold">{t("your_location", user.language)}</div>
+				<div class="font-extrabold">{t("your_location", language)}</div>
 				<div class="flex gap-2">
 					<LocationIcon class="h-7" />
 					<div class="flex flex-col text-xs">
@@ -74,6 +74,8 @@ const currentLocation = { lat: 48.137154, lon: 11.576124 };
 		if (!address || address.length == 0) {
 			return;
 		}
+
+		console.log("set address:", address);
 
 		const addressTokens = address.split(",");
 		streetLabel.textContent = addressTokens[0];

@@ -61,6 +61,16 @@ export async function getUsernameById(id: string): Promise<string | undefined> {
 	return account.username;
 }
 
+export async function getLocation(accountId: string): Promise<Point> {
+	const [result] = await sql`select st_astext(location) as location from accounts where id = ${accountId}`;
+
+	if (!result) {
+		logger.error(`Can't get location for account ID ${accountId}`);
+		return Point.centerOfGermany();
+	}
+
+	return Point.fromWkt(result.location);
+}
 export async function insertAccount(account: Account): Promise<Result<number, string>> {
 	// prettier-ignore
 	const columnsToInsert = account.isDealer
