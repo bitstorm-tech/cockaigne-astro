@@ -8,7 +8,7 @@ const { language, id = "" } = Astro.locals.user;
 const account = await getAccountById(id);
 ---
 
-<form class="flex flex-col gap-4" hx-post="/api/accounts/update-data" hx-target="closest #content">
+<form class="flex flex-col gap-4" hx-post="/api/accounts/update-common-data" hx-target="closest #content">
 	<div class="form-control">
 		<label for="username">{t("username", language)}</label>
 		<input id="username" type="text" name="username" value={account?.username} />

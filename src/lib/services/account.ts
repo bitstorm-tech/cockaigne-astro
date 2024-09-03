@@ -77,6 +77,10 @@ export async function updateLocation(accountId: string, point: Point) {
 	await sql`update accounts set ${sql(location)} where id = ${accountId}`;
 }
 
+export async function updateUseLocationService(accountId: string, useLocationService: boolean) {
+	await sql`update accounts set ${sql({ useLocationService })} where id = ${accountId}`;
+}
+
 export async function insertAccount(account: Account): Promise<Result<number, string>> {
 	// prettier-ignore
 	const columnsToInsert = account.isDealer

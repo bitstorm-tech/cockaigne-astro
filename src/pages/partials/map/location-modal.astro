@@ -1,0 +1,111 @@
+---
+import Modal from "@layouts/Modal.astro";
+import { getAccountById } from "@lib/services/account";
+import { t } from "@lib/services/i18n";
+
+const { language, id = "" } = Astro.locals.user;
+const account = await getAccountById(id);
+---
+
+<Modal>
+	<form hx-post="/api/accounts/update-use-location-service" hx-target="#modal">
+		<div class="flex flex-col gap-4">
+			<div id="address-input-form-control" class="form-control">
+				<label for="address-input">{t("address", language)}</label>
+				<input id="address-input" type="text" name="address" onkeydown="searchAddress(event)" />
+				<button type="button" class="btn btn-primary btn-sm" onclick="searchAddress()">
+					{t("address_search", language)}
+				</button>
+			</div>
+			<div class="flex items-center gap-2">
+				<div id="loading-indicator" class="flex items-center justify-center gap-2">
+					<span class="loading loading-ring loading-lg"></span>
+					<span>Suche aktuelle Position ...</span>
+				</div>
+				<div id="address-label-form-control" class="flex flex-col">
+					<span class="text-xs">Adresse</span>
+					<span id="address-label"></span>
+				</div>
+			</div>
+			<div class="form-control-horizontal">
+				<input
+					id="use-location-service"
+					class="checkbox"
+					type="checkbox"
+					name="use-location-service"
+					checked={account?.useLocationService}
+					onclick="toggleCheckbox(this)"
+				/>
+				<label for="use-location-service">{t("use_current_location", language)}</label>
+			</div>
+		</div>
+		<div class="modal-action">
+			<button class="btn-outline btn-primary" hx-delete="/api/ui/remove" hx-target="#modal">
+				{t("cancel", language)}
+			</button>
+			<button onclick="searchAddress">{t("save", language)}</button>
+		</div>
+	</form>
+	<script is:inline define:vars={{ locationService: account?.useLocationService }}>
+		const addressLabel = document.getElementById("address-label");
+		const addressLabelFormControl = document.getElementById("address-label-form-control");
+		const addressInput = document.getElementById("address-input");
+		const addressInputFormControl = document.getElementById("address-input-form-control");
+		const loadingIndicator = document.getElementById("loading-indicator");
+		let useLocationService = locationService;
+
+		hideElement(loadingIndicator);
+
+		if (useLocationService) {
+			hideElement(addressInputFormControl);
+		} else {
+			hideElement(addressLabelFormControl);
+		}
+
+		if (LocationService.address.length > 0) {
+			addressLabel.textContent = LocationService.address;
+			addressInput.value = LocationService.address;
+		}
+
+		LocationService.addChangeHandler((_, address) => {
+			hideElement(loadingIndicator);
+			addressLabel.textContent = address;
+			addressInput.value = address;
+
+			if (useLocationService) {
+				showElement(addressLabelFormControl);
+			} else {
+				showElement(addressInputFormControl);
+			}
+		});
+
+		document.toggleCheckbox = (element) => {
+			useLocationService = element.checked;
+			if (useLocationService) {
+				LocationService.startLocationWatcher();
+				showElement(loadingIndicator);
+				hideElement(addressLabelFormControl);
+				hideElement(addressInputFormControl);
+			} else {
+				LocationService.stopLocationWatcher();
+				showElement(addressInputFormControl);
+				hideElement(addressLabelFormControl);
+				hideElement(loadingIndicator);
+			}
+		};
+
+		document.searchAddress = async (event) => {
+			if (event?.keyCode !== 13) return;
+			event?.preventDefault();
+
+			showElement(loadingIndicator);
+			const address = addressInput.value;
+			const location = await getPosition(address);
+			if (location) {
+				LocationService.location = location;
+			} else {
+				addressInput.value = "Adresse konnte nicht gefunden werden";
+			}
+		};
+	</script>
+</Modal>

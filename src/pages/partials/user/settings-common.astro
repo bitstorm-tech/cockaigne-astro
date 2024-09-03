@@ -18,7 +18,7 @@ if (!account) {
 }
 ---
 
-<form class="flex flex-col gap-4" hx-post="/api/accounts/update-data" hx-target="closest #content">
+<form class="flex flex-col gap-4" hx-post="/api/accounts/update-common-data" hx-target="closest #content">
 	<div class="form-control">
 		<label for="username">{t("username", lang)}</label>
 		<input id="username" type="text" name="username" value={account.username} />

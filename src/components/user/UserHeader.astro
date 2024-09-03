@@ -9,7 +9,7 @@ import FavoriteDealersCountBadge from "./FavoriteDealersCountBadge.astro";
 import FavoriteDealsCountBadge from "./FavoriteDealsCountBadge.astro";
 
 const { id = "", language } = Astro.locals.user;
-const username = id === "" ? await getUsernameById(id) : "Basic";
+const username = id !== "" ? await getUsernameById(id) : "Basic";
 const useLocationService = false;
 const currentLocation = await getLocation(id);
 ---
