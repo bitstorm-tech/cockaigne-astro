@@ -1,7 +1,33 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import { t } from "@lib/services/i18n";
+
+const { language } = Astro.locals.user;
 ---
 
 <Layout showBadge={true} showFooter={true}>
-	<h1>Top-Deals</h1>
+	<section class="flex flex-col">
+		<h1 class="text-center">{t("top_deals_in_your_area", language)}</h1>
+		<div class="tabs tabs-bordered" x-data="{selectedTab: 0}">
+			<div
+				hx-get="/partials/lists/top-likes"
+				hx-target="#content"
+				hx-trigger="click, load"
+				class="tab"
+				:class="selectedTab === 0 ? 'tab-active' : ''"
+				@click="selectedTab = 0">
+				{t("top_likes", language)}
+			</div>
+			<div
+				hx-get="/partials/lists/top-favorites"
+				hx-target="#content"
+				hx-trigger="click"
+				class="tab"
+				:class="selectedTab === 1 ? 'tab-active' : ''"
+				@click="selectedTab = 1">
+				{t("top_favorites", language)}
+			</div>
+		</div>
+		<div id="content" class="pt-1"></div>
+	</section>
 </Layout>

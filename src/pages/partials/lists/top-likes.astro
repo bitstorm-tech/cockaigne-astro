@@ -1,0 +1,11 @@
+---
+import DealHeader from "@components/deal/DealHeader.astro";
+import { getTopDeals } from "@lib/services/deal";
+
+const dealHeaders = await getTopDeals("likes");
+---
+
+<div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">
+	{dealHeaders.map((header) => <DealHeader {header} />)}
+</div>
+<div id="image-zoom-modal"></div>

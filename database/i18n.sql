@@ -244,6 +244,8 @@ values
   ('title', 'Titel', 'Title'),
   ('toast.changes_saved_successfully', 'Änderungen erfolgreich gespeichert', 'Changes saved successfully'),
   ('top_25', 'Top 25', 'Top 25'),
+  ('top_favorites', 'Top Favoriten', 'Top Favorites'),
+  ('top_likes', 'Top Likes', 'Top Likes'),
   ('top_deals_in_your_area', 'TOP-Deals in deiner Nähe', 'TOP deals in your area'),
   ('until', 'Bis', 'Until'),
   ('use_current_location', 'Aktuellen Standort verwenden', 'Use current location'),

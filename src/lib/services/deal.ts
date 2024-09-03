@@ -26,6 +26,14 @@ export async function getCategory(id: number): Promise<Category | undefined> {
 	return result;
 }
 
+export async function getTopDeals(type: "likes" | "favorites"): Promise<DealHeader[]> {
+	return await sql<DealHeader[]>`
+		select id, dealer_id, title, category_id, username
+		from top_deals_view
+		order by ${type}
+		limit 10`;
+}
+
 export async function getDealHeaders(state: DealState, userId?: string, dealerId?: string): Promise<DealHeader[]> {
 	switch (state) {
 		case "active":
@@ -47,7 +55,7 @@ export async function getActiveDealHeaders(userId?: string, dealerId?: string): 
 	const withDealerId = (dealerId: string | undefined) => (dealerId ? sql`where dealer_id = ${dealerId}` : sql``);
 
 	return await sql<DealHeader[]>`
-		select d.id, d.dealer_id, d.title, d.category_id, d.start, a.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+		select d.id, d.dealer_id, d.title, d.category_id, a.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
   		from active_deals_view d
 		join accounts a on d.dealer_id = a.id
 		left join favorite_deals f on f.deal_id = d.id
@@ -56,7 +64,7 @@ export async function getActiveDealHeaders(userId?: string, dealerId?: string): 
 
 export async function getFavoriteDealersDealHeaders(userId: string): Promise<DealHeader[]> {
 	return await sql<DealHeader[]>`
-		select d.id, d.dealer_id, d.title, d.category_id, d.start, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+		select d.id, d.dealer_id, d.title, d.category_id, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
 	 	from active_deals_view d
 		join favorite_dealers_view fd on fd.dealer_id = d.dealer_id
 		left join favorite_deals f on f.deal_id = d.id
@@ -65,7 +73,7 @@ export async function getFavoriteDealersDealHeaders(userId: string): Promise<Dea
 
 export async function getFavoriteDealsDealHeaders(userId: string): Promise<DealHeader[]> {
 	return await sql<DealHeader[]>`
-		select d.id, d.dealer_id, d.title, d.category_id, d.start, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+		select d.id, d.dealer_id, d.title, d.category_id, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
 	 	from active_deals_view d
 		left join favorite_deals f on f.deal_id = d.id
 		where f.user_id = ${userId}`;

@@ -4,7 +4,6 @@ export interface DealHeader {
 	title: string;
 	username: string;
 	categoryId: number;
-	startTime: string;
 	canEdit: boolean;
 	isFavorite: boolean;
 }
