@@ -71,6 +71,12 @@ export async function getLocation(accountId: string): Promise<Point> {
 
 	return Point.fromWkt(result.location);
 }
+
+export async function updateLocation(accountId: string, point: Point) {
+	const location = { location: point.toWkt() };
+	await sql`update accounts set ${sql(location)} where id = ${accountId}`;
+}
+
 export async function insertAccount(account: Account): Promise<Result<number, string>> {
 	// prettier-ignore
 	const columnsToInsert = account.isDealer
