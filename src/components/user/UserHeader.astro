@@ -3,15 +3,16 @@ import DefaultUserProfileImage from "@components/icons/DefaultUserProfileImage.a
 import FilterIcon from "@components/icons/FilterIcon.astro";
 import LocationIcon from "@components/icons/LocationIcon.astro";
 import { getLocation, getUsernameById } from "@lib/services/account";
+import { Point } from "@lib/services/geo";
 import { t } from "@lib/services/i18n";
 import DealsCountBadge from "./DealsCountBadge.astro";
 import FavoriteDealersCountBadge from "./FavoriteDealersCountBadge.astro";
 import FavoriteDealsCountBadge from "./FavoriteDealsCountBadge.astro";
 
-const { id = "", language } = Astro.locals.user;
-const username = id !== "" ? await getUsernameById(id) : "Basic";
+const { id, language } = Astro.locals.user;
+const username = id ? await getUsernameById(id) : t("basic", language);
 const useLocationService = false;
-const currentLocation = await getLocation(id);
+const currentLocation = id ? await getLocation(id) : Point.centerOfGermany();
 ---
 
 <div class="flex h-52 justify-between">
