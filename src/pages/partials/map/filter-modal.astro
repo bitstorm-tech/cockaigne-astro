@@ -14,7 +14,14 @@ const filterData = user.id ? await getFilterData(user.id) : undefined;
 
 <Modal>
 	<h1>{t("filter", user.language)}</h1>
-	<form hx-post="/api/accounts/filter" hx-target="#modal">
+	<form
+		hx-post="/api/accounts/update-filter"
+		hx-target="#modal"
+		x-data={`{
+			categories: [${categories.map((cat) => JSON.stringify(cat))}],
+			selectedCategoryIds: [${filterData?.selectedCategoryIds}],
+			allCategoryIds: [${categories.map((cat) => cat.id)}]
+		}`}>
 		<div class="form-control">
 			<label id="radius-label" for="radius" class="flex items-center gap-1"></label>
 			<input
@@ -30,38 +37,28 @@ const filterData = user.id ? await getFilterData(user.id) : undefined;
 		</div>
 		<hr class="my-4" />
 		<div class="grid grid-cols-2 gap-2 py-4">
-			<button
-				type="button"
-				class="btn-primary btn-sm"
-				hx-post="/api/accounts/filter/select-all"
-				hx-target="#category-list">
+			<button type="button" class="btn-primary btn-sm" @click="selectedCategoryIds = allCategoryIds">
 				{t("select_all", user.language)}
 			</button>
-			<button
-				type="button"
-				class="btn-primary btn-sm"
-				hx-post="/api/accounts/filter/deselect-all"
-				hx-target="#category-list">
+			<button type="button" class="btn-primary btn-sm" @click="selectedCategoryIds = []">
 				{t("deselect_all", user.language)}
 			</button>
 		</div>
 		<div id="category-list" class="flex flex-col gap-2">
-			{
-				categories.map((category) => (
-					<div class="form-control-horizontal">
-						<input
-							type="checkbox"
-							id={category.name}
-							class="checkbox"
-							name="selectedCategoryIds"
-							value={category.id}
-							checked={filterData?.selectedCategoryIds?.includes(category.id)}
-							oninput="changeSelectedCategories(this)"
-						/>
-						<label for={category.name}>{category.name}</label>
-					</div>
-				))
-			}
+			<template x-for="category in categories">
+				<div class="form-control-horizontal">
+					<input
+						type="checkbox"
+						:id="category.name"
+						class="checkbox"
+						name="selectedCategoryIds"
+						:value="category.id"
+						:checked="selectedCategoryIds.includes(category.id)"
+						oninput="changeSelectedCategories(this)"
+					/>
+					<label :for="category.name" x-text="category.name"></label>
+				</div>
+			</template>
 		</div>
 		<div class="modal-action">
 			<button class="btn-outline btn-primary" hx-delete="/api/ui/remove" hx-target="#modal">
