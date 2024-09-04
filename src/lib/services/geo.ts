@@ -7,6 +7,27 @@ export interface NominatimResponse {
 	display_name: string;
 }
 
+export class Extent {
+	constructor(
+		public a: number,
+		public b: number,
+		public c: number,
+		public d: number,
+	) {}
+
+	static fromString(extent: string): Extent | undefined {
+		const tokens = extent.split(",");
+		const numbers = tokens.map((token) => Number(token)).filter((token) => !isNaN(token));
+
+		if (numbers.length !== 4) {
+			logger.error(`Can't create extent from string '${extent}'`);
+			return;
+		}
+
+		return new Extent(numbers[0], numbers[1], numbers[2], numbers[3]);
+	}
+}
+
 export class Point {
 	constructor(
 		public lon: number,

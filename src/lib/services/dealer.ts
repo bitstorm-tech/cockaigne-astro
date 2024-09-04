@@ -1,4 +1,4 @@
-import type { DealHeader } from "@lib/models/deal-header";
+import type { DealHeader } from "@lib/models/deal";
 import type { DealStatistics } from "@lib/models/deal-statistics";
 import type { Rating, RatingUpsert } from "@lib/models/rating";
 import logger from "./logger";

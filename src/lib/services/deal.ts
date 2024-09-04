@@ -1,10 +1,10 @@
 import type { Category } from "@lib/models/category";
-import type { Deal } from "@lib/models/deal";
+import type { Deal, DealHeader, DealOnMap } from "@lib/models/deal";
 import type { DealDetails } from "@lib/models/deal-details";
-import type { DealHeader } from "@lib/models/deal-header";
 import type { Summary } from "@lib/models/deal-summary";
 import sql from "@lib/services/pg";
 import dayjs from "dayjs";
+import { Point, type Extent } from "./geo";
 import { getDealImageUrls } from "./imagekit";
 import logger from "./logger";
 import { getFreeDaysLeft, getHighestVoucherDiscount, hasActiveSubscription } from "./subscription";
@@ -49,6 +49,38 @@ export async function getDealHeaders(state: DealState, userId?: string, dealerId
 		case "favorite-dealers":
 			return getFavoriteDealersDealHeaders(userId!);
 	}
+}
+
+// TODO: move colors to database
+const dealColorMap = new Map<number, string>([
+	[1, "#6898af"], //Elektronik & Technik
+	[2, "#4774b2"], //Unterhaltung & Gaming
+	[3, "#86b200"], //Lebensmittel & Haushalt
+	[4, "#b3396a"], //Fashion, Schmuck & Lifestyle
+	[5, "#9059b3"], //Beauty, Wellness & Gesundheit
+	[6, "#02b0b2"], //Family & Kids
+	[7, "#b2aba0"], //Home & Living
+	[8, "#b28d4b"], //Baumarkt & Garten
+	[9, "#5c5e66"], //Auto, Fahhrad & Motorrad
+	[10, "#b35a37"], //Gastronomie, Bars & Cafes
+	[11, "#b3b100"], //Kultur & Freizeit
+	[12, "#b22929"], //Sport & Outdoor
+	[13, "#3d484b"], //Reisen, Hotels & Übernachtungen
+	[14, "#465c8e"], //Dienstleistungen & Finanzen
+	[15, "#60b262"], //Floristik
+	[16, "#b3b3b3"], //Sonstiges
+]);
+
+export async function getDealsForMap(extent: Extent): Promise<DealOnMap[]> {
+	const result = await sql<{ wkt: string; categoryId: number }[]>`
+		select st_astext(location) as wkt, category_id
+		from active_deals_view
+		where st_within(location, st_makeenvelope(${extent.a}, ${extent.b}, ${extent.c}, ${extent.d}, 4326))`;
+
+	return result.map((deal) => ({
+		location: Point.fromWkt(deal.wkt),
+		color: dealColorMap.get(deal.categoryId) || "#ff00ff",
+	}));
 }
 
 export async function getActiveDealHeaders(userId?: string, dealerId?: string): Promise<DealHeader[]> {

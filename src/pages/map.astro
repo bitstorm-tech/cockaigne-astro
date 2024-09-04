@@ -100,16 +100,16 @@ const account = await getAccountById(id);
 	});
 
 	async function updateDealsOnMap(extent) {
-		const res = await fetch("/api/deals/filter?extent=" + extent);
+		const res = await fetch(`/api/deals/filter?extent=${extent}`);
 		const deals = await res.json();
 		const zoomLevel = map.getZoom();
 		const radius = Math.pow(2, 13 - zoomLevel) * 150;
 		dealLayer.clearLayers();
 
 		for (const deal of deals) {
-			const coordinates = { lat: deal.location.Lat, lon: deal.location.Lon };
-			const color = deal.Color;
-			L.circle(coordinates, { color, fillOpacity: 0.7, radius }).addTo(dealLayer);
+			const coordinates = { lat: deal.location.lat, lon: deal.location.lon };
+			const color = deal.color;
+			L.circle(coordinates, { color, fillOpacity: 0.9, radius }).addTo(dealLayer);
 		}
 	}
 

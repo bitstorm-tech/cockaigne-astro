@@ -1,3 +1,5 @@
+import type { Point } from "@lib/services/geo";
+
 export type PaymentState = "PAYED" | "PAYMENT_PENDING";
 
 export interface Deal {
@@ -13,4 +15,19 @@ export interface Deal {
 	paymentState?: PaymentState;
 	startInstantly: boolean;
 	ownEndDate: boolean;
+}
+
+export interface DealHeader {
+	id: string;
+	dealerId: string;
+	title: string;
+	username: string;
+	categoryId: number;
+	canEdit: boolean;
+	isFavorite: boolean;
+}
+
+export interface DealOnMap {
+	location: Point;
+	color: string;
 }
