@@ -3,7 +3,7 @@ import { Extent } from "@lib/services/geo";
 import logger from "@lib/services/logger";
 import type { APIRoute } from "astro";
 
-export const GET: APIRoute = async ({ url }): Promise<Response> => {
+export const GET: APIRoute = async ({ url, locals }): Promise<Response> => {
 	const extentString = url.searchParams.get("extent");
 
 	if (!extentString) {
@@ -16,7 +16,7 @@ export const GET: APIRoute = async ({ url }): Promise<Response> => {
 		return new Response("[]");
 	}
 
-	const deals = await getDealsForMap(extent);
+	const deals = await getDealsForMap(extent, locals.user.id);
 
 	return new Response(JSON.stringify(deals));
 };

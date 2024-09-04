@@ -9,13 +9,12 @@ export const partial = true;
 const user = Astro.locals.user;
 const categories = await getAllCategories();
 const perimeterText = t("perimeter", user.language);
-const redirectAfterSafe = "";
 const filterData = user.id ? await getFilterData(user.id) : undefined;
 ---
 
 <Modal>
 	<h1>{t("filter", user.language)}</h1>
-	<form hx-post={`/api/accounts/filter?redirect-after-save=${redirectAfterSafe}`} hx-target="#modal">
+	<form hx-post="/api/accounts/filter" hx-target="#modal">
 		<div class="form-control">
 			<label id="radius-label" for="radius" class="flex items-center gap-1"></label>
 			<input
@@ -30,17 +29,17 @@ const filterData = user.id ? await getFilterData(user.id) : undefined;
 			/>
 		</div>
 		<hr class="my-4" />
-		<div class="grid grid-cols-2 py-4 gap-2">
+		<div class="grid grid-cols-2 gap-2 py-4">
 			<button
 				type="button"
-				class="btn-sm btn-primary"
+				class="btn-primary btn-sm"
 				hx-post="/api/accounts/filter/select-all"
 				hx-target="#category-list">
 				{t("select_all", user.language)}
 			</button>
 			<button
 				type="button"
-				class="btn-sm btn-primary"
+				class="btn-primary btn-sm"
 				hx-post="/api/accounts/filter/deselect-all"
 				hx-target="#category-list">
 				{t("deselect_all", user.language)}
@@ -65,7 +64,7 @@ const filterData = user.id ? await getFilterData(user.id) : undefined;
 			}
 		</div>
 		<div class="modal-action">
-			<button class="btn-primary btn-outline" hx-delete="/api/ui/remove" hx-target="#modal">
+			<button class="btn-outline btn-primary" hx-delete="/api/ui/remove" hx-target="#modal">
 				{t("cancel", user.language)}
 			</button>
 			<button>{t("save", user.language)}</button>

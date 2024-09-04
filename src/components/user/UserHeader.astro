@@ -50,7 +50,7 @@ const currentLocation = id ? await getLocation(id) : Point.centerOfGermany();
 			</div>
 			<button
 				class="btn-circle btn-primary flex w-20 justify-start self-end rounded-l-full rounded-r-none px-0.5"
-				hx-get="/partials/map/filter-modal?redirect-after-save=/user"
+				hx-get="/partials/map/filter-modal"
 				hx-target="#modal">
 				<FilterIcon class="h-11 w-auto rounded-full border border-white p-1" />
 			</button>

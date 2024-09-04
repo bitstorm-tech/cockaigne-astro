@@ -8,3 +8,10 @@ export function redirect(location: string): Response {
 
 	return response;
 }
+
+export function refresh(): Response {
+	const response = new Response();
+	response.headers.append("HX-Refresh", "true");
+
+	return response;
+}

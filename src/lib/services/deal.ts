@@ -71,10 +71,11 @@ const dealColorMap = new Map<number, string>([
 	[16, "#b3b3b3"], //Sonstiges
 ]);
 
-export async function getDealsForMap(extent: Extent): Promise<DealOnMap[]> {
+export async function getDealsForMap(extent: Extent, accountId: string): Promise<DealOnMap[]> {
 	const result = await sql<{ wkt: string; categoryId: number }[]>`
-		select st_astext(location) as wkt, category_id
-		from active_deals_view
+		select st_astext(a.location) as wkt, a.category_id
+		from active_deals_view a
+		join selected_categories s on a.category_id = s.category_id and s.user_id = ${accountId}
 		where st_within(location, st_makeenvelope(${extent.a}, ${extent.b}, ${extent.c}, ${extent.d}, 4326))`;
 
 	return result.map((deal) => ({

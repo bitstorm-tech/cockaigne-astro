@@ -1,3 +1,4 @@
+import { refresh } from "@lib/services/http";
 import logger from "@lib/services/logger";
 import { updateFilter } from "@lib/services/user";
 import type { APIRoute } from "astro";
@@ -23,5 +24,5 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 
 	updateFilter(userId, selectedCategoryIds, searchRadius);
 
-	return new Response();
+	return refresh();
 };
