@@ -1,4 +1,9 @@
 ---
+interface Props {
+	outline?: boolean;
+	class?: string;
+}
+
 const { outline, class: clazz } = Astro.props;
 ---
 {outline ?
