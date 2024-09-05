@@ -20,5 +20,6 @@ const dealHeaders = await getActiveDealHeaders(userId);
 <div id="new-deals-button" hx-swap="outerHTML"></div>
 <div id="image-zoom-modal"></div>
 <div id="deals-count-badge-count" hx-swap-oob="true">
+	<!-- update the deals-count-badge when the list is loaded -->
 	{dealHeaders.length}
 </div>

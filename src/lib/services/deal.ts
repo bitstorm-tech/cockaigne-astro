@@ -34,23 +34,6 @@ export async function getTopDeals(type: "likes" | "favorites"): Promise<DealHead
 		limit 10`;
 }
 
-export async function getDealHeaders(state: DealState, userId?: string, dealerId?: string): Promise<DealHeader[]> {
-	switch (state) {
-		case "active":
-			return getActiveDealHeaders(userId, dealerId);
-		case "past":
-			return [];
-		case "future":
-			return [];
-		case "template":
-			return [];
-		case "favorite-deals":
-			return getFavoriteDealsDealHeaders(userId!);
-		case "favorite-dealers":
-			return getFavoriteDealersDealHeaders(userId!);
-	}
-}
-
 // TODO: move colors to database
 const dealColorMap = new Map<number, string>([
 	[1, "#6898af"], //Elektronik & Technik
