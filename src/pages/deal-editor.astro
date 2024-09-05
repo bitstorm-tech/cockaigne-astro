@@ -37,7 +37,7 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 <Layout>
 	<form
 		class="flex flex-col gap-4 p-4"
-		hx-post={`/deals?from_template=${deal.id}`}
+		hx-post={`/api/deals/save-deal?from-template=${deal.id}`}
 		hx-encoding="multipart/form-data"
 		hx-target="#alert"
 		x-data={`{
@@ -96,11 +96,11 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 				<img
 					x-show="imagePreviewUrls[0]"
 					:src="imagePreviewUrls[0]"
-					@click="remove($refs.fileInput0, 0)"
+					@click="remove($refs.fileInput0, $data, 0)"
 					class="h-24 w-full object-cover"
 					alt="Deal image 1"
 				/>
-				<input x-ref="fileInput0" type="file" hidden @change="add($event, 0)" name="image0" />
+				<input x-ref="fileInput0" type="file" hidden @change="add($event, $data, 0)" name="image0" />
 			</div>
 			<div>
 				<button
@@ -112,11 +112,11 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 				<img
 					x-show="imagePreviewUrls[1]"
 					:src="imagePreviewUrls[1]"
-					@click="remove($refs.fileInput1, 1)"
+					@click="remove($refs.fileInput1, $data, 1)"
 					class="h-24 w-full object-cover"
 					alt="Deal image 1"
 				/>
-				<input x-ref="fileInput1" type="file" hidden @change="add($event, 1)" name="image1" />
+				<input x-ref="fileInput1" type="file" hidden @change="add($event, $data, $refs, 1)" name="image1" />
 			</div>
 			<div>
 				<button
@@ -128,11 +128,11 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 				<img
 					x-show="imagePreviewUrls[2]"
 					:src="imagePreviewUrls[2]"
-					@click="remove($refs.fileInput2, 2)"
+					@click="remove($refs.fileInput2, $data, 2)"
 					class="h-24 w-full object-cover"
 					alt="Deal image 1"
 				/>
-				<input x-ref="fileInput2" type="file" hidden @change="add($event, 2)" name="image2" />
+				<input x-ref="fileInput2" type="file" hidden @change="add($event, $data, 2)" name="image2" />
 			</div>
 		</div>
 		<!--------------------------------------------------------------------------->
@@ -219,7 +219,7 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 		<div id="summary-modal"></div>
 	</form>
 	<script is:inline>
-		function add(event, index) {
+		function add(event, refs, index) {
 			const file = event.target.files[0];
 
 			if (!file) {
@@ -227,12 +227,12 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 			}
 
 			const URL = window.URL || window.webkitURL;
-			this.imagePreviewUrls[index] = URL.createObjectURL(file);
+			refs.imagePreviewUrls[index] = URL.createObjectURL(file);
 			document.getElementById(`deleteImage${index}`).checked = false;
 		}
 
-		function remove(input, index) {
-			this.imagePreviewUrls[index] = null;
+		function remove(input, refs, index) {
+			refs.imagePreviewUrls[index] = null;
 			input.value = null;
 			document.getElementById(`deleteImage${index}`).checked = true;
 		}

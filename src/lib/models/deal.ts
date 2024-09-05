@@ -17,6 +17,20 @@ export interface Deal {
 	ownEndDate: boolean;
 }
 
+export interface DealInsert {
+	dealerId: string;
+	title: string;
+	description: string;
+	categoryId: number;
+	durationInHours: number;
+	start: Date;
+	template: boolean;
+	paymentState?: PaymentState;
+	startInstantly: boolean;
+	ownEndDate: boolean;
+	images: Array<File | undefined>;
+}
+
 export interface DealHeader {
 	id: string;
 	dealerId: string;

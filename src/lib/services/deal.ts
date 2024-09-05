@@ -1,11 +1,11 @@
 import type { Category } from "@lib/models/category";
-import type { Deal, DealHeader, DealOnMap } from "@lib/models/deal";
+import type { Deal, DealHeader, DealInsert, DealOnMap } from "@lib/models/deal";
 import type { DealDetails } from "@lib/models/deal-details";
 import type { Summary } from "@lib/models/deal-summary";
 import sql from "@lib/services/pg";
 import dayjs from "dayjs";
 import { Point, type Extent } from "./geo";
-import { getDealImageUrls } from "./imagekit";
+import { getDealImageUrls, saveDealImage } from "./imagekit";
 import logger from "./logger";
 import { getFreeDaysLeft, getHighestVoucherDiscount, hasActiveSubscription } from "./subscription";
 
@@ -113,25 +113,25 @@ export async function getFavoriteDealsDealHeaders(userId: string): Promise<DealH
 }
 
 export async function getDealDetails(dealId: string): Promise<DealDetails | undefined> {
-	const result = await sql`select title, description, start, duration_in_hours from deals where id = ${dealId}`;
+	const [result] =
+		await sql`select title, description, start, duration_in_hours, dealer_id from deals where id = ${dealId}`;
 
-	if (result.length === 0) {
+	if (!result) {
 		logger.error(`Can't find deal details for ID ${dealId}`);
 		return;
 	}
 
-	const startDate = dayjs(result[0].start);
+	const startDate = dayjs(result.start);
 	const imageUrls = await getDealImageUrls(dealId, 400);
 
-	const dealDetails: DealDetails = {
-		title: result[0].title,
-		description: result[0].description,
+	return {
+		dealerId: result.dealerId,
+		title: result.title,
+		description: result.description,
 		imageUrls,
 		start: startDate.format("DD.MM.YYYY"),
-		end: startDate.add(result[0].durationInHours, "hours").format("DD.MM.YYYY"),
+		end: startDate.add(result.durationInHours, "hours").format("DD.MM.YYYY"),
 	};
-
-	return dealDetails;
 }
 
 export async function getDeal(dealId: string): Promise<Deal | undefined> {
@@ -195,7 +195,7 @@ export async function getDealReportMessage(userId: string, dealId: string): Prom
 export async function getDealSummary(formData: FormData): Promise<Summary> {
 	const startInstantly = formData.get("startInstantly")?.toString() === "on";
 	const startDate = dayjs(startInstantly ? dayjs().toDate() : formData.get("startDate")?.toString());
-	const duration = calculateDuration(formData);
+	const duration = calculateDurationInDays(formData);
 	const dealerId = formData.get("dealerId")?.toString() || "";
 	const price = await calculatePrice(dealerId, duration);
 
@@ -211,7 +211,7 @@ export async function getDealSummary(formData: FormData): Promise<Summary> {
 	};
 }
 
-function calculateDuration(formData: FormData): number {
+export function calculateDurationInDays(formData: FormData): number {
 	const startInstantly = formData.get("startInstantly")?.toString() === "on";
 	const ownEndDate = formData.get("ownEndDate")?.toString() === "on";
 	const startDate = dayjs(startInstantly ? dayjs().toDate() : formData.get("startDate")?.toString());
@@ -253,4 +253,20 @@ export async function calculatePrice(
 	result.discount = await getHighestVoucherDiscount(dealerId);
 
 	return result;
+}
+
+export async function saveDeal(dealInsert: DealInsert) {
+	const { images, ...rest } = dealInsert;
+
+	rest.paymentState = "PAYED";
+
+	const [result] = await sql`insert into deals ${sql(rest)} returning id`;
+
+	images.forEach(async (image, index) => {
+		if (image) {
+			await saveDealImage(result.id, index, image);
+		}
+	});
+
+	return;
 }

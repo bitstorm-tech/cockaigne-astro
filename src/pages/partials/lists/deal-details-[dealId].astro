@@ -19,9 +19,17 @@ if (!details) {
 	logger.error("Can't get deal details -> missing details");
 	return;
 }
+
+const countDealView = user.id !== details.dealerId;
 ---
 
-<span hx-get=`/api/deals/viewed/${dealId}` hx-trigger="intersect once" hx-swap="none" hx-target="this">
+{
+	countDealView && (
+		// needed to count deal views / visits (don't count visit of deal owner)
+		<div hx-get={`/api/deals/viewed/${dealId}`} hx-trigger="intersect once" hx-swap="none" hx-target="this" />
+	)
+}
+<span>
 	{details.description}
 </span>
 <div class="grid grid-cols-3 gap-1 py-2">
@@ -31,7 +39,7 @@ if (!details) {
 				src={url}
 				alt="Deal image"
 				class="h-24 w-full object-cover cursor-pointer"
-				hx-get=`/partials/lists/image-modal-${dealId}?index=${index}`
+				hx-get={`/partials/lists/image-modal-${dealId}?index=${index}`}
 				hx-target="#image-zoom-modal"
 				hx-swap="innerHTML"
 			/>
@@ -60,10 +68,10 @@ if (!details) {
 				{t("ends_on", user.language)} {details.end}
 			</span>
 			<div class="flex h-6 justify-between">
-			<div hx-get=`/partials/lists/like-button-${dealId}?toggle=false` hx-target="this" hx-trigger="load once" />
+				<div hx-get={`/partials/lists/like-button-${dealId}?toggle=false`} hx-target="this" hx-trigger="load once" />
 				<button
 					class="clean"
-					hx-get=`/partials/lists/report-modal-${dealId}?title=${details.title}`
+					hx-get={`/partials/lists/report-modal-${dealId}?title=${details.title}`}
 					hx-target="#modal"
 					hx-swap="innerHTML">
 					<ReportIcon class="h-6" />

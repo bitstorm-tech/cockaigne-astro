@@ -106,3 +106,16 @@ export async function saveDealerImage(dealerId: string, image: File): Promise<st
 
 	return result.url;
 }
+
+export async function saveDealImage(dealId: string, index: number, image: File): Promise<string> {
+	const file = Buffer.from(await image.arrayBuffer());
+
+	const result = await imagekit.upload({
+		folder: `${dealImagesFolder}/${dealId}`,
+		fileName: `${index}`,
+		useUniqueFileName: false,
+		file,
+	});
+
+	return result.url;
+}
