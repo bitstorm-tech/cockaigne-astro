@@ -31,6 +31,15 @@ export interface DealInsert {
 	images: Array<File | undefined>;
 }
 
+export interface DealUpdate {
+	id: string;
+	title: string;
+	description: string;
+	categoryId: number;
+	deleteImages: Array<boolean>;
+	newImages: Array<File | undefined>;
+}
+
 export interface DealHeader {
 	id: string;
 	dealerId: string;
@@ -39,6 +48,15 @@ export interface DealHeader {
 	categoryId: number;
 	canEdit: boolean;
 	isFavorite: boolean;
+}
+
+export interface DealDetails {
+	dealerId: string;
+	title: string;
+	description: string;
+	imageUrls: string[];
+	start: string;
+	end: string;
 }
 
 export interface DealOnMap {

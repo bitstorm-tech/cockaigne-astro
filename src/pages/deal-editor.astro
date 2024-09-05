@@ -5,6 +5,7 @@ import { getDeal } from "@lib/services/deal";
 import { getDefaultCategoryId } from "@lib/services/dealer";
 import { t } from "@lib/services/i18n";
 import { getDealImageUrls } from "@lib/services/imagekit";
+import { undefined } from "astro:schema";
 import dayjs from "dayjs";
 
 function editCreatedDeal(deal: Deal): boolean {
@@ -31,7 +32,12 @@ const deal: Deal = (dealId && (await getDeal(dealId))) || {
 	ownEndDate: false,
 };
 
-const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) => `'${url}'`);
+const urls = dealId ? (await getDealImageUrls(dealId)).map((url) => `'${url}'`) : [];
+const imagePreviewUrls: Array<string | undefined> = new Array(3).fill(undefined);
+urls.forEach((url) => {
+	const index = Number(url.split("?")[0].slice(-1));
+	imagePreviewUrls[index] = url;
+});
 ---
 
 <Layout>
@@ -47,6 +53,7 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 			imagePreviewUrls: [${imagePreviewUrls}],
 		}`}>
 		{deal.template && <h1 class="text-center">{t("template", language)}</h1>}
+		<input id="dealId" name="dealId" value={deal.id} hidden />
 		<!-- ----- -->
 		<!-- Title -->
 		<!-- ----- -->
@@ -116,7 +123,7 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 					class="h-24 w-full object-cover"
 					alt="Deal image 1"
 				/>
-				<input x-ref="fileInput1" type="file" hidden @change="add($event, $data, $refs, 1)" name="image1" />
+				<input x-ref="fileInput1" type="file" hidden @change="add($event, $data, 1)" name="image1" />
 			</div>
 			<div>
 				<button
@@ -202,7 +209,7 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 						<button
 							type="submit"
 							class="btn btn-primary flex-1"
-							hx-post={"/deal-update/" + deal.id}
+							hx-post={`/api/deals/update-deal`}
 							hx-encoding="multipart/form-data">
 							{t("save_changes", language)}
 						</button>
@@ -219,7 +226,7 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 		<div id="summary-modal"></div>
 	</form>
 	<script is:inline>
-		function add(event, refs, index) {
+		function add(event, data, index) {
 			const file = event.target.files[0];
 
 			if (!file) {
@@ -227,12 +234,12 @@ const imagePreviewUrls = dealId && (await getDealImageUrls(dealId)).map((url) =>
 			}
 
 			const URL = window.URL || window.webkitURL;
-			refs.imagePreviewUrls[index] = URL.createObjectURL(file);
+			data.imagePreviewUrls[index] = URL.createObjectURL(file);
 			document.getElementById(`deleteImage${index}`).checked = false;
 		}
 
-		function remove(input, refs, index) {
-			refs.imagePreviewUrls[index] = null;
+		function remove(input, data, index) {
+			data.imagePreviewUrls[index] = null;
 			input.value = null;
 			document.getElementById(`deleteImage${index}`).checked = true;
 		}

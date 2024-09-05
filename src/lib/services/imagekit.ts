@@ -83,6 +83,19 @@ export async function deleteDealerImage(dealerId: string, imageName: string) {
 	await imagekit.deleteFile(files[0].fileId);
 }
 
+export async function deleteDealImage(dealId: string, index: number) {
+	const files = await imagekit.listFiles({
+		path: `${dealImagesFolder}/${dealId}`,
+		searchQuery: `name="${index}"`,
+	});
+
+	if (files.length === 0) {
+		logger.error(`Can't delete dealer image ${dealId}/${index}`);
+	}
+
+	await imagekit.deleteFile(files[0].fileId);
+}
+
 export async function saveProfileImage(accountId: string, image: File) {
 	const file = Buffer.from(await image.arrayBuffer());
 

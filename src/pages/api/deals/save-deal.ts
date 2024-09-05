@@ -1,7 +1,7 @@
 import type { DealInsert } from "@lib/models/deal";
 import { renderAlertTranslated } from "@lib/services/alerts";
 import { calculateDurationInDays, saveDeal } from "@lib/services/deal";
-import { redirect } from "@lib/services/http";
+import { extractDealImagesFromFormData, redirect } from "@lib/services/http";
 import logger from "@lib/services/logger";
 import type { APIRoute } from "astro";
 import dayjs from "dayjs";
@@ -22,14 +22,6 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 function extractDealFromRequest(dealerId: string, formData: FormData): DealInsert {
 	const durationInHours = calculateDurationInDays(formData) * 24;
 
-	const imageValue0 = formData.get("image0")?.valueOf();
-	const imageValue1 = formData.get("image1")?.valueOf();
-	const imageValue2 = formData.get("image2")?.valueOf();
-
-	const image0 = imageValue0 ? (imageValue0 as File) : undefined;
-	const image1 = imageValue1 ? (imageValue1 as File) : undefined;
-	const image2 = imageValue2 ? (imageValue2 as File) : undefined;
-
 	const startInstantly = formData.get("startInstantly")?.toString() === "on";
 	const start = startInstantly ? dayjs().toDate() : dayjs(formData.get("startDate")?.toString()).toDate();
 
@@ -43,6 +35,6 @@ function extractDealFromRequest(dealerId: string, formData: FormData): DealInser
 		start,
 		template: formData.get("template")?.toString() === "on",
 		durationInHours,
-		images: [image0, image1, image2],
+		images: extractDealImagesFromFormData(formData),
 	};
 }

@@ -1,11 +1,10 @@
 import type { Category } from "@lib/models/category";
-import type { Deal, DealHeader, DealInsert, DealOnMap } from "@lib/models/deal";
-import type { DealDetails } from "@lib/models/deal-details";
+import type { Deal, DealDetails, DealHeader, DealInsert, DealOnMap, DealUpdate } from "@lib/models/deal";
 import type { Summary } from "@lib/models/deal-summary";
 import sql from "@lib/services/pg";
 import dayjs from "dayjs";
 import { Point, type Extent } from "./geo";
-import { getDealImageUrls, saveDealImage } from "./imagekit";
+import { deleteDealImage, getDealImageUrls, saveDealImage } from "./imagekit";
 import logger from "./logger";
 import { getFreeDaysLeft, getHighestVoucherDiscount, hasActiveSubscription } from "./subscription";
 
@@ -252,4 +251,24 @@ export async function saveDeal(dealInsert: DealInsert) {
 	});
 
 	return;
+}
+
+export async function updateDeal(dealUpdate: DealUpdate) {
+	const { id, deleteImages, newImages, ...dealData } = dealUpdate;
+
+	await sql`update deals set ${sql(dealData)} where id = ${id}`;
+
+	for (let i = 0; i < 3; i++) {
+		if (deleteImages[i]) {
+			await deleteDealImage(id, i);
+		}
+	}
+
+	for (let i = 0; i < 3; i++) {
+		const image = newImages[i];
+
+		if (image) {
+			await saveDealImage(id, i, image);
+		}
+	}
 }
