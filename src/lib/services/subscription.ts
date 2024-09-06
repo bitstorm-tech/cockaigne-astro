@@ -1,13 +1,74 @@
-import type { Subscription, SubscriptionInsert } from "@lib/models/subscription";
+import type { Subscription, SubscriptionInsert, SubscriptionState } from "@lib/models/subscription";
 import dayjs from "dayjs";
+import Stripe from "stripe";
 import sql from "./pg";
 
-export async function insertSubscription(insert: SubscriptionInsert) {
-	await sql`insert into subscriptions ${sql(insert)}`;
+const stripe = new Stripe(import.meta.env.STRIPE_PRIVATE_API_KEY);
+
+export async function createSubscription(accountId: string, planId: string, baseUrl: string): Promise<string> {
+	const priceId = await getPriceId(planId);
+	const stripeTrackingId = crypto.randomUUID();
+
+	const session = await stripe.checkout.sessions.create({
+		line_items: [
+			{
+				price: priceId,
+				quantity: 1,
+			},
+		],
+		metadata: {
+			stripeTrackingId,
+		},
+		mode: "subscription",
+		success_url: `${baseUrl}`,
+		cancel_url: `${baseUrl}/api/subscriptions/cancel-checkout-${stripeTrackingId}`,
+	});
+
+	const subscriptionInsert: SubscriptionInsert = {
+		accountId,
+		planId,
+		state: "WAITING_FOR_ACTIVATION",
+		stripeTrackingId,
+	};
+
+	await sql`insert into subscriptions ${sql(subscriptionInsert)}`;
+
+	return session.url!;
 }
 
-export async function cancelSubscription(trackingId: string) {
+export async function checkoutCompleted(trackingId: string, stripeSubscriptionId: string) {
+	const update = {
+		state: "ACTIVE" as SubscriptionState,
+		activated: dayjs().toDate(),
+		stripeSubscriptionId,
+	};
+
+	await sql`
+		update subscriptions
+		set ${sql(update)}
+		where stripe_tracking_id = ${trackingId}`;
+}
+
+export async function subscriptionExpired(subscriptionId: string) {
+	const expiredState: SubscriptionState = "EXPIRED";
+	const cancelDate = dayjs().toDate();
+
+	await sql`
+		update subscriptions
+		set state = ${expiredState}, canceled = ${cancelDate}
+		where stripe_subscription_id = ${subscriptionId}`;
+}
+
+export async function removePendingCheckout(trackingId: string) {
 	await sql`delete from subscriptions where stripe_tracking_id = ${trackingId} and state = 'WAITING_FOR_ACTIVATION'`;
+}
+
+export async function updateSubscriptionPlan(subscriptionId: string, newPrice: string) {
+	await sql`
+		update subscriptions
+		set plan_id = plans.id
+		from plans
+		where plans.stripe_price_id = ${newPrice} and subscriptions.stripe_subscription_id = ${subscriptionId}`;
 }
 
 export async function getPriceId(planId: string): Promise<string | undefined> {

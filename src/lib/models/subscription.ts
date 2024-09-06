@@ -1,4 +1,4 @@
-export type SubscriptionState = "ACTIVE" | "CANCELED" | "WAITING_FOR_ACTIVATION";
+export type SubscriptionState = "ACTIVE" | "CANCELED" | "EXPIRED" | "WAITING_FOR_ACTIVATION";
 
 export interface Subscription {
 	id: string;

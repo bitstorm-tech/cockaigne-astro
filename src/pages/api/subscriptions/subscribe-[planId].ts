@@ -1,7 +1,7 @@
 import { renderAlertTranslated } from "@lib/services/alerts";
 import { createBaseUrl } from "@lib/services/http";
 import logger from "@lib/services/logger";
-import { createSubscription } from "@lib/services/stripe";
+import { createSubscription } from "@lib/services/subscription";
 import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ params, locals, url }): Promise<Response> => {
