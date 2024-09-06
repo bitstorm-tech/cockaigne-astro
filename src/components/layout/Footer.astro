@@ -5,8 +5,8 @@ import MapIcon from "@components/icons/MapIcon.astro";
 import TopDealsIcon from "@components/icons/TopDealsIcon.astro";
 
 const { isDealer } = Astro.locals.user;
-const activeUrl = Astro.url.pathname.split("/").pop();
-const isHomeUrl = activeUrl?.startsWith("dealer") || activeUrl?.startsWith("user");
+const activeUrl = Astro.url.pathname.split("/").pop() || "";
+const isHomeUrl = activeUrl.startsWith("dealer") || activeUrl.startsWith("user");
 ---
 
 <footer class="fixed bottom-0 left-0 right-0 h-10 border-t border-t-white border-opacity-25 bg-dark">
@@ -17,7 +17,7 @@ const isHomeUrl = activeUrl?.startsWith("dealer") || activeUrl?.startsWith("user
 		{
 			isDealer ? (
 				<a href="/deals-overview">
-					<DealsOverviewIcon class="h-6" outline={activeUrl !== "deals-overview"} />
+					<DealsOverviewIcon class="h-6" outline={!["deals-overview", "templates"].includes(activeUrl)} />
 				</a>
 			) : (
 				<>

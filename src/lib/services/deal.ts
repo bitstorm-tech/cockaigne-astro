@@ -94,6 +94,11 @@ export async function getFavoriteDealsDealHeaders(userId: string): Promise<DealH
 		where f.user_id = ${userId}`;
 }
 
+export async function getTemplateDealHeaders(dealerId: string): Promise<DealHeader[]> {
+	return await sql<DealHeader[]>`
+		select id, dealer_id, title, category_id from deals where dealer_id = ${dealerId} and template is true`;
+}
+
 export async function getDealDetails(dealId: string): Promise<DealDetails | undefined> {
 	const [result] =
 		await sql`select title, description, start, duration_in_hours, dealer_id from deals where id = ${dealId}`;

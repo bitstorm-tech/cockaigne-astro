@@ -204,16 +204,15 @@ urls.forEach((url) => {
 		<div class="flex gap-2">
 			<a href="/" class="btn btn-outline btn-primary flex-1">{t("cancel", language)}</a>
 			{
-				deal.template ||
-					(editCreatedDeal(deal) && (
-						<button
-							type="submit"
-							class="btn btn-primary flex-1"
-							hx-post={`/api/deals/update-deal`}
-							hx-encoding="multipart/form-data">
-							{t("save_changes", language)}
-						</button>
-					))
+				(deal.template || editCreatedDeal(deal)) && (
+					<button
+						type="submit"
+						class="btn btn-primary flex-1"
+						hx-post={`/api/deals/update-deal`}
+						hx-encoding="multipart/form-data">
+						{t("save_changes", language)}
+					</button>
+				)
 			}
 			{
 				!editCreatedDeal(deal) && (
