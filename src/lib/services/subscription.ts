@@ -16,6 +16,16 @@ export async function createSubscription(accountId: string, planId: string, base
 				quantity: 1,
 			},
 		],
+		automatic_tax: {
+			enabled: true,
+		},
+		tax_id_collection: {
+			enabled: true,
+		},
+		payment_method_types: ["card", "paypal"],
+		shipping_address_collection: {
+			allowed_countries: ["DE"],
+		},
 		metadata: {
 			stripeTrackingId,
 		},
