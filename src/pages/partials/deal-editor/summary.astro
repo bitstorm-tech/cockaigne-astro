@@ -1,7 +1,7 @@
 ---
 import Modal from "@layouts/Modal.astro";
 import { renderAlertTranslated } from "@lib/services/alerts";
-import { getDealSummary } from "@lib/services/deal";
+import { calculateDurationInDays, getDealSummary } from "@lib/services/deal";
 import { t } from "@lib/services/i18n";
 import dayjs from "dayjs";
 
@@ -16,6 +16,11 @@ if (!formData.get("title")) {
 
 if (!formData.get("description")) {
 	return renderAlertTranslated("alert.enter_description", language);
+}
+
+const duration = calculateDurationInDays(formData);
+if (duration < 1) {
+	return renderAlertTranslated("alert.start_before_end", language);
 }
 
 const summary = await getDealSummary(formData);

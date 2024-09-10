@@ -36,6 +36,10 @@ export interface DealUpdate {
 	title: string;
 	description: string;
 	categoryId: number;
+	start: Date;
+	ownEndDate: boolean;
+	durationInHours: number;
+	startInstantly: boolean;
 	deleteImages: Array<boolean>;
 	newImages: Array<File | undefined>;
 }

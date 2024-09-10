@@ -76,8 +76,6 @@ const currentLocation = id ? await getLocation(id) : Point.centerOfGermany();
 			return;
 		}
 
-		console.log("set address:", address);
-
 		const addressTokens = address.split(",");
 		streetLabel.textContent = addressTokens[0];
 		cityLabel.textContent = addressTokens[1];

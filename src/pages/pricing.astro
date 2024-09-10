@@ -1,6 +1,7 @@
 ---
 import BasicPlanCard from "@components/pricing/BasicPlanCard.astro";
 import PlanCard from "@components/pricing/PlanCard.astro";
+import VoucherCard from "@components/pricing/VoucherCard.astro";
 import Layout from "@layouts/Layout.astro";
 import { t } from "@lib/services/i18n";
 import { hasActiveSubscription } from "@lib/services/subscription";
@@ -56,7 +57,7 @@ const hasActiveSub = await hasActiveSubscription(id);
 				</ul>
 			</BasicPlanCard>
 		</template>
-		<div class="w-full" hx-get="/active-vouchers-card" hx-target="this" hx-trigger="load" x-show="tabIndex === 0"></div>
+		<VoucherCard />
 		<!----------------------------------------->
 		<!-- Montly plan  -->
 		<!----------------------------------------->

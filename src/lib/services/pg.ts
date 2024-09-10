@@ -1,4 +1,5 @@
 import postgres from "postgres";
+import logger from "./logger";
 
 const user = import.meta.env.PG_USER;
 const password = import.meta.env.PG_PASSWORD;
@@ -16,5 +17,6 @@ const sql = postgres({
 	transform: postgres.toCamel,
 });
 
-console.log(`Connection to database: ${host}:${port}/${database}`);
+logger.info(`Connection to database: ${host}:${port}/${database}`);
+
 export default sql;

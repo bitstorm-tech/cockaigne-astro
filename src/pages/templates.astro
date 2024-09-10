@@ -6,7 +6,6 @@ import { getTemplateDealHeaders } from "@lib/services/deal";
 
 const { id = "" } = Astro.locals.user;
 const dealHeaders = await getTemplateDealHeaders(id);
-console.log(dealHeaders);
 ---
 
 <Layout showFooter={true}>
