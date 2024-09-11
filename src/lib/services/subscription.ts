@@ -1,6 +1,7 @@
 import type { Subscription, SubscriptionInsert, SubscriptionState } from "@lib/models/subscription";
-import dayjs from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import Stripe from "stripe";
+import logger from "./logger";
 import sql from "./pg";
 
 const stripe = new Stripe(import.meta.env.STRIPE_PRIVATE_API_KEY);
@@ -76,7 +77,7 @@ export async function removePendingCheckout(trackingId: string) {
 export async function updateSubscriptionPlan(subscriptionId: string, newPrice: string) {
 	await sql`
 		update subscriptions
-		set plan_id = plans.id
+		set plan_id = plans.id, activated = now()
 		from plans
 		where plans.stripe_price_id = ${newPrice} and subscriptions.stripe_subscription_id = ${subscriptionId}`;
 }
@@ -109,7 +110,10 @@ export async function getActiveSubscription(dealerId: string): Promise<Subscript
 	return result;
 }
 
-export async function getFreeDaysLeft(dealerId: string): Promise<number> {
+export async function getFreeDaysLeftInCurrentPeriod(dealerId: string, periodEnd?: Dayjs): Promise<number> {
+	if (!periodEnd) {
+		periodEnd = await getCurrentSubscriptionPeriodEndDate(dealerId);
+	}
 	return 0;
 }
 
@@ -120,15 +124,35 @@ export async function getHighestVoucherDiscount(dealerId: string): Promise<numbe
 	return result.discount;
 }
 
-export async function getCurrentSubscriptionPeriodEndDate(dealerId: string): Promise<Date | undefined> {
-	const [result] =
-		await sql`select activated from subscriptions where account_id = ${dealerId} and state = 'ACTIVE' limit 1`;
+export async function getCurrentSubscriptionPeriodEndDate(dealerId: string): Promise<Dayjs | undefined> {
+	const [result] = await sql<{ activated: Date; name: string; stripeSubscriptionId: string }[]>`
+		select activated, name, stripe_subscription_id
+		from subscriptions s
+		join plans p on s.plan_id = p.id
+		where account_id = ${dealerId} and state = 'ACTIVE'
+		limit 1`;
 
 	if (!result) {
+		logger.error(
+			`Can't get current subscription period end date -> no active subscription found for dealer ${dealerId}`,
+		);
 		return;
 	}
 
-	const day = dayjs(result.activated).date();
+	if (result.name.toLowerCase().includes("month")) {
+		return await getCurrentSubscriptionPeriodEndDateFromStripe(result.stripeSubscriptionId);
+	}
+
+	return calculateSubscriptionPeriodEndDate(result.activated);
+}
+
+async function getCurrentSubscriptionPeriodEndDateFromStripe(stripeSubscriptionId: string): Promise<Dayjs> {
+	const response = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+	return dayjs(response.current_period_end * 1000);
+}
+
+function calculateSubscriptionPeriodEndDate(activationDate: Date): Dayjs {
+	const day = dayjs(activationDate).date();
 	let month = dayjs().month() + (dayjs().date() < day ? 1 : 2);
 	let year = dayjs().year();
 
@@ -137,5 +161,5 @@ export async function getCurrentSubscriptionPeriodEndDate(dealerId: string): Pro
 		year += 1;
 	}
 
-	return dayjs(`${year}-${month}-${day}`).toDate();
+	return dayjs(`${year}-${month}-${day}`);
 }
