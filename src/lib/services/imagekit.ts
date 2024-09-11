@@ -132,3 +132,10 @@ export async function saveDealImage(dealId: string, index: number, image: File):
 
 	return result.url;
 }
+
+export async function copyImageFromTemplate(templateId: string, dealId: string, index: number) {
+	await imagekit.copyFile({
+		sourceFilePath: `${dealImagesFolder}/${templateId}/${index}`,
+		destinationPath: `${dealImagesFolder}/${dealId}`,
+	});
+}

@@ -242,7 +242,7 @@ export async function calculatePrice(
 	return result;
 }
 
-export async function saveDeal(dealInsert: DealInsert) {
+export async function saveDeal(dealInsert: DealInsert): Promise<string> {
 	const { images, ...rest } = dealInsert;
 
 	rest.paymentState = "PAYED";
@@ -255,7 +255,7 @@ export async function saveDeal(dealInsert: DealInsert) {
 		}
 	});
 
-	return;
+	return result.id;
 }
 
 export async function updateDeal(dealUpdate: DealUpdate) {
