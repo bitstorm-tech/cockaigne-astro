@@ -1,25 +1,25 @@
 ---
 import { t } from "@lib/services/i18n";
 import {
-	getCurrentSubscriptionPeriodEndDate,
-	getFreeDaysLeftInCurrentPeriod,
+	getCurrentSubscriptionPeriod,
+	getFreeDaysLeftInCurrentSubscriptionPeriod,
 	hasActiveSubscription,
 } from "@lib/services/subscription";
-import dayjs from "dayjs";
 
 export const partial = true;
 
 const { language, id = "" } = Astro.locals.user;
-const freeDaysLeft = await getFreeDaysLeftInCurrentPeriod(id);
 const hasActiveSub = await hasActiveSubscription(id);
-const periodEndDate = hasActiveSub && ((await getCurrentSubscriptionPeriodEndDate(id)) || dayjs()).format("DD.MM.YYYY");
+const currentSubscriptionPeriod = await getCurrentSubscriptionPeriod(id);
+const subscriptionPeriodEndDate = hasActiveSub && currentSubscriptionPeriod?.end.format("DD.MM.YYYY");
+const freeDaysLeft = await getFreeDaysLeftInCurrentSubscriptionPeriod(id, currentSubscriptionPeriod);
 ---
 
 {
 	hasActiveSub ? (
 		<div class="flex flex-col justify-center">
 			<div class="text-right">{`${freeDaysLeft} ${t("deals_left", language)}`}</div>
-			<div class="text-xs text-right">Verfügbar bis {periodEndDate}</div>
+			<div class="text-xs text-right">Verfügbar bis {subscriptionPeriodEndDate}</div>
 		</div>
 	) : (
 		<div class="flex flex-col text-sm text-center">

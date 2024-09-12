@@ -110,11 +110,36 @@ export async function getActiveSubscription(dealerId: string): Promise<Subscript
 	return result;
 }
 
-export async function getFreeDaysLeftInCurrentPeriod(dealerId: string, periodEnd?: Dayjs): Promise<number> {
-	if (!periodEnd) {
-		periodEnd = await getCurrentSubscriptionPeriodEndDate(dealerId);
+export interface CurrentSubscripitonPeriod {
+	start: Dayjs;
+	end: Dayjs;
+}
+
+export async function getFreeDaysLeftInCurrentSubscriptionPeriod(
+	dealerId: string,
+	currentSubscriptionPeriod?: CurrentSubscripitonPeriod,
+): Promise<number> {
+	if (!currentSubscriptionPeriod) {
+		currentSubscriptionPeriod = await getCurrentSubscriptionPeriod(dealerId);
 	}
-	return 0;
+
+	if (!currentSubscriptionPeriod) {
+		logger.error(`Can't get free days left in current subscription period -> can't get current subscription period`);
+		return 0;
+	}
+
+	const startDate = currentSubscriptionPeriod.start.format("YYYY-MM-DD");
+	const endDate = currentSubscriptionPeriod.end.format("YYYY-MM-DD");
+
+	const [result] = await sql`
+		select p.free_days_per_month - (sum(duration_in_hours) / 24) as free_days_left
+		from deals d
+		join subscriptions s on s.account_id = d.dealer_id
+		join plans p on p.id = s.plan_id
+		where d.dealer_id = ${dealerId} and d.created between ${startDate} and ${endDate} and template is false
+		group by p.free_days_per_month`;
+
+	return result.freeDaysLeft;
 }
 
 export async function getHighestVoucherDiscount(dealerId: string): Promise<number> {
@@ -124,7 +149,7 @@ export async function getHighestVoucherDiscount(dealerId: string): Promise<numbe
 	return result.discount;
 }
 
-export async function getCurrentSubscriptionPeriodEndDate(dealerId: string): Promise<Dayjs | undefined> {
+export async function getCurrentSubscriptionPeriod(dealerId: string): Promise<CurrentSubscripitonPeriod | undefined> {
 	const [result] = await sql<{ activated: Date; name: string; stripeSubscriptionId: string }[]>`
 		select activated, name, stripe_subscription_id
 		from subscriptions s
@@ -133,33 +158,48 @@ export async function getCurrentSubscriptionPeriodEndDate(dealerId: string): Pro
 		limit 1`;
 
 	if (!result) {
-		logger.error(
-			`Can't get current subscription period end date -> no active subscription found for dealer ${dealerId}`,
-		);
+		logger.error(`Can't get current subscription period -> no active subscription found for dealer ${dealerId}`);
 		return;
 	}
 
 	if (result.name.toLowerCase().includes("month")) {
-		return await getCurrentSubscriptionPeriodEndDateFromStripe(result.stripeSubscriptionId);
+		return await getCurrentSubscriptionPeriodFromStripe(result.stripeSubscriptionId);
 	}
 
-	return calculateSubscriptionPeriodEndDate(result.activated);
+	return calculateSubscriptionPeriod(result.activated);
 }
 
-async function getCurrentSubscriptionPeriodEndDateFromStripe(stripeSubscriptionId: string): Promise<Dayjs> {
+async function getCurrentSubscriptionPeriodFromStripe(
+	stripeSubscriptionId: string,
+): Promise<CurrentSubscripitonPeriod> {
 	const response = await stripe.subscriptions.retrieve(stripeSubscriptionId);
-	return dayjs(response.current_period_end * 1000);
+
+	return {
+		start: dayjs(response.current_period_start * 1000),
+		end: dayjs(response.current_period_end * 1000),
+	};
 }
 
-function calculateSubscriptionPeriodEndDate(activationDate: Date): Dayjs {
-	const day = dayjs(activationDate).date();
-	let month = dayjs().month() + (dayjs().date() < day ? 1 : 2);
-	let year = dayjs().year();
+export function calculateSubscriptionPeriod(activationDate: Date, today = dayjs()): CurrentSubscripitonPeriod {
+	const todayDay = today.date();
+	const activationDay = dayjs(activationDate).date();
 
-	if (month > 12) {
-		month = 1;
-		year += 1;
+	let endMonth = today.month() + (todayDay < activationDay ? 1 : 2);
+	let endYear = today.year();
+
+	if (endMonth > 12) {
+		endMonth = 1;
+		endYear += 1;
 	}
 
-	return dayjs(`${year}-${month}-${day}`);
+	const endDay = Math.min(activationDay, dayjs(`${endYear}-${endMonth}`).endOf("month").date());
+
+	const startYear = endMonth === 1 ? endYear - 1 : endYear;
+	const startMonth = endMonth === 1 ? 12 : endMonth - 1;
+	const startDay = Math.min(activationDay, dayjs(`${startYear}-${startMonth}`).endOf("month").date());
+
+	return {
+		start: dayjs(`${startYear}-${startMonth}-${startDay}`),
+		end: dayjs(`${endYear}-${endMonth}-${endDay}`),
+	};
 }

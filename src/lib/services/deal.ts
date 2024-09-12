@@ -6,7 +6,11 @@ import dayjs from "dayjs";
 import { Point, type Extent } from "./geo";
 import { deleteDealImage, getDealImageUrls, saveDealImage } from "./imagekit";
 import logger from "./logger";
-import { getFreeDaysLeft, getHighestVoucherDiscount, hasActiveSubscription } from "./subscription";
+import {
+	getFreeDaysLeftInCurrentSubscriptionPeriod,
+	getHighestVoucherDiscount,
+	hasActiveSubscription,
+} from "./subscription";
 
 export type DealState = "active" | "past" | "future" | "template" | "favorite-deals" | "favorite-dealers";
 
@@ -226,7 +230,7 @@ export async function calculatePrice(
 	const hasActiveSub = await hasActiveSubscription(dealerId);
 
 	if (hasActiveSub) {
-		const freeDaysLeft = (await getFreeDaysLeft(dealerId)) - duration;
+		const freeDaysLeft = (await getFreeDaysLeftInCurrentSubscriptionPeriod(dealerId)) - duration;
 
 		result.freeDaysLeft = Math.max(0, freeDaysLeft);
 
