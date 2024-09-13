@@ -249,7 +249,7 @@ export async function calculatePrice(
 export async function saveDeal(dealInsert: DealInsert): Promise<string> {
 	const { images, ...rest } = dealInsert;
 
-	rest.paymentState = "PAYED";
+	rest.paymentState = "PAYMENT_PENDING";
 
 	const [result] = await sql`insert into deals ${sql(rest)} returning id`;
 
@@ -280,4 +280,16 @@ export async function updateDeal(dealUpdate: DealUpdate) {
 			await saveDealImage(id, i, image);
 		}
 	}
+}
+
+export async function activateDealByDealId(dealId: string) {
+	await sql`update deals set payment_state = 'PAYED' where id = ${dealId}`;
+}
+
+export async function activateDealByStripePaymentIntentId(paymentIntentId: string) {
+	await sql`update deals set payment_state = 'PAYED' where stripe_payment_intent_id = ${paymentIntentId}`;
+}
+
+export async function setPaymentIntentId(dealId: string, paymentIntentId: string) {
+	await sql`update deals set stripe_payment_intent_id = ${paymentIntentId} where id = ${dealId}`;
 }

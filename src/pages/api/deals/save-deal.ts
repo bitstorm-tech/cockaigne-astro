@@ -1,9 +1,10 @@
 import type { DealInsert } from "@lib/models/deal";
 import { renderAlertTranslated } from "@lib/services/alerts";
-import { calculateDurationInDays, saveDeal } from "@lib/services/deal";
-import { extractDealImagesFromFormData, redirect } from "@lib/services/http";
+import { activateDealByDealId, calculateDurationInDays, saveDeal } from "@lib/services/deal";
+import { createBaseUrl, extractDealImagesFromFormData, fullRedirect, redirect } from "@lib/services/http";
 import { copyImageFromTemplate } from "@lib/services/imagekit";
 import logger from "@lib/services/logger";
+import { doDynamicPayment, getFreeDaysLeftInCurrentSubscriptionPeriod } from "@lib/services/subscription";
 import type { APIRoute } from "astro";
 import dayjs from "dayjs";
 
@@ -27,6 +28,14 @@ export const POST: APIRoute = async ({ request, url, locals }): Promise<Response
 		}
 	}
 
+	const stripeCheckoutUrl = await doPaymentIfNeeded(dealInsert.dealerId, dealId, dealInsert.durationInHours / 24, url);
+
+	if (stripeCheckoutUrl) {
+		return fullRedirect(stripeCheckoutUrl);
+	}
+
+	await activateDealByDealId(dealId);
+
 	return redirect("/");
 };
 
@@ -48,4 +57,19 @@ function extractDealFromRequest(dealerId: string, formData: FormData): DealInser
 		durationInHours,
 		images: extractDealImagesFromFormData(formData),
 	};
+}
+
+async function doPaymentIfNeeded(
+	dealerId: string,
+	dealId: string,
+	durationInDays: number,
+	url: URL,
+): Promise<string | undefined> {
+	const freeDaysLeft = await getFreeDaysLeftInCurrentSubscriptionPeriod(dealerId);
+	const freeDaysLeftAfterDeal = freeDaysLeft - durationInDays;
+
+	if (freeDaysLeftAfterDeal < 0) {
+		const baseUrl = createBaseUrl(url);
+		return await doDynamicPayment(-freeDaysLeftAfterDeal, dealId, baseUrl);
+	}
 }

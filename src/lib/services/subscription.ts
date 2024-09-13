@@ -47,6 +47,41 @@ export async function createSubscription(accountId: string, planId: string, base
 	return session.url!;
 }
 
+export async function doDynamicPayment(daysToPay: number, dealId: string, baseUrl: string): Promise<string> {
+	const session = await stripe.checkout.sessions.create({
+		line_items: [
+			{
+				quantity: 1,
+				price_data: {
+					unit_amount: daysToPay * 499,
+					currency: "EUR",
+					product_data: {
+						name: `Preis für ${daysToPay} Tag(e) Laufzeit`,
+					},
+				},
+			},
+		],
+		automatic_tax: {
+			enabled: true,
+		},
+		tax_id_collection: {
+			enabled: true,
+		},
+		payment_method_types: ["card", "paypal"],
+		shipping_address_collection: {
+			allowed_countries: ["DE"],
+		},
+		metadata: {
+			dealId,
+		},
+		mode: "payment",
+		success_url: `${baseUrl}`,
+		cancel_url: `${baseUrl}`,
+	});
+
+	return session.url!;
+}
+
 export async function checkoutCompleted(trackingId: string, stripeSubscriptionId: string) {
 	const update = {
 		state: "ACTIVE" as SubscriptionState,
@@ -132,11 +167,11 @@ export async function getFreeDaysLeftInCurrentSubscriptionPeriod(
 	const endDate = currentSubscriptionPeriod.end.format("YYYY-MM-DD");
 
 	const [result] = await sql`
-		select p.free_days_per_month - (sum(duration_in_hours) / 24) as free_days_left
+		select greatest(0, p.free_days_per_month - (sum(duration_in_hours) / 24)::int) as free_days_left
 		from deals d
 		join subscriptions s on s.account_id = d.dealer_id
 		join plans p on p.id = s.plan_id
-		where d.dealer_id = ${dealerId} and d.created between ${startDate} and ${endDate} and template is false
+		where d.dealer_id = ${dealerId} and d.created between ${startDate} and ${endDate} and template is false and payment_state = 'PAYED'
 		group by p.free_days_per_month`;
 
 	return result.freeDaysLeft;
