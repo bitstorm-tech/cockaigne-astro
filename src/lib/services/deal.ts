@@ -70,15 +70,21 @@ export async function getDealsForMap(extent: Extent, accountId: string): Promise
 	}));
 }
 
-export async function getActiveDealHeaders(userId?: string, dealerId?: string): Promise<DealHeader[]> {
-	const withDealerId = (dealerId: string | undefined) => (dealerId ? sql`where dealer_id = ${dealerId}` : sql``);
-
+export async function getActiveDealHeadersForUserPage(userId: string): Promise<DealHeader[]> {
 	return await sql<DealHeader[]>`
-		select d.id, d.dealer_id, d.title, d.category_id, a.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+		select d.id, d.dealer_id, d.title, d.category_id, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
   		from active_deals_view d
-		join accounts a on d.dealer_id = a.id
+    	join accounts a on a.id = ${userId}
 		left join favorite_deals f on f.deal_id = d.id
-		${withDealerId(dealerId)}`;
+		where ${sql`st_within(d.location, st_buffer(a.location::geography, a.search_radius_in_meters)::geometry)`}`;
+}
+
+export async function getActiveDealHeadersForDealerPage(dealerId: string, userId?: string): Promise<DealHeader[]> {
+	return await sql<DealHeader[]>`
+		select d.id, d.dealer_id, d.title, d.category_id, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+  		from active_deals_view d
+		left join favorite_deals f on f.deal_id = d.id
+		where dealer_id = ${dealerId}`;
 }
 
 export async function getFavoriteDealersDealHeaders(userId: string): Promise<DealHeader[]> {

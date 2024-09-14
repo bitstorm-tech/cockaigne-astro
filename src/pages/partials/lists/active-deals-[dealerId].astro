@@ -1,12 +1,12 @@
 ---
 import DealHeader from "@components/deal/DealHeader.astro";
 import FavoriteToggleButton from "@components/deal/FavoriteToggleButton.astro";
-import { getActiveDealHeaders } from "@lib/services/deal";
+import { getActiveDealHeadersForDealerPage } from "@lib/services/deal";
 
 export const partial = true;
 const userId = Astro.locals.user.id;
 const { dealerId } = Astro.params;
-const dealHeaders = await getActiveDealHeaders(userId, dealerId);
+const dealHeaders = await getActiveDealHeadersForDealerPage(dealerId!, userId);
 const showFavoriteToggle = userId !== dealerId;
 ---
 

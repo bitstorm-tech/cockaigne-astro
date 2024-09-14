@@ -14,7 +14,7 @@ const { user } = Astro.locals;
 	<div x-data="{selectedTab: 0}">
 		<div class="tabs tabs-bordered" x-cloak>
 			<div
-				hx-get={`/partials/lists/active-${dealerId}`}
+				hx-get={`/partials/lists/active-deals-${dealerId}`}
 				hx-target="#content"
 				hx-trigger="click, load"
 				class="tab"

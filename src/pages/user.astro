@@ -11,7 +11,7 @@ import Layout from "@layouts/Layout.astro";
 	<div x-data="{selectedTab: 0}">
 		<div class="tabs tabs-bordered" x-cloak>
 			<div
-				hx-get="/partials/lists/active"
+				hx-get="/partials/lists/active-deals"
 				hx-target="#content"
 				hx-trigger="click, load"
 				class="tab"
