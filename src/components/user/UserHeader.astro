@@ -5,14 +5,18 @@ import LocationIcon from "@components/icons/LocationIcon.astro";
 import { getLocation, getUsernameById } from "@lib/services/account";
 import { Point } from "@lib/services/geo";
 import { t } from "@lib/services/i18n";
+import { areSelectedCategoriesActive, useLocationService } from "@lib/services/user";
 import DealsCountBadge from "./DealsCountBadge.astro";
 import FavoriteDealersCountBadge from "./FavoriteDealersCountBadge.astro";
 import FavoriteDealsCountBadge from "./FavoriteDealsCountBadge.astro";
 
 const { id, language } = Astro.locals.user;
-const username = id ? await getUsernameById(id) : t("basic", language);
-const useLocationService = false;
-const currentLocation = id ? await getLocation(id) : Point.centerOfGermany();
+const [username, locationService, currentLocation, selectedCategoriesFilterActive] = await Promise.all([
+	id ? await getUsernameById(id) : t("basic", language),
+	id ? await useLocationService(id) : false,
+	id ? await getLocation(id) : Point.centerOfGermany(),
+	id ? await areSelectedCategoriesActive(id) : false,
+]);
 ---
 
 <div class="flex h-52 justify-between">
@@ -52,12 +56,15 @@ const currentLocation = id ? await getLocation(id) : Point.centerOfGermany();
 				class="btn-circle btn-primary flex w-20 justify-start self-end rounded-l-full rounded-r-none px-0.5"
 				hx-get="/partials/map/filter-modal"
 				hx-target="#modal">
-				<FilterIcon class="h-11 w-auto rounded-full border border-white p-1" />
+				<FilterIcon
+					class="h-11 w-auto rounded-full border border-white p-1"
+					outline={!selectedCategoriesFilterActive}
+				/>
 			</button>
 		</div>
 	</div>
 </div>
-<script is:inline define:vars={{ useLocationService, currentLocation }}>
+<script is:inline define:vars={{ useLocationService: locationService, currentLocation }}>
 	const streetLabel = document.getElementById("street");
 	const cityLabel = document.getElementById("city");
 	LocationService.addChangeHandler((_, address) => setAddressLabels(address));

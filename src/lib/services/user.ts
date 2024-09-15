@@ -53,3 +53,15 @@ export async function toggleFavorite(userId: string, dealId: string): Promise<bo
 
 	return !isFavorite;
 }
+
+export async function areSelectedCategoriesActive(userId: string): Promise<boolean> {
+	const [result] = await sql`select true from selected_categories where user_id = ${userId}`;
+
+	return !!result;
+}
+
+export async function useLocationService(userId: string): Promise<boolean> {
+	const [result] = await sql`select use_location_service from accounts where id = ${userId}`;
+
+	return result.useLocationService;
+}
