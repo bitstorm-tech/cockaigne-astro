@@ -5,7 +5,7 @@ import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request, locals }): Promise<Response> => {
 	if (!locals.user.id) {
-		logger.error(`Can't update account location -> missing account id`);
+		logger.error("Can't update account location -> missing account id");
 		return new Response();
 	}
 

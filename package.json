@@ -14,15 +14,9 @@
 		"ncu": "ncu -u && bun i"
 	},
 	"dependencies": {
-		"@astrojs/alpinejs": "0.4.0",
-		"@astrojs/check": "0.9.3",
-		"@astrojs/node": "8.3.3",
-		"@astrojs/tailwind": "5.1.1",
 		"@getbrevo/brevo": "2.2.0",
-		"@types/alpinejs": "3.13.10",
-		"@types/bcryptjs": "2.4.6",
 		"alpinejs": "3.14.1",
-		"astro": "4.15.7",
+		"astro": "5.0.0-beta.1",
 		"bcryptjs": "2.4.3",
 		"dayjs": "1.11.13",
 		"imagekit": "5.2.0",
@@ -33,6 +27,12 @@
 		"winston": "3.14.2"
 	},
 	"devDependencies": {
+		"@astrojs/alpinejs": "0.4.0",
+		"@astrojs/check": "0.9.3",
+		"@astrojs/node": "9.0.0-beta.2",
+		"@astrojs/tailwind": "5.1.1",
+		"@types/alpinejs": "3.13.10",
+		"@types/bcryptjs": "2.4.6",
 		"daisyui": "4.12.10",
 		"npm-check-updates": "17.1.2",
 		"playwright": "1.47.1",

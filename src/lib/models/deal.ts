@@ -51,6 +51,7 @@ export interface DealHeader {
 	username: string;
 	categoryId: number;
 	canEdit: boolean;
+	startTime: string;
 	isFavorite: boolean;
 }
 

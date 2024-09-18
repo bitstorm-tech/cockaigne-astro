@@ -70,20 +70,42 @@ export async function getDealsForMap(extent: Extent, accountId: string): Promise
 	}));
 }
 
+function rotateToCurrentDeal(dealHeaders: DealHeader[]): DealHeader[] {
+	if (dealHeaders.length <= 1) {
+		return dealHeaders;
+	}
+
+	const now = Number(dayjs().format("HHmmss"));
+
+	for (let i = 0; i < dealHeaders.length; i++) {
+		const nextStartTime = Number(dealHeaders[1].startTime.split(".")[0].replaceAll(":", ""));
+		if (nextStartTime < now) {
+			dealHeaders.push(dealHeaders.shift()!);
+		} else {
+			break;
+		}
+	}
+
+	return dealHeaders;
+}
+
 export async function getActiveDealHeadersForUserPage(userId: string): Promise<DealHeader[]> {
 	const [result] =
 		await sql`select array_agg(category_id) as category_ids from selected_categories where user_id = ${userId}`;
 
 	const categoryFilter = result.categoryIds ? sql` and d.category_id in ${sql(result.categoryIds)}` : sql``;
 
-	return await sql<DealHeader[]>`
-		select d.id, d.dealer_id, d.title, d.category_id, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+	return rotateToCurrentDeal(
+		await sql<DealHeader[]>`
+		select d.id, d.dealer_id, d.title, d.category_id, d.username, d.start_time, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
   		from active_deals_view d
     	join accounts a on a.id = ${userId}
 		left join favorite_deals f on f.deal_id = d.id
 		where
 			${sql`st_within(d.location, st_buffer(a.location::geography, a.search_radius_in_meters)::geometry)`} ${categoryFilter}
-			${categoryFilter}`;
+			${categoryFilter}
+		order by d.start_time`,
+	);
 }
 
 export async function getActiveDealHeadersForDealerPage(dealerId: string, userId?: string): Promise<DealHeader[]> {
@@ -95,20 +117,25 @@ export async function getActiveDealHeadersForDealerPage(dealerId: string, userId
 }
 
 export async function getFavoriteDealersDealHeaders(userId: string): Promise<DealHeader[]> {
-	return await sql<DealHeader[]>`
-		select d.id, d.dealer_id, d.title, d.category_id, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+	return rotateToCurrentDeal(
+		await sql<DealHeader[]>`
+		select d.id, d.dealer_id, d.title, d.category_id, d.username, d.start_time, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
 	 	from active_deals_view d
 		join favorite_dealers_view fd on fd.dealer_id = d.dealer_id
 		left join favorite_deals f on f.deal_id = d.id
-		where f.user_id = ${userId}`;
+		where f.user_id = ${userId}
+		order by d.start_time`,
+	);
 }
 
 export async function getFavoriteDealsDealHeaders(userId: string): Promise<DealHeader[]> {
-	return await sql<DealHeader[]>`
-		select d.id, d.dealer_id, d.title, d.category_id, d.username, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+	return rotateToCurrentDeal(
+		await sql<DealHeader[]>`
+		select d.id, d.dealer_id, d.title, d.category_id, d.username, d.start_time, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
 	 	from active_deals_view d
 		left join favorite_deals f on f.deal_id = d.id
-		where f.user_id = ${userId}`;
+		where f.user_id = ${userId}`,
+	);
 }
 
 export async function getTemplateDealHeaders(dealerId: string): Promise<DealHeader[]> {
