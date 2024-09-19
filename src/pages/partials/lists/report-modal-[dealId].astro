@@ -1,15 +1,16 @@
 ---
 import Modal from "@layouts/Modal.astro";
+import { renderInfoTranslated } from "@lib/services/alerts";
 import { getDealReportMessage } from "@lib/services/deal";
 import { t } from "@lib/services/i18n";
 
 export const partial = true;
 
-const dealId = Astro.params.dealId;
-const {user, language } = Astro.locals;
+const dealId = Astro.params.dealId!;
+const { user, language } = Astro.locals;
 
-if (!user.id || !dealId) {
-	return
+if (!user.id) {
+	return renderInfoTranslated("info.only_for_pro_member", language);
 }
 
 const reason = await getDealReportMessage(user.id, dealId);
@@ -17,7 +18,7 @@ const title = Astro.url.searchParams.get("title");
 ---
 
 <Modal>
-	<h1 class="text-lg font-bold flex flex-col">
+	<h1 class="flex flex-col text-lg font-bold">
 		<span>{t("you_want_to_report", language)}</span>
 		<i class="font-normal">{title}</i>
 	</h1>
@@ -47,7 +48,7 @@ const title = Astro.url.searchParams.get("title");
 						<button class="btn-primary btn-outline" hx-delete="/api/ui/remove" hx-target="#modal">
 							{t("cancel", language)}
 						</button>
-						<button :disabled="text.length === 0">{t("report", language)}</button>
+						<button x-bind:disabled="text.length === 0">{t("report", language)}</button>
 					</div>
 				)
 			}

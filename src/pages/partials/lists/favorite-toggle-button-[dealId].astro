@@ -1,11 +1,17 @@
 ---
 import FavoriteToggleButton from "@components/deal/FavoriteToggleButton.astro";
+import { renderInfoTranslated } from "@lib/services/alerts";
 import { toggleFavorite } from "@lib/services/user";
 
 export const partial = true;
 
 const dealId = Astro.params.dealId!;
 const userId = Astro.locals.user.id;
+const language = Astro.locals.language;
+
+if (!userId) {
+	return renderInfoTranslated("info.only_for_pro_member", language);
+}
 
 const isFavorite = userId ? await toggleFavorite(userId, dealId) : false;
 
