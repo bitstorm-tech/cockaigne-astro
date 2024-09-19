@@ -8,14 +8,14 @@ export const POST: APIRoute = async ({ locals, request, url }): Promise<Response
 	const newEmail = formData.get("email")?.toString()?.trim();
 
 	if (!newEmail?.length) {
-		return renderAlertTranslated("alert.invalid_email", locals.user.language);
+		return renderAlertTranslated("alert.invalid_email", locals.language);
 	}
 
 	const baseUrl = createBaseUrl(url);
 	const error = await prepareEmailChange(locals.user.id!, newEmail, baseUrl);
 	if (error) {
-		return renderAlertTranslated("alert.email_already_used", locals.user.language);
+		return renderAlertTranslated("alert.email_already_used", locals.language);
 	}
 
-	return renderInfoTranslated("info.send_activation_email", locals.user.language);
+	return renderInfoTranslated("info.send_activation_email", locals.language);
 };

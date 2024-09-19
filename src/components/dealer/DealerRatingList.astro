@@ -7,24 +7,24 @@ interface Props {
 	dealerId: string;
 }
 
-const { language, id, isBasicUser } = Astro.locals.user;
+const { language, user } = Astro.locals;
 const { dealerId } = Astro.props;
-const isOwner = dealerId === id;
+const isOwner = dealerId === user.id;
 const ratings = await getAllDealerRatings(dealerId);
 const averageRating = (ratings.reduce((acc, rating) => acc + rating.stars, 0) / ratings.length).toFixed(1);
-const alreadyRated = ratings.some((rating) => rating.userId === id);
+const alreadyRated = ratings.some((rating) => rating.userId === user.id);
 ---
 
 <div id="rating-list" class="flex flex-col">
 	{
-		!alreadyRated && !isOwner && !isBasicUser && (
+		!alreadyRated && !isOwner && !user.isBasicUser && (
 			<button class="btn-warning btn m-4" hx-get={`/partials/lists/rating-modal-${dealerId}`} hx-target="#rating-modal">
 				{t("rating_add", language)}
 			</button>
 		)
 	}
 	{
-		isBasicUser && (
+		user.isBasicUser && (
 			<span class="text-center m-2 py-6 bg-warning">
 				<a href="/registration" class="link">
 					{t("signup_now_1", language)}

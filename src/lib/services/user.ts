@@ -1,6 +1,8 @@
 import type { FilterData } from "@lib/models/filter-data";
+import type { BasicUser } from "@lib/models/user";
 import sql from "@lib/services/pg";
 
+export type IdOrBasicUser = { id?: string; basicUser: BasicUser } | { id: string; basicUser?: BasicUser };
 export async function getFavoriteDealersCount(userId: string): Promise<number> {
 	const result = await sql`select count(*) from favorite_dealers_view where user_id = ${userId}`;
 

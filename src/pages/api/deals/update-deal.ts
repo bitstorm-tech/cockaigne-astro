@@ -16,13 +16,13 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 	const formData = await request.formData();
 	const title = formData.get("title")?.toString();
 	if (!title) {
-		return renderAlertTranslated("alert.enter_title", locals.user.language);
+		return renderAlertTranslated("alert.enter_title", locals.language);
 	}
 
 	const description = formData.get("description")?.toString();
 
 	if (!description) {
-		return renderAlertTranslated("alert.enter_description", locals.user.language);
+		return renderAlertTranslated("alert.enter_description", locals.language);
 	}
 
 	const durationInDays = calculateDurationInDays(formData);
@@ -46,5 +46,5 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 
 	await updateDeal(dealUpdate);
 
-	return renderToastTranslated("toast.changes_saved_successfully", locals.user.language);
+	return renderToastTranslated("toast.changes_saved_successfully", locals.language);
 };

@@ -6,7 +6,7 @@ import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ locals, request }): Promise<Response> => {
 	if (!locals.user.id) {
-		return renderAlertTranslated("alert.can_t_save_profile_image", locals.user.language);
+		return renderAlertTranslated("alert.can_t_save_profile_image", locals.language);
 	}
 
 	const formData = await request.formData();
@@ -16,15 +16,15 @@ export const POST: APIRoute = async ({ locals, request }): Promise<Response> => 
 		const error = await deleteProfileImage(locals.user.id);
 		if (error) {
 			logger.warn(error);
-			return renderAlertTranslated("alert.can_t_delet_profile_image", locals.user.language);
+			return renderAlertTranslated("alert.can_t_delet_profile_image", locals.language);
 		}
 	} else {
 		const image = formData.get("profile-image")?.valueOf();
 		if (!image) {
-			return renderAlertTranslated("alert.can_t_save_profile_image", locals.user.language);
+			return renderAlertTranslated("alert.can_t_save_profile_image", locals.language);
 		}
 		saveProfileImage(locals.user.id, image.valueOf() as File);
 	}
 
-	return renderToastTranslated("info.profile_image_changed", locals.user.language);
+	return renderToastTranslated("info.profile_image_changed", locals.language);
 };

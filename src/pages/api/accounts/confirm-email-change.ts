@@ -11,8 +11,8 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 	const error = await changeEmail(oldMail, code);
 	if (error) {
 		logger.error(error.stack);
-		return renderAlertTranslated("alert.can_t_change_email", locals.user.language);
+		return renderAlertTranslated("alert.can_t_change_email", locals.language);
 	}
 
-	return renderInfoTranslated("info.email_changed", locals.user.language);
+	return renderInfoTranslated("info.email_changed", locals.language);
 };

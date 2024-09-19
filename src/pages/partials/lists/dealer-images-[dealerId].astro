@@ -6,7 +6,7 @@ import { getDealerImageUrls } from "@lib/services/imagekit";
 
 export const partial = true;
 
-const { user } = Astro.locals;
+const { user, language } = Astro.locals;
 const dealerId = Astro.params.dealerId!;
 const isOwner = dealerId === user.id;
 const imageUrls = await getDealerImageUrls(dealerId);
@@ -16,11 +16,7 @@ const imageUrls = await getDealerImageUrls(dealerId);
 	{
 		imageUrls.length === 0 && (
 			<span id="hint" class="flex justify-around p-8 text-center">
-				{isOwner ? (
-					<>{t("dealer_images_add", user.language)}</>
-				) : (
-					<>{t("dealer_images_no_images_yet", user.language)}</>
-				)}
+				{isOwner ? <>{t("dealer_images_add", language)}</> : <>{t("dealer_images_no_images_yet", language)}</>}
 			</span>
 		)
 	}

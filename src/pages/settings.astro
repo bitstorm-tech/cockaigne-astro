@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import { t } from "@lib/services/i18n";
 
-const { user } = Astro.locals;
+const { language, user } = Astro.locals;
 ---
 
 <Layout showBadge={user.isProUser} showFooter={true}>
@@ -18,7 +18,7 @@ const { user } = Astro.locals;
 							class="tab"
 							x-bind:class="selectedTab === 0 ? 'tab-active' : ''"
 							@click="selectedTab = 0">
-							{t("common", user.language)}
+							{t("common", language)}
 						</div>
 						<div
 							hx-get="/partials/dealer/settings-address"
@@ -27,7 +27,7 @@ const { user } = Astro.locals;
 							class="tab"
 							x-bind:class="selectedTab === 2 ? 'tab-active' : ''"
 							@click="selectedTab = 2">
-							{t("address", user.language)}
+							{t("address", language)}
 						</div>
 					</>
 				) : (
@@ -38,7 +38,7 @@ const { user } = Astro.locals;
 						class="tab"
 						x-bind:class="selectedTab === 0 ? 'tab-active' : ''"
 						@click="selectedTab = 0">
-						{t("common", user.language)}
+						{t("common", language)}
 					</div>
 				)
 			}
@@ -49,7 +49,7 @@ const { user } = Astro.locals;
 				class="tab"
 				x-bind:class="selectedTab === 1 ? 'tab-active' : ''"
 				@click="selectedTab = 1">
-				{t("profile_picture", user.language)}
+				{t("profile_picture", language)}
 			</div>
 		</div>
 		<div

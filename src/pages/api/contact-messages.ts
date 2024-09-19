@@ -3,21 +3,20 @@ import { isLastContactMessageYoungerThenFiveMinutes, saveContactMessage } from "
 import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request, locals }): Promise<Response> => {
-	const { language, id = "" } = locals.user;
-	const lastMessageYoungerThenFiveMinutes = await isLastContactMessageYoungerThenFiveMinutes(id);
+	const lastMessageYoungerThenFiveMinutes = await isLastContactMessageYoungerThenFiveMinutes(locals.user.id || "");
 
 	if (lastMessageYoungerThenFiveMinutes) {
-		return renderAlertTranslated("alert.message_delay", language);
+		return renderAlertTranslated("alert.message_delay", locals.language);
 	}
 
 	const formData = await request.formData();
 	const message = formData.get("message")?.toString();
 
 	if (!message) {
-		return renderAlertTranslated("alert.can_t_save_message", language);
+		return renderAlertTranslated("alert.can_t_save_message", locals.language);
 	}
 
-	saveContactMessage(id, message);
+	saveContactMessage(locals.user.id || "", message);
 
-	return renderInfoTranslated("info.contact_message_send", language);
+	return renderInfoTranslated("info.contact_message_send", locals.language);
 };

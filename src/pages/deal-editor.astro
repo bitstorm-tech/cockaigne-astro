@@ -16,14 +16,14 @@ function calculateEndDate(deal: Deal): string {
 	return endDate.format("YYYY-MM-DD");
 }
 
-const { language, id = "" } = Astro.locals.user;
+const { user, language } = Astro.locals;
 const dealId = Astro.url.searchParams.get("id");
 const deal: Deal = (dealId && (await getDeal(dealId))) || {
 	id: "",
-	dealerId: id,
+	dealerId: user.id || "",
 	title: "",
 	description: "",
-	categoryId: await getDefaultCategoryId(id),
+	categoryId: await getDefaultCategoryId(user.id || ""),
 	durationInHours: 24,
 	start: dayjs().add(1, "hour").toDate(),
 	template: false,

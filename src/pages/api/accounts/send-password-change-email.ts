@@ -9,15 +9,15 @@ export const POST: APIRoute = async ({ request, locals, url }): Promise<Response
 	const email = formData.get("email")?.toString().trim();
 
 	if (!locals.user.id && !email) {
-		return renderAlertTranslated("alert.provide_email", locals.user.language);
+		return renderAlertTranslated("alert.provide_email", locals.language);
 	}
 
 	const baseUrl = createBaseUrl(url);
 	const error = await preparePasswordChange(baseUrl, locals.user.id, email);
 	if (error) {
 		logger.error(error.stack);
-		return renderAlertTranslated("alert.can_t_change_password", locals.user.language);
+		return renderAlertTranslated("alert.can_t_change_password", locals.language);
 	}
 
-	return renderInfoTranslated("info.send_change_pw_email", locals.user.language);
+	return renderInfoTranslated("info.send_change_pw_email", locals.language);
 };

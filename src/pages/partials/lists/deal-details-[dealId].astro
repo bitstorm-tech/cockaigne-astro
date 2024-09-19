@@ -6,7 +6,7 @@ import logger from "@lib/services/logger";
 
 export const partial = true;
 
-const user = Astro.locals.user;
+const { user, language } = Astro.locals;
 
 const dealId = Astro.params.dealId;
 if (!dealId) {
@@ -55,17 +55,17 @@ const countDealView = user.id !== details.dealerId;
 		<>
 			<div class="flex flex-col gap-1 text-xs">
 				<span>
-					{t("from", user.language)}: {details.start}
+					{t("from", language)}: {details.start}
 				</span>
 				<span>
-					{t("until", user.language)}: {details.end}
+					{t("until", language)}: {details.end}
 				</span>
 			</div>
 		</>
 	) : (
 		<>
 			<span class="py-4 text-xs">
-				{t("ends_on", user.language)} {details.end}
+				{t("ends_on", language)} {details.end}
 			</span>
 			<div class="flex h-6 justify-between">
 				<div hx-get={`/partials/lists/like-button-${dealId}?toggle=false`} hx-target="this" hx-trigger="load once" />

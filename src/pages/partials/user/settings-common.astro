@@ -5,13 +5,13 @@ import { renderErrorPageTranslated } from "@lib/services/error";
 import { t } from "@lib/services/i18n";
 
 export const partial = true;
-const { language: lang, id } = Astro.locals.user;
+const { language, user } = Astro.locals;
 
-if (!id) {
+if (!user.id) {
 	return notForBasicUser("common-user-settings");
 }
 
-const account = await getAccountById(id);
+const account = await getAccountById(user.id);
 
 if (!account) {
 	return renderErrorPageTranslated("", lang);
@@ -20,19 +20,19 @@ if (!account) {
 
 <form class="flex flex-col gap-4" hx-post="/api/accounts/update-common-data" hx-target="closest #content">
 	<div class="form-control">
-		<label for="username">{t("username", lang)}</label>
+		<label for="username">{t("username", language)}</label>
 		<input id="username" type="text" name="username" value={account.username} />
 	</div>
 	<div class="form-control">
-		<label for="email">{t("email", lang)}</label>
+		<label for="email">{t("email", language)}</label>
 		<input id="email" type="email" value={account.email} disabled />
 	</div>
-	<a class="btn btn-primary" href="/email-change">{t("email_change", lang)}</a>
+	<a class="btn btn-primary" href="/email-change">{t("email_change", language)}</a>
 	<button type="button" class="btn btn-primary" hx-post="/api/accounts/send-password-change-email">
-		{t("password_change", lang)}
+		{t("password_change", language)}
 	</button>
 	<div class="grid grid-cols-2 gap-4">
-		<a class="btn" href="/">{t("cancel", lang)}</a>
-		<button>{t("save", lang)}</button>
+		<a class="btn" href="/">{t("cancel", language)}</a>
+		<button>{t("save", language)}</button>
 	</div>
 </form>

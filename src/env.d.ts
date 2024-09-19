@@ -4,6 +4,8 @@
 declare namespace App {
 	interface Locals {
 		user: import("./lib/models/user").User;
+		basicUser: import("./lib/models/user").BasicUser;
+		language: string;
 	}
 }
 

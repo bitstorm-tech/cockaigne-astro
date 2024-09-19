@@ -9,14 +9,14 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 	const activationCode = formData.get("code")?.toString();
 
 	if (!activationCode) {
-		return renderAlertTranslated("alert.invalid_activation_code", locals.user.language);
+		return renderAlertTranslated("alert.invalid_activation_code", locals.language);
 	}
 
 	const success = await activateAccount(activationCode);
 
 	if (!success) {
 		logger.warn(`Can't activate account with code ${activationCode}`);
-		return renderAlertTranslated("alert.can_t_activate_account", locals.user.language);
+		return renderAlertTranslated("alert.can_t_activate_account", locals.language);
 	}
 
 	return redirect("/login");

@@ -11,7 +11,7 @@ import { None, Some, type Option } from "ts-results-es";
 export const POST: APIRoute = async ({ request, locals, url }): Promise<Response> => {
 	const formData = await request.formData();
 	const account = extractAccountFromForm(formData);
-	account.language = locals.user.language ? locals.user.language : account.language;
+	account.language = locals.language ? locals.language : account.language;
 
 	const failedCheck = await checkRegistration(account, formData);
 	if (failedCheck.isSome()) {

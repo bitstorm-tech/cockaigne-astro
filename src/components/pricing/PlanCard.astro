@@ -9,8 +9,8 @@ interface Props {
 }
 
 const { title, price, planId } = Astro.props;
-const { language, id = "" } = Astro.locals.user;
-const hasActiveSub = await hasActiveSubscription(id);
+const { user, language } = Astro.locals;
+const hasActiveSub = await hasActiveSubscription(user.id || "");
 ---
 
 <div class="text-100 card w-full bg-neutral shadow-xl">

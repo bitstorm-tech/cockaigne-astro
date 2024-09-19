@@ -7,7 +7,7 @@ export const partial = true;
 const categories = await getAllCategories();
 const translationKey = Astro.url.searchParams.get("translation_key") || "category_select";
 const selectedId = Astro.url.searchParams.get("selected") || -1;
-const { language } = Astro.locals.user;
+const { language } = Astro.locals;
 const emptyOptionText = t(translationKey, language);
 ---
 

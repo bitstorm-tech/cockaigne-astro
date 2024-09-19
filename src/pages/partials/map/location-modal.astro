@@ -3,8 +3,8 @@ import Modal from "@layouts/Modal.astro";
 import { getAccountById } from "@lib/services/account";
 import { t } from "@lib/services/i18n";
 
-const { language, id = "" } = Astro.locals.user;
-const account = await getAccountById(id);
+const { language, user } = Astro.locals;
+const account = await getAccountById(user.id || "");
 ---
 
 <Modal>

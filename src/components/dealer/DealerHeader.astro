@@ -11,7 +11,7 @@ interface Props {
 	dealerId: string;
 }
 
-const user = Astro.locals.user;
+const { user, language } = Astro.locals;
 const { dealerId = "" } = Astro.params;
 const account = await getAccountById(dealerId);
 const isOwner = user.id === dealerId;
@@ -31,7 +31,7 @@ const isFavorite = user.id ? await isDealerFavorite(user.id, dealerId) : false;
 
 <div class="flex h-52 justify-between">
 	<div class="m-4 flex flex-col">
-		<span class="text-xs text-[#6a828c]"><b>{t("category", user.language)}</b></span>
+		<span class="text-xs text-[#6a828c]"><b>{t("category", language)}</b></span>
 		<span class="text-xs font-extralight italic text-[#6a828c]">{category?.name}</span>
 		<span class="pb-2 pt-8 text-xl">{username}</span>
 		<span class="text-xs">{street} {houseNumber}</span>

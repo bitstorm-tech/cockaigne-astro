@@ -6,16 +6,16 @@ import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ locals, request }): Promise<Response> => {
 	if (!locals.user.id) {
-		return renderAlertTranslated("alert.can_t_save_profile_image", locals.user.language);
+		return renderAlertTranslated("alert.can_t_save_profile_image", locals.language);
 	}
 
 	const accountUpdate = await extractAccountDataFromRequest(request, locals.user.isDealer);
 	const error = await updateAccount(locals.user.id, accountUpdate);
 	if (error) {
-		return renderAlertTranslated("alert.username_already_exists", locals.user.language);
+		return renderAlertTranslated("alert.username_already_exists", locals.language);
 	}
 
-	return renderToastTranslated("info.changes_saved", locals.user.language);
+	return renderToastTranslated("info.changes_saved", locals.language);
 };
 
 async function extractAccountDataFromRequest(

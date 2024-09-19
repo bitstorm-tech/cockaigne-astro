@@ -4,8 +4,8 @@ import DefaultUserProfileImage from "@components/icons/DefaultUserProfileImage.a
 import { t } from "@lib/services/i18n";
 
 export const partial = true;
-const { language: lang, isDealer } = Astro.locals.user;
-const DefaultImage = isDealer ? DefaultDealerProfileImage : DefaultUserProfileImage;
+const { language, user } = Astro.locals;
+const DefaultImage = user.isDealer ? DefaultDealerProfileImage : DefaultUserProfileImage;
 ---
 
 <form
@@ -14,8 +14,8 @@ const DefaultImage = isDealer ? DefaultDealerProfileImage : DefaultUserProfileIm
 	hx-post="/api/accounts/update-profile-image"
 	x-data="{ newImage: null, deleteImageFlag: false }">
 	<div class="grid grid-cols-2 gap-4">
-		<button type="button" class="btn btn-primary" @click="deleteImage($data)">{t("delete", lang)}</button>
-		<button type="button" class="btn btn-primary" @click="input.click()">{t("change", lang)}</button>
+		<button type="button" class="btn btn-primary" @click="deleteImage($data)">{t("delete", language)}</button>
+		<button type="button" class="btn btn-primary" @click="input.click()">{t("change", language)}</button>
 	</div>
 	<div
 		x-show="!newImage && !deleteImageFlag"
@@ -28,8 +28,8 @@ const DefaultImage = isDealer ? DefaultDealerProfileImage : DefaultUserProfileIm
 		<DefaultImage />
 	</div>
 	<div class="grid grid-cols-2 gap-4">
-		<a class="btn" href="/">{t("cancel", lang)}</a>
-		<button>{t("save", lang)}</button>
+		<a class="btn" href="/">{t("cancel", language)}</a>
+		<button>{t("save", language)}</button>
 	</div>
 	<input id="input" name="profile-image" type="file" @change="showImage($event, $data)" hidden />
 	<input id="delete" name="delete-image" type="text" :value="deleteImageFlag" hidden />

@@ -6,8 +6,8 @@ import Layout from "@layouts/Layout.astro";
 import { t } from "@lib/services/i18n";
 import { hasActiveSubscription } from "@lib/services/subscription";
 
-const { language, id = "" } = Astro.locals.user;
-const hasActiveSub = await hasActiveSubscription(id);
+const { language, user } = Astro.locals;
+const hasActiveSub = await hasActiveSubscription(user.id || "");
 ---
 
 <Layout>

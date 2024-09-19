@@ -1,35 +1,35 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { t } from "@lib/services/i18n";
-const lang = Astro.locals.user.language;
+const { language } = Astro.locals;
 ---
 
 <Layout>
 	<form class="flex flex-col gap-4 p-6" hx-post="/api/registration" hx-target="#alert" x-data="{isDealer: false}">
-		<h1 class="text-center">{t("signup", lang)}</h1>
+		<h1 class="text-center">{t("signup", language)}</h1>
 		<div class="form-control-horizontal">
 			<input id="dealer" type="checkbox" checked="checked" class="checkbox" name="isDealer" x-model="isDealer" />
-			<label for="dealer" class="cursor-pointer">{t("i_am_a_dealer", lang)}</label>
+			<label for="dealer" class="cursor-pointer">{t("i_am_a_dealer", language)}</label>
 		</div>
 		<div class="form-control">
-			<label for="email">{t("email", lang)}</label>
+			<label for="email">{t("email", language)}</label>
 			<input id="email" type="text" name="email" />
 		</div>
 		<div class="form-control">
-			<label for="username">{t("username", lang)}</label>
+			<label for="username">{t("username", language)}</label>
 			<input id="username" type="text" name="username" />
 		</div>
 		<div class="form-control">
-			<label for="password">{t("password", lang)}</label>
+			<label for="password">{t("password", language)}</label>
 			<input id="password" type="password" name="password" />
 		</div>
 		<div class="form-control">
-			<label for="password-repeat">{t("password_repeat", lang)}</label>
+			<label for="password-repeat">{t("password_repeat", language)}</label>
 			<input id="password-repeat" type="password" name="passwordRepeat" />
 		</div>
 		<div class="flex flex-col gap-4" x-show="!isDealer">
 			<div class="form-control">
-				<label for="age">{t("age", lang)}</label>
+				<label for="age">{t("age", language)}</label>
 				<div id="age" class="join grid w-full grid-cols-3 grid-rows-2">
 					<input class="btn join-item btn-sm" type="radio" value="1" name="age" aria-label="bis 18" checked />
 					<input class="btn join-item btn-sm" type="radio" value="2" name="age" aria-label="19 - 29" />
@@ -40,7 +40,7 @@ const lang = Astro.locals.user.language;
 				</div>
 			</div>
 			<div class="form-control">
-				<label for="gender">{t("gender", lang)}</label>
+				<label for="gender">{t("gender", language)}</label>
 				<div id="gender" class="join grid w-full grid-cols-3">
 					<input class="btn join-item btn-sm" type="radio" value="f" name="gender" aria-label="Frau" checked />
 					<input class="btn join-item btn-sm" type="radio" value="m" name="gender" aria-label="Mann" />
@@ -50,7 +50,7 @@ const lang = Astro.locals.user.language;
 		</div>
 		<div class="flex flex-col gap-4" x-show="isDealer">
 			<div class="form-control">
-				<label for="category-select">{t("industry", lang)}</label>
+				<label for="category-select">{t("industry", language)}</label>
 				<div
 					id="category-select"
 					hx-get="/partials/category-select?translation_key=industry_select"
@@ -60,46 +60,46 @@ const lang = Astro.locals.user.language;
 			</div>
 			<div class="grid grid-cols-3 gap-2">
 				<div class="form-control col-span-2">
-					<label for="street">{t("street", lang)}</label>
+					<label for="street">{t("street", language)}</label>
 					<input id="street" type="text" name="street" />
 				</div>
 				<div class="form-control">
-					<label for="house-number">{t("house_number", lang)}</label>
+					<label for="house-number">{t("house_number", language)}</label>
 					<input id="house-number" type="text" name="houseNumber" />
 				</div>
 			</div>
 			<div class="grid grid-cols-3 gap-2">
 				<div class="form-control col-span-2">
-					<label for="city">{t("city", lang)}</label>
+					<label for="city">{t("city", language)}</label>
 					<input id="city" type="text" name="city" />
 				</div>
 				<div class="form-control">
-					<label for="zip">{t("zipcode", lang)}</label>
+					<label for="zip">{t("zipcode", language)}</label>
 					<input id="zip" type="number" name="zipCode" />
 				</div>
 			</div>
 			<div class="form-control">
-				<label for="phone">{t("phone", lang)}</label>
+				<label for="phone">{t("phone", language)}</label>
 				<input id="phone" type="text" name="phone" />
 			</div>
 			<div class="form-control">
-				<label for="tax-id">{t("tax_id", lang)}</label>
+				<label for="tax-id">{t("tax_id", language)}</label>
 				<input id="tax-id" type="text" name="taxId" />
 			</div>
 		</div>
 		<div class="form-control-horizontal pt-10">
 			<input id="terms" type="checkbox" class="checkbox" name="terms" />
 			<label for="terms" class="cursor-pointer">
-				{t("accept_terms_and_privacy_1", lang)}
-				<a class="link" href="#">{t("terms", lang)}</a>
-				{t("and", lang)}
-				<a class="link" href="#">{t("privacy", lang)}</a>
-				{t("accept_terms_and_privacy_2", lang)}
+				{t("accept_terms_and_privacy_1", language)}
+				<a class="link" href="#">{t("terms", language)}</a>
+				{t("and", language)}
+				<a class="link" href="#">{t("privacy", language)}</a>
+				{t("accept_terms_and_privacy_2", language)}
 			</label>
 		</div>
 		<div class="mt-4 grid grid-cols-2 gap-2">
-			<a class="btn btn-outline btn-primary" href="/">{t("cancel", lang)}</a>
-			<button>{t("signup", lang)}</button>
+			<a class="btn btn-outline btn-primary" href="/">{t("cancel", language)}</a>
+			<button>{t("signup", language)}</button>
 		</div>
 	</form>
 </Layout>

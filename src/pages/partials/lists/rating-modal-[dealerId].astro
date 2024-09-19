@@ -6,14 +6,14 @@ import { t } from "@lib/services/i18n";
 export const partial = true;
 
 const { dealerId = "" } = Astro.params;
-const { language, id = "" } = Astro.locals.user;
-let rating = await getDealerRating(dealerId, id);
-const canEdit = rating?.userId === id;
+const { language, user } = Astro.locals;
+let rating = await getDealerRating(dealerId, user.id || "");
+const canEdit = rating?.userId === user.id || "";
 
 if (!rating) {
 	rating = {
 		dealerId,
-		userId: id,
+		userId: user.id || "",
 		username: "",
 		stars: 5,
 		text: "",

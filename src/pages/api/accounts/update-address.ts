@@ -6,13 +6,13 @@ import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request, locals }): Promise<Response> => {
 	if (!locals.user.id) {
-		return renderAlertTranslated("alert.can_t_update_address", locals.user.language);
+		return renderAlertTranslated("alert.can_t_update_address", locals.language);
 	}
 
 	const update = await extractAddressDataFromRequest(request);
 	await updateAccount(locals.user.id, update);
 
-	return renderToastTranslated("info.changes_saved", locals.user.language);
+	return renderToastTranslated("info.changes_saved", locals.language);
 };
 
 async function extractAddressDataFromRequest(request: Request): Promise<AddressUpdate> {

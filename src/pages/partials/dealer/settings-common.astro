@@ -4,8 +4,8 @@ import { t } from "@lib/services/i18n";
 
 export const partial = true;
 
-const { language, id = "" } = Astro.locals.user;
-const account = await getAccountById(id);
+const { language, user } = Astro.locals;
+const account = await getAccountById(user.id || "");
 ---
 
 <form class="flex flex-col gap-4" hx-post="/api/accounts/update-common-data" hx-target="closest #content">

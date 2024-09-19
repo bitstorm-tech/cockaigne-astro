@@ -8,11 +8,11 @@ import {
 
 export const partial = true;
 
-const { language, id = "" } = Astro.locals.user;
-const hasActiveSub = await hasActiveSubscription(id);
-const currentSubscriptionPeriod = await getCurrentSubscriptionPeriod(id);
+const { language, user } = Astro.locals;
+const hasActiveSub = await hasActiveSubscription(user.id || "");
+const currentSubscriptionPeriod = await getCurrentSubscriptionPeriod(user.id || "");
 const subscriptionPeriodEndDate = hasActiveSub && currentSubscriptionPeriod?.end.format("DD.MM.YYYY");
-const freeDaysLeft = await getFreeDaysLeftInCurrentSubscriptionPeriod(id, currentSubscriptionPeriod);
+const freeDaysLeft = await getFreeDaysLeftInCurrentSubscriptionPeriod(user.id || "", currentSubscriptionPeriod);
 ---
 
 {

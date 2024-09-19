@@ -6,7 +6,7 @@ import { t } from "@lib/services/i18n";
 export const partial = true;
 
 const dealId = Astro.params.dealId;
-const user = Astro.locals.user;
+const {user, language } = Astro.locals;
 
 if (!user.id || !dealId) {
 	return
@@ -18,7 +18,7 @@ const title = Astro.url.searchParams.get("title");
 
 <Modal>
 	<h1 class="text-lg font-bold flex flex-col">
-		<span>{t("you_want_to_report", user.language)}</span>
+		<span>{t("you_want_to_report", language)}</span>
 		<i class="font-normal">{title}</i>
 	</h1>
 	<form hx-post=`/api/deals/reports/${dealId}` hx-target="#modal" x-data=`{text: '${reason}'}`>
@@ -27,9 +27,9 @@ const title = Astro.url.searchParams.get("title");
 				<label for="reason">
 					{
 						reason && reason.length > 0 ? (
-							<>{t("deal_already_reported", user.language)}</>
+							<>{t("deal_already_reported", language)}</>
 						) : (
-							<>{t("tell_us_what_is_wrong", user.language)}</>
+							<>{t("tell_us_what_is_wrong", language)}</>
 						)
 					}
 				</label>
@@ -40,14 +40,14 @@ const title = Astro.url.searchParams.get("title");
 			{
 				reason.length > 0 ? (
 					<button class="btn" hx-delete="/api/ui/remove" hx-target="#modal">
-						{t("ok", user.language)}
+						{t("ok", language)}
 					</button>
 				) : (
 					<div class="flex gap-2">
 						<button class="btn-primary btn-outline" hx-delete="/api/ui/remove" hx-target="#modal">
-							{t("cancel", user.language)}
+							{t("cancel", language)}
 						</button>
-						<button :disabled="text.length === 0">{t("report", user.language)}</button>
+						<button :disabled="text.length === 0">{t("report", language)}</button>
 					</div>
 				)
 			}

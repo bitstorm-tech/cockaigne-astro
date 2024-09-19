@@ -3,7 +3,7 @@ import CloseIcon from "@components/icons/CloseIcon.astro";
 import MenuIcon from "@components/icons/MenuIcon.astro";
 import { t } from "@lib/services/i18n";
 
-const user = Astro.locals.user;
+const { user, language } = Astro.locals;
 const { showBadge } = Astro.props;
 ---
 
@@ -15,7 +15,7 @@ const { showBadge } = Astro.props;
 				{
 					!user.isDealer && showBadge && (
 						<div class="self-end badge badge-neutral text-xs">
-							{user.isProUser ? t("pro", user.language) : t("basic", user.language)}
+							{user.isProUser ? t("pro", language) : t("basic", language)}
 						</div>
 					)
 				}
@@ -25,7 +25,7 @@ const { showBadge } = Astro.props;
 					user.isDealer || user.isProUser ? (
 						<>
 							<a class="menu-item" href="/settings">
-								{t("settings", user.language)}
+								{t("settings", language)}
 							</a>
 							<a class="menu-item" href="/contact">
 								Kontaktiere uns

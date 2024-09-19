@@ -10,12 +10,12 @@ import DealsCountBadge from "./DealsCountBadge.astro";
 import FavoriteDealersCountBadge from "./FavoriteDealersCountBadge.astro";
 import FavoriteDealsCountBadge from "./FavoriteDealsCountBadge.astro";
 
-const { id, language } = Astro.locals.user;
+const { user, language } = Astro.locals;
 const [username, locationService, currentLocation, selectedCategoriesFilterActive] = await Promise.all([
-	id ? await getUsernameById(id) : t("basic", language),
-	id ? await useLocationService(id) : false,
-	id ? await getLocation(id) : Point.centerOfGermany(),
-	id ? await areSelectedCategoriesActive(id) : false,
+	user.id ? await getUsernameById(user.id) : t("basic", language),
+	user.id ? await useLocationService(user.id) : false,
+	user.id ? await getLocation(user.id) : Point.centerOfGermany(),
+	user.id ? await areSelectedCategoriesActive(user.id) : false,
 ]);
 ---
 

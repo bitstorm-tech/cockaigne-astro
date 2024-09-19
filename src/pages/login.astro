@@ -4,31 +4,30 @@ import FlagUkIcon from "@components/icons/FlagUkIcon.astro";
 import Layout from "@layouts/Layout.astro";
 import { t } from "@lib/services/i18n";
 
-const user = Astro.locals.user;
-const lang = user.language;
+const { language } = Astro.locals;
 ---
 
 <Layout>
 	<form hx-post="/api/login" hx-target="#alert" class="pt-1/3 pt-18 m-4 flex flex-col gap-4 p-6">
-		<h1 class="text-center">{t("login", lang)}</h1>
+		<h1 class="text-center">{t("login", language)}</h1>
 		<div class="form-control">
-			<label for="email">{t("email", lang)}</label>
+			<label for="email">{t("email", language)}</label>
 			<input id="email" type="email" name="email" />
 		</div>
 		<div class="form-control pb-6">
-			<label for="password">{t("password", lang)}</label>
+			<label for="password">{t("password", language)}</label>
 			<input id="password" type="password" name="password" />
 		</div>
-		<button>{t("login", lang)}</button>
+		<button>{t("login", language)}</button>
 		<a class="btn btn-primary" type="button" href="/user">
-			{t("continue_as_basic_user", lang)}
+			{t("continue_as_basic_user", language)}
 		</a>
 		<div class="pt-10 text-center text-sm">
-			<a href="/registration">{t("signup", lang)}</a>
+			<a href="/registration">{t("signup", language)}</a>
 			<span>/</span>
-			<a href="/send-password-change-email">{t("password_reset", lang)}</a>
+			<a href="/send-password-change-email">{t("password_reset", language)}</a>
 			<span>/</span>
-			<a href="/registration-complete">{t("account_activate", lang)}</a>
+			<a href="/registration-complete">{t("account_activate", language)}</a>
 		</div>
 		<div class="mt-4 flex justify-center gap-2">
 			<a class="link w-10" hx-get="/api/accounts/change-language?lang=de"><FlagDeIcon /></a>

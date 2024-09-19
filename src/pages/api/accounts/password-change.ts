@@ -9,17 +9,17 @@ export const POST: APIRoute = async ({ request, locals }): Promise<Response> => 
 	const newPasswordRepeat = formData.get("password-repeat")?.toString() || "";
 
 	if (newPassword !== newPasswordRepeat) {
-		return renderAlertTranslated("alert.password_repeat_not_matching", locals.user.language);
+		return renderAlertTranslated("alert.password_repeat_not_matching", locals.language);
 	}
 
 	if (newPassword.length === 0) {
-		return renderAlertTranslated("alert.can_t_change_password", locals.user.language);
+		return renderAlertTranslated("alert.can_t_change_password", locals.language);
 	}
 
 	const error = await changePassword(newPassword, code);
 	if (error) {
-		return renderAlertTranslated("alert.can_t_change_password", locals.user.language);
+		return renderAlertTranslated("alert.can_t_change_password", locals.language);
 	}
 
-	return renderInfoTranslated("info.password_changed", locals.user.language);
+	return renderInfoTranslated("info.password_changed", locals.language);
 };

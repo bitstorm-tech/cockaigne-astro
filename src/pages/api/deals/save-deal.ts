@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 export const POST: APIRoute = async ({ request, url, locals }): Promise<Response> => {
 	if (!locals.user.id) {
 		logger.error(`Can't save deal -> missing dealer ID`);
-		return renderAlertTranslated("alert.can_t_save_deal", locals.user.language);
+		return renderAlertTranslated("alert.can_t_save_deal", locals.language);
 	}
 
 	const formData = await request.formData();
