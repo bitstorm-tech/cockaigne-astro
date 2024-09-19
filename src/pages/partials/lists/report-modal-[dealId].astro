@@ -45,7 +45,7 @@ const title = Astro.url.searchParams.get("title");
 					</button>
 				) : (
 					<div class="flex gap-2">
-						<button class="btn-primary btn-outline" hx-delete="/api/ui/remove" hx-target="#modal">
+						<button class="btn-primary" hx-delete="/api/ui/remove" hx-target="#modal">
 							{t("cancel", language)}
 						</button>
 						<button x-bind:disabled="text.length === 0">{t("report", language)}</button>

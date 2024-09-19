@@ -40,7 +40,7 @@ const useLocationService = user.id ? await UserService.useLocationService(user.i
 			</div>
 		</div>
 		<div class="modal-action">
-			<button class="btn-outline btn-primary" hx-delete="/api/ui/remove" hx-target="#modal">
+			<button class="btn-primary" hx-delete="/api/ui/remove" hx-target="#modal">
 				{t("cancel", language)}
 			</button>
 			<button onclick="searchAddress">{t("save", language)}</button>

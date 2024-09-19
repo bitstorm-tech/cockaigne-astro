@@ -45,7 +45,7 @@ if (!rating) {
 				{
 					canEdit ? (
 						<>
-							<button class="btn-primary btn-outline" hx-post={`/api/dealer/delete-rating`}>
+							<button class="btn-primary" hx-post={`/api/dealer/delete-rating`}>
 								{t("delete", language)}
 							</button>
 							<button hx-post={`/api/dealer/update-rating`}>{t("change", language)}</button>

@@ -19,7 +19,7 @@ const email = Astro.url.searchParams.get("email") || "";
 				<input id="code" name="code" type="text" maxlength="6" class="text-center tracking-[1rem]" x-model="code" />
 			</div>
 			<div class="grid grid-cols-2 gap-4">
-				<a href="/" class="btn btn-outline btn-primary">{t("back", language)}</a>
+				<a href="/" class="btn btn-primary">{t("back", language)}</a>
 				<button class="btn btn-warning" :disabled="!code?.length">{t("activate", language)}</button>
 			</div>
 		</form>
