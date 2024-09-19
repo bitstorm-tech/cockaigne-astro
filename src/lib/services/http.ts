@@ -1,3 +1,5 @@
+export type CookieName = "user" | "basicUser" | "lang";
+
 export function createBaseUrl(url: URL): string {
 	return `${url.protocol}//${url.host}`;
 }
@@ -16,9 +18,12 @@ export function fullRedirect(location: string): Response {
 	return response;
 }
 
-export function refresh(): Response {
+export function refresh(cookie?: { key: CookieName; value: string }): Response {
 	const response = new Response();
 	response.headers.append("HX-Refresh", "true");
+	if (cookie) {
+		response.headers.append("Set-Cookie", `${cookie.key}=${cookie.value}; HttpOnly; Path=/`);
+	}
 
 	return response;
 }
@@ -33,4 +38,13 @@ export function extractDealImagesFromFormData(formData: FormData): Array<File | 
 	const image2 = imageValue2 ? (imageValue2 as File) : undefined;
 
 	return [image0, image1, image2];
+}
+
+export namespace HttpService {
+	export function createSetCookieResponse(key: CookieName, value: string): Response {
+		const response = new Response();
+		response.headers.append("Set-Cookie", `${key}=${value}; HttpOnly; Path=/`);
+
+		return response;
+	}
 }

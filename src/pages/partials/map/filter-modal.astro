@@ -1,15 +1,18 @@
 ---
 import Modal from "@layouts/Modal.astro";
+import type { FilterModalFilterData } from "@lib/models/filter-data";
 import { getAllCategories } from "@lib/services/deal";
 import { t } from "@lib/services/i18n";
-import { getFilterData } from "@lib/services/user";
+import { getFilterModalFilterData } from "@lib/services/user";
 
 export const partial = true;
 
-const { language, user } = Astro.locals;
+const { language, user, basicUser } = Astro.locals;
 const categories = await getAllCategories();
 const perimeterText = t("perimeter", language);
-const filterData = user.id ? await getFilterData(user.id) : undefined;
+const filterData: FilterModalFilterData = user.id
+	? await getFilterModalFilterData(user.id)
+	: { searchRadius: basicUser.searchRadius, selectedCategoryIds: basicUser.selectedCategories };
 ---
 
 <Modal>

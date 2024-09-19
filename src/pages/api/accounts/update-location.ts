@@ -1,20 +1,24 @@
 import { updateLocation } from "@lib/services/account";
+import { AstroService } from "@lib/services/astro";
+import { encryptJwt } from "@lib/services/auth";
 import { Point } from "@lib/services/geo";
-import logger from "@lib/services/logger";
+import { HttpService } from "@lib/services/http";
 import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request, locals }): Promise<Response> => {
-	if (!locals.user.id) {
-		logger.error("Can't update account location -> missing account id");
-		return new Response();
-	}
-
 	const formData = await request.formData();
 	const lon = Number(formData.get("lon")?.toString());
 	const lat = Number(formData.get("lat")?.toString());
 	const point = new Point(lon, lat);
 
-	updateLocation(locals.user.id, point);
+	const { id, basicUser } = AstroService.extractIdAndBasicUserFromLocals(locals);
 
-	return new Response();
+	if (id) {
+		updateLocation(id, point);
+		return new Response();
+	}
+
+	basicUser.location = point;
+	const basicUserPayload = await encryptJwt(basicUser);
+	return HttpService.createSetCookieResponse("basicUser", basicUserPayload);
 };

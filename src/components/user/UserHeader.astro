@@ -3,19 +3,18 @@ import DefaultUserProfileImage from "@components/icons/DefaultUserProfileImage.a
 import FilterIcon from "@components/icons/FilterIcon.astro";
 import LocationIcon from "@components/icons/LocationIcon.astro";
 import { getLocation, getUsernameById } from "@lib/services/account";
-import { Point } from "@lib/services/geo";
 import { t } from "@lib/services/i18n";
 import { areSelectedCategoriesActive, useLocationService } from "@lib/services/user";
 import DealsCountBadge from "./DealsCountBadge.astro";
 import FavoriteDealersCountBadge from "./FavoriteDealersCountBadge.astro";
 import FavoriteDealsCountBadge from "./FavoriteDealsCountBadge.astro";
 
-const { user, language } = Astro.locals;
+const { user, language, basicUser } = Astro.locals;
 const [username, locationService, currentLocation, selectedCategoriesFilterActive] = await Promise.all([
 	user.id ? await getUsernameById(user.id) : t("basic", language),
-	user.id ? await useLocationService(user.id) : false,
-	user.id ? await getLocation(user.id) : Point.centerOfGermany(),
-	user.id ? await areSelectedCategoriesActive(user.id) : false,
+	user.id ? await useLocationService(user.id) : basicUser.useLocationService,
+	user.id ? await getLocation(user.id) : basicUser.location,
+	user.id ? await areSelectedCategoriesActive(user.id) : basicUser.selectedCategories.length > 0,
 ]);
 ---
 

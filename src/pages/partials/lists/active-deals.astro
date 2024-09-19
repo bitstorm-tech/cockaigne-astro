@@ -1,11 +1,12 @@
 ---
 import DealHeader from "@components/deal/DealHeader.astro";
 import FavoriteToggleButton from "@components/deal/FavoriteToggleButton.astro";
+import { AstroService } from "@lib/services/astro";
 import { getActiveDealHeadersForUserPage } from "@lib/services/deal";
 
 export const partial = true;
-const userId = Astro.locals.user.id || "";
-const dealHeaders = await getActiveDealHeadersForUserPage(userId);
+const idOrBasicUser = AstroService.extractIdAndBasicUserFromLocals(Astro.locals);
+const dealHeaders = await getActiveDealHeadersForUserPage(idOrBasicUser);
 ---
 
 <div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">

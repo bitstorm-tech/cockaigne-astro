@@ -5,6 +5,7 @@ export type AlertType = "warning" | "info";
 export function renderAlertTranslated(translationKey: string, lang: string, type?: AlertType): Response {
 	const headers = new Headers();
 	headers.append("HX-Retarget", "#alert");
+	headers.append("HX-Reswap", "innerHTML");
 	const message = t(translationKey, lang);
 	return new Response(alert(message, type), { headers });
 }

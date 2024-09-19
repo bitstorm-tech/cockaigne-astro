@@ -1,14 +1,16 @@
 ---
+import BasicUserHint from "@components/deal/BasicUserHint.astro";
 import DealHeader from "@components/deal/DealHeader.astro";
 import FavoriteToggleButton from "@components/deal/FavoriteToggleButton.astro";
 import { getFavoriteDealsDealHeaders } from "@lib/services/deal";
 
 export const partial = true;
-const userId = Astro.locals.user.id;
-const dealHeaders = userId ? await getFavoriteDealsDealHeaders(userId) : [];
+const { id, isBasicUser } = Astro.locals.user;
+const dealHeaders = id ? await getFavoriteDealsDealHeaders(id) : [];
 ---
 
 <div class="flex flex-col gap-2" x-data="{openDetailsId: ''}">
+	{isBasicUser && <BasicUserHint />}
 	{
 		dealHeaders.map((header) => (
 			<DealHeader {header}>

@@ -11,6 +11,7 @@ import {
 	getHighestVoucherDiscount,
 	hasActiveSubscription,
 } from "./subscription";
+import type { IdOrBasicUser } from "./user";
 
 export type DealState = "active" | "past" | "future" | "template" | "favorite-deals" | "favorite-dealers";
 
@@ -57,12 +58,24 @@ const dealColorMap = new Map<number, string>([
 	[16, "#b3b3b3"], //Sonstiges
 ]);
 
-export async function getDealsForMap(extent: Extent, accountId: string): Promise<DealOnMap[]> {
+export async function getDealsForMap(extent: Extent, idOrBasicUser: IdOrBasicUser): Promise<DealOnMap[]> {
+	const { id, basicUser } = idOrBasicUser;
+	const selectedCategoriesCondition = id
+		? sql`join selected_categories s on a.category_id = s.category_id and s.user_id = ${id}`
+		: sql``;
+
+	const additionalWhereCondition =
+		id || basicUser.selectedCategories.length === 0
+			? sql``
+			: sql`and a.category_id in ${sql(basicUser.selectedCategories)}`;
+
 	const result = await sql<{ wkt: string; categoryId: number }[]>`
 		select st_astext(a.location) as wkt, a.category_id
 		from active_deals_view a
-		join selected_categories s on a.category_id = s.category_id and s.user_id = ${accountId}
-		where st_within(location, st_makeenvelope(${extent.a}, ${extent.b}, ${extent.c}, ${extent.d}, 4326))`;
+		${selectedCategoriesCondition}
+		where
+			st_within(location, st_makeenvelope(${extent.a}, ${extent.b}, ${extent.c}, ${extent.d}, 4326))
+			${additionalWhereCondition}`;
 
 	return result.map((deal) => ({
 		location: Point.fromWkt(deal.wkt),
@@ -89,20 +102,32 @@ function rotateToCurrentDeal(dealHeaders: DealHeader[]): DealHeader[] {
 	return dealHeaders;
 }
 
-export async function getActiveDealHeadersForUserPage(userId: string): Promise<DealHeader[]> {
-	const [result] =
-		await sql`select array_agg(category_id) as category_ids from selected_categories where user_id = ${userId}`;
+export async function getActiveDealHeadersForUserPage(idOrBasicUser: IdOrBasicUser): Promise<DealHeader[]> {
+	const { id, basicUser } = idOrBasicUser;
 
-	const categoryFilter = result.categoryIds ? sql` and d.category_id in ${sql(result.categoryIds)}` : sql``;
+	let categoryIds = basicUser.selectedCategories;
+
+	if (id) {
+		const [result] =
+			await sql`select array_agg(category_id) as category_ids from selected_categories where user_id = ${id}`;
+
+		categoryIds = result.categoryIds;
+	}
+
+	const categoryFilter = categoryIds?.length > 0 ? sql` and d.category_id in ${sql(categoryIds)}` : sql``;
+	const spatialFilter = id
+		? sql`st_within(d.location, st_buffer(a.location::geography, a.search_radius_in_meters)::geometry)`
+		: sql`st_within(d.location, st_buffer(${basicUser.location.toWkt()}::geography, ${basicUser.searchRadius})::geometry)`;
+	const joinAccountsCondition = id ? sql`join accounts a on a.id = ${id}` : sql``;
 
 	return rotateToCurrentDeal(
 		await sql<DealHeader[]>`
-		select d.id, d.dealer_id, d.title, d.category_id, d.username, d.start_time, f.user_id = ${userId || sql`uuid_nil()`} as "isFavorite"
+		select d.id, d.dealer_id, d.title, d.category_id, d.username, d.start_time, f.user_id = ${id || sql`uuid_nil()`} as "isFavorite"
   		from active_deals_view d
-    	join accounts a on a.id = ${userId}
+    	${joinAccountsCondition}
 		left join favorite_deals f on f.deal_id = d.id
 		where
-			${sql`st_within(d.location, st_buffer(a.location::geography, a.search_radius_in_meters)::geometry)`} ${categoryFilter}
+			${spatialFilter}
 			${categoryFilter}
 		order by d.start_time`,
 	);

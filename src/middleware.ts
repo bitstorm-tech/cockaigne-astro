@@ -1,4 +1,4 @@
-import { type BasicUser, newBasicUser } from "@lib/models/user";
+import { newBasicUser } from "@lib/models/user";
 import { decryptJwt, encryptJwt, type JwtPayload } from "@lib/services/auth";
 import { getValueFromCookie } from "@lib/services/cookie";
 import { defineMiddleware } from "astro/middleware";
@@ -10,6 +10,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		isProUser: false,
 		isBasicUser: true,
 	};
+
+	context.locals.basicUser = newBasicUser();
 
 	const cookie = context.request.headers.get("cookie") || "";
 
@@ -26,16 +28,23 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		}
 	}
 
-	const response = await next();
+	let basicUserCookie = "";
 
 	if (context.locals.user.isBasicUser) {
 		const basicUser = getValueFromCookie(cookie, "basicUser");
-		if (basicUser) {
-			context.locals.basicUser = (await decryptJwt<BasicUser>(basicUser)) || newBasicUser();
-		} else {
+
+		if (!basicUser) {
 			const basicUserPayload = await encryptJwt(context.locals.basicUser);
-			response.headers.append("Set-Cookie", `basicUser=${basicUserPayload}; HttpOnly; Path=/`);
+			basicUserCookie = `basicUser=${basicUserPayload}; HttpOnly; Path=/`;
 		}
+
+		context.locals.basicUser = basicUser ? (await decryptJwt(basicUser)) || newBasicUser() : newBasicUser();
+	}
+
+	const response = await next();
+
+	if (basicUserCookie.length > 0) {
+		response.headers.append("Set-Cookie", basicUserCookie);
 	}
 
 	return response;

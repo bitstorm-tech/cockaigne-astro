@@ -1,10 +1,10 @@
 ---
 import Modal from "@layouts/Modal.astro";
-import { getAccountById } from "@lib/services/account";
 import { t } from "@lib/services/i18n";
+import { UserService } from "@lib/services/user";
 
-const { language, user } = Astro.locals;
-const account = await getAccountById(user.id || "");
+const { user, basicUser, language } = Astro.locals;
+const useLocationService = user.id ? await UserService.useLocationService(user.id) : basicUser.useLocationService;
 ---
 
 <Modal>
@@ -33,7 +33,7 @@ const account = await getAccountById(user.id || "");
 					class="checkbox"
 					type="checkbox"
 					name="use-location-service"
-					checked={account?.useLocationService}
+					:checked={useLocationService}
 					onclick="toggleCheckbox(this)"
 				/>
 				<label for="use-location-service">{t("use_current_location", language)}</label>
@@ -46,7 +46,7 @@ const account = await getAccountById(user.id || "");
 			<button onclick="searchAddress">{t("save", language)}</button>
 		</div>
 	</form>
-	<script is:inline define:vars={{ locationService: account?.useLocationService }}>
+	<script is:inline define:vars={{ locationService: useLocationService }}>
 		const addressLabel = document.getElementById("address-label");
 		const addressLabelFormControl = document.getElementById("address-label-form-control");
 		const addressInput = document.getElementById("address-input");

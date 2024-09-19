@@ -1,4 +1,4 @@
-export interface FilterData {
+export interface FilterModalFilterData {
 	selectedCategoryIds: number[];
 	searchRadius: number;
 }

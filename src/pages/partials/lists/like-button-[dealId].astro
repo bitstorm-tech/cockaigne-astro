@@ -12,11 +12,11 @@ if (!dealId) {
 	return;
 }
 
-const user = Astro.locals.user;
+const { user, language } = Astro.locals;
 const toggle = Astro.url.searchParams.get("toggle") === "true";
 
 if (toggle && user.isBasicUser) {
-	return renderInfoTranslated("info.only_for_pro_member", user.language);
+	return renderInfoTranslated("info.only_for_pro_member", language);
 }
 
 const likes = toggle && user.id ? await toggleDealLike(dealId, user.id) : await getDealLikes(dealId);

@@ -3,10 +3,11 @@ import CurrentLocationIcon from "@components/icons/CurrentLocationIcon.astro";
 import FilterIcon from "@components/icons/FilterIcon.astro";
 import MapPinIcon from "@components/icons/MapPinIcon.astro";
 import Layout from "@layouts/Layout.astro";
-import { getAccountById } from "@lib/services/account";
+import { AstroService } from "@lib/services/astro";
+import { UserService } from "@lib/services/user";
 
-const { id = "" } = Astro.locals.user;
-const account = await getAccountById(id);
+const idOrBasicUser = AstroService.extractIdAndBasicUserFromLocals(Astro.locals);
+const filterData = await UserService.getFilterData(idOrBasicUser);
 ---
 
 <Layout showBadge={true} showFooter={true}>
@@ -35,9 +36,9 @@ const account = await getAccountById(id);
 <script
 	is:inline
 	define:vars={{
-		currentLocation: account?.location,
-		useLocationService: account?.useLocationService,
-		searchRadius: account?.searchRadiusInMeters,
+		currentLocation: filterData.location,
+		useLocationService: filterData.useLocationService,
+		searchRadius: filterData.searchRadius,
 	}}
 >
 	const map = L.map("map", { attributionControl: false });

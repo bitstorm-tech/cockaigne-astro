@@ -1,8 +1,11 @@
-import type { FilterData } from "@lib/models/filter-data";
+import type { FilterModalFilterData } from "@lib/models/filter-data";
 import type { BasicUser } from "@lib/models/user";
 import sql from "@lib/services/pg";
+import { Point } from "./geo";
+import logger from "./logger";
 
-export type IdOrBasicUser = { id?: string; basicUser: BasicUser } | { id: string; basicUser?: BasicUser };
+export type IdOrBasicUser = { id?: string; basicUser: BasicUser };
+
 export async function getFavoriteDealersCount(userId: string): Promise<number> {
 	const result = await sql`select count(*) from favorite_dealers_view where user_id = ${userId}`;
 
@@ -18,7 +21,7 @@ export async function getFavoriteDealsCount(userId: string): Promise<number> {
 	return result[0].count;
 }
 
-export async function getFilterData(userId: string): Promise<FilterData> {
+export async function getFilterModalFilterData(userId: string): Promise<FilterModalFilterData> {
 	const [result1, result2] = await Promise.all([
 		await sql`select category_id from selected_categories where user_id = ${userId}`,
 		await sql`select search_radius_in_meters from accounts where id = ${userId}`,
@@ -66,4 +69,43 @@ export async function useLocationService(userId: string): Promise<boolean> {
 	const [result] = await sql`select use_location_service from accounts where id = ${userId}`;
 
 	return result.useLocationService;
+}
+
+export interface FilterData {
+	location: Point;
+	useLocationService: boolean;
+	searchRadius: number;
+}
+
+export namespace UserService {
+	export async function getFilterData(idOrBasicUser: IdOrBasicUser): Promise<FilterData> {
+		const { id, basicUser } = idOrBasicUser;
+		if (!id) {
+			return {
+				location: basicUser.location,
+				useLocationService: basicUser.useLocationService,
+				searchRadius: basicUser.searchRadius,
+			};
+		}
+
+		const [result] =
+			await sql`select st_astext(location) as location, use_location_service, search_radius_in_meters from accounts where id = ${id}`;
+
+		return {
+			location: Point.fromWkt(result.location),
+			useLocationService: result.useLocationService,
+			searchRadius: result.searchRadiusInMeters,
+		};
+	}
+
+	export async function useLocationService(userId: string): Promise<boolean> {
+		const [result] = await sql`select use_location_service from accounts where id = ${userId}`;
+
+		if (!result) {
+			logger.error(`Can't check if user ${userId} is using location service`);
+			return false;
+		}
+
+		return result.useLocationService;
+	}
 }

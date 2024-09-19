@@ -1,3 +1,4 @@
+import { AstroService } from "@lib/services/astro";
 import { getDealsForMap } from "@lib/services/deal";
 import { Extent } from "@lib/services/geo";
 import logger from "@lib/services/logger";
@@ -16,7 +17,8 @@ export const GET: APIRoute = async ({ url, locals }): Promise<Response> => {
 		return new Response("[]");
 	}
 
-	const deals = await getDealsForMap(extent, locals.user.id);
+	const idOrBasicUser = AstroService.extractIdAndBasicUserFromLocals(locals);
+	const deals = await getDealsForMap(extent, idOrBasicUser);
 
 	return new Response(JSON.stringify(deals));
 };
