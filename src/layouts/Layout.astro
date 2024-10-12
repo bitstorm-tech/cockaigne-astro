@@ -12,7 +12,7 @@ const { showBadge = false, showFooter = false } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" class="bg-dark text-[#a6adba]">
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -31,16 +31,16 @@ const { showBadge = false, showFooter = false } = Astro.props;
 			integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
-			is:inline>
-		</script>
+			is:inline
+		></script>
 		<!-- htmx -->
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.1/htmx.min.js"
 			integrity="sha512-/POjPSnGjDaJfmt9O7LOTz1eGoCQNsVSJdgxYTVjhnWRDmuDFTvzwQrxIxipRrakLw7IYJfOsanDe7WuP40zxw=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer"
-			is:inline
-		></script>
+			is:inline>
+		</script>
 		<script src="/js/geo.js" is:inline></script>
 		<script src="/js/ui.js" is:inline></script>
 		<title>Cockaigne City</title>

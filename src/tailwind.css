@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-	body {
-		@apply bg-dark text-[#a6adba];
-	}
-
 	h1 {
 		@apply text-3xl;
 		@apply my-4;
