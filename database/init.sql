@@ -43,7 +43,8 @@ create table accounts
     tax_id                  text                         null,
     use_location_service    boolean                      not null default false,
     search_radius_in_meters integer                      not null default 500,
-    "location"              public.geometry(point, 4326) null,
+    language                text                         not null default 'de',
+	  "location"              public.geometry(point, 4326) null,
     created                 timestamptz                  not null default now()
 );
 
@@ -63,6 +64,8 @@ create table deals
     payment_state     text,
     "start"           timestamptz not null,
     "template"        boolean     not null default false,
+    start_instantly   boolean     not null default false,
+    own_end_date      boolean     not null default false;
     created           timestamptz not null default now()
 );
 
@@ -198,6 +201,25 @@ create table contact_messages
     account_id uuid        not null references accounts (id) on delete restrict on update cascade,
     message    text        not null,
     created    timestamptz not null default now()
+);
+
+
+
+create table deal_clicks
+(
+    deal_id    uuid        not null references deals (id),
+    account_id uuid        not null references accounts (id),
+    clicked    timestamptz not null default now(),
+    constraint "deal_id_account_id_key" unique (deal_id, account_id)
+);
+
+
+
+create table i18n
+(
+    key text primary key,
+    de  text not null,
+    en  text not null
 );
 
 
@@ -377,6 +399,32 @@ from vouchers v
          join redeemed_vouchers rv on v.code = rv.code
 where v.is_active
   and now() between v."start" and v."end";
+
+
+
+create or replace view click_counts_view as
+select deal_id,
+       count(deal_id) as clickcount
+from deal_clicks
+group by deal_id
+order by clickcount desc;
+
+
+
+create or replace view
+    statistics_view as
+select d.id                         as deal_id,
+       d.dealer_id,
+       d.title,
+       d.start,
+       d.duration_in_hours,
+       coalesce(c.clickcount, 0)    as clickcount,
+       coalesce(f.favoritecount, 0) as favoritecount,
+       coalesce(l.likecount, 0)     as likecount
+from deals d
+         left join click_counts_view c on d.id = c.deal_id
+         left join favorite_counts_view f on d.id = f.deal_id
+         left join like_counts_view l on d.id = l.deal_id;
 
 
 
