@@ -4,9 +4,18 @@ import DealsIcon from "@components/icons/DealsIcon.astro";
 import ImagesIcon from "@components/icons/ImagesIcon.astro";
 import RatingIcon from "@components/icons/RatingIcon.astro";
 import Layout from "@layouts/Layout.astro";
+import { accountExistsById } from "@lib/services/account";
 
 const dealerId = Astro.params.dealerId!;
 const { user } = Astro.locals;
+
+if (dealerId && !(await accountExistsById(dealerId))) {
+	const headers = new Headers();
+	headers.append("Set-Cookie", "jwt=; HttpOnly; Path=/");
+	headers.append("Location", "/login");
+
+	return new Response(null, { headers, status: 302 });
+}
 ---
 
 <Layout showBadge={!user.isDealer} showFooter={true}>

@@ -4,6 +4,17 @@ import DealsIcon from "@components/icons/DealsIcon.astro";
 import HeartIcon from "@components/icons/HeartIcon.astro";
 import UserHeader from "@components/user/UserHeader.astro";
 import Layout from "@layouts/Layout.astro";
+import { accountExistsById } from "@lib/services/account";
+
+const { id } = Astro.locals.user;
+
+if (id && !(await accountExistsById(id))) {
+	const headers = new Headers();
+	headers.append("Set-Cookie", "jwt=; HttpOnly; Path=/");
+	headers.append("Location", "/login");
+
+	return new Response(null, { headers, status: 302 });
+}
 ---
 
 <Layout showBadge={true} showFooter={true}>

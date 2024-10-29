@@ -13,6 +13,12 @@ export async function accountExists(email: string, username: string): Promise<bo
 	return !!result;
 }
 
+export async function accountExistsById(id: string): Promise<boolean> {
+	const [result] = await sql`select true from accounts where id = ${id} limit 1`;
+
+	return !!result;
+}
+
 export async function activateAccount(code: string): Promise<boolean> {
 	const [result] =
 		await sql`update accounts set active = true, activation_code = null where activation_code = ${code} returning id`;
