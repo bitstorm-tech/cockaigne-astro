@@ -44,7 +44,7 @@ const hasActiveSub = await hasActiveSubscription(user.id || "");
 		<!----------------------------------------->
 		<!-- Basic -->
 		<!----------------------------------------->
-		<template x-if="tabIndex === 0">
+		<div class="flex w-full flex-col gap-4" x-show="tabIndex === 0">
 			<BasicPlanCard title="Basic" price={`4,99 € / ${t("deal", language)}`}>
 				<ul>
 					<li class="list-disc">
@@ -56,8 +56,8 @@ const hasActiveSub = await hasActiveSubscription(user.id || "");
 					<li class="list-disc">{t("basic_pricing_description_2", language)}</li>
 				</ul>
 			</BasicPlanCard>
-		</template>
-		<VoucherCard />
+			<VoucherCard />
+		</div>
 		<!----------------------------------------->
 		<!-- Montly plan  -->
 		<!----------------------------------------->
