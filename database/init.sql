@@ -65,7 +65,7 @@ create table deals
     "start"           timestamptz not null,
     "template"        boolean     not null default false,
     start_instantly   boolean     not null default false,
-    own_end_date      boolean     not null default false;
+    own_end_date      boolean     not null default false,
     created           timestamptz not null default now()
 );
 
@@ -183,15 +183,6 @@ create table subscriptions
     activated              timestamptz null,
     canceled               timestamptz null,
     constraint "account_subscription_key" unique (account_id, stripe_subscription_id)
-);
-
-
-
-create table contact_messages
-(
-    account_id uuid        not null references accounts (id) on delete restrict on update cascade,
-    message    text        not null,
-    created    timestamptz not null default now()
 );
 
 
