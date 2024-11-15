@@ -25,9 +25,26 @@ const hasActiveSub = await hasActiveSubscription(user.id || "");
 				hasActiveSub ? (
 					<span>{t("active_subscription_already_exists", language)}</span>
 				) : (
-					<button hx-post={`/api/subscriptions/subscribe-${planId}`}>{t("subscription_subscribe", language)}</button>
+					<a
+						href="#"
+						class="paddle_button"
+						data-display-mode="overlay"
+						data-theme="light"
+						data-locale="en"
+						data-items='[
+				{
+					"priceId": "pri_01jc99z8gnf48j2tvxqbm7gg99",
+					"quantity": 1
+				}
+			]'>
+						Paddle
+					</a>
 				)
 			}
 		</div>
 	</div>
 </div>
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js" is:inline></script>
+<script is:inline>
+	Paddle.Initialize({ token: "test_6fc960e5ae4a150bc047546254e" });
+</script>
