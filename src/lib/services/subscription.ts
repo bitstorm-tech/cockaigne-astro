@@ -1,6 +1,7 @@
 import type { Subscription, SubscriptionInsert, SubscriptionState } from "@lib/models/subscription";
 import dayjs, { type Dayjs } from "dayjs";
 import Stripe from "stripe";
+import { getAccountById } from "./account";
 import logger from "./logger";
 import sql from "./pg";
 
@@ -9,8 +10,11 @@ const stripe = new Stripe(import.meta.env.STRIPE_PRIVATE_API_KEY);
 export async function createSubscription(accountId: string, planId: string, baseUrl: string): Promise<string> {
 	const priceId = await getPriceId(planId);
 	const stripeTrackingId = crypto.randomUUID();
+	const account = await getAccountById(accountId);
+	const eMail = account?.email;
 
 	const session = await stripe.checkout.sessions.create({
+		client_reference_id: accountId,
 		line_items: [
 			{
 				price: priceId,
@@ -24,9 +28,7 @@ export async function createSubscription(accountId: string, planId: string, base
 			enabled: true,
 		},
 		payment_method_types: ["card", "paypal"],
-		shipping_address_collection: {
-			allowed_countries: ["DE"],
-		},
+		customer_email: eMail,
 		metadata: {
 			stripeTrackingId,
 		},
