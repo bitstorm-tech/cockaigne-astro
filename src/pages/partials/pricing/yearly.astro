@@ -1,0 +1,42 @@
+---
+import PlanCard from "@components/pricing/PlanCard.astro";
+import { t } from "@lib/services/i18n";
+
+const language = Astro.locals.language;
+---
+
+<PlanCard
+	title={t("starter", language)}
+	price={`89 € / ${t("month", language)}`}
+	priceSubText={t("yearly_payment", language)}
+	planId={4}>
+	<ul>
+		<li class="list-disc">{t("yearly_starter_1", language)}</li>
+		<li class="list-disc">{t("yearly_starter_2", language)}</li>
+		<li class="list-disc">{t("yearly_starter_3", language)}</li>
+	</ul>
+</PlanCard>
+<PlanCard
+	title={t("exclusive", language)}
+	price={`224 € / ${t("month", language)}`}
+	priceSubText={t("yearly_payment", language)}
+	planId={3}>
+	<ul>
+		<li class="list-disc">{t("yearly_exclusive_1", language)}</li>
+		<li class="list-disc">{t("yearly_exclusive_2", language)}</li>
+		<li class="list-disc">{t("yearly_exclusive_3", language)}</li>
+		<li class="list-disc">{t("yearly_exclusive_4", language)}</li>
+	</ul>
+</PlanCard>
+<PlanCard
+	title={t("premium", language)}
+	price={`314 € / ${t("month", language)}`}
+	priceSubText={t("yearly_payment", language)}
+	planId={3}>
+	<ul>
+		<li class="list-disc">{t("yearly_premium_1", language)}</li>
+		<li class="list-disc">{t("yearly_premium_2", language)}</li>
+		<li class="list-disc">{t("yearly_premium_3", language)}</li>
+		<li class="list-disc">{t("yearly_premium_4", language)}</li>
+	</ul>
+</PlanCard>

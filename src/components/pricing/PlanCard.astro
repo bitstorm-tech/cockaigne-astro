@@ -5,10 +5,11 @@ import { hasActiveSubscription } from "@lib/services/subscription";
 interface Props {
 	title: string;
 	price: string;
+	priceSubText: string;
 	planId: number;
 }
 
-const { title, price, planId } = Astro.props;
+const { title, price, priceSubText, planId } = Astro.props;
 const { user, language } = Astro.locals;
 const hasActiveSub = await hasActiveSubscription(user.id || "");
 ---
@@ -17,7 +18,10 @@ const hasActiveSub = await hasActiveSubscription(user.id || "");
 	<div class="card-body gap-6">
 		<span class="card-title w-full justify-between">
 			<span>{title}</span>
-			<span class="text-sm">{price}</span>
+			<div class="flex flex-col items-end">
+				<span class="text-sm">{price}</span>
+				<i class="text-xs">{priceSubText}</i>
+			</div>
 		</span>
 		<slot />
 		<div class="card-actions justify-end">

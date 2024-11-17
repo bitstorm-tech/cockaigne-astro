@@ -1,6 +1,5 @@
 ---
 import BasicPlanCard from "@components/pricing/BasicPlanCard.astro";
-import PlanCard from "@components/pricing/PlanCard.astro";
 import VoucherCard from "@components/pricing/VoucherCard.astro";
 import Layout from "@layouts/Layout.astro";
 import { t } from "@lib/services/i18n";
@@ -11,10 +10,10 @@ const hasActiveSub = await hasActiveSubscription(user.id || "");
 ---
 
 <Layout>
-	<section class="flex flex-col items-center gap-4 p-4" x-data="{tabIndex: 0}">
+	<section class="flex flex-col items-center gap-4 p-4" x-data="{tabIndex: 0, yearlyPayment: true}">
 		<h1>{t("prices_and_subscriptions", language)}</h1>
 		{hasActiveSub && <h2 class="text-red">{t("already_have_active_subscription", language)}</h2>}
-		<div class="join grid w-full grid-cols-3">
+		<div class="join grid w-full grid-cols-2">
 			<input
 				class="btn join-item"
 				type="radio"
@@ -23,24 +22,8 @@ const hasActiveSub = await hasActiveSubscription(user.id || "");
 				checked
 				@click="tabIndex = 0"
 			/>
-			<input
-				class="btn join-item"
-				type="radio"
-				name="options"
-				aria-label={t("monthly_subscription", language)}
-				@click="tabIndex = 1"
-			/>
-			<input
-				class="btn join-item"
-				type="radio"
-				name="options"
-				aria-label={t("yearly_subscription", language)}
-				@click="tabIndex = 2"
-			/>
+			<input class="btn join-item" type="radio" name="options" aria-label="Abos" @click="tabIndex = 1" />
 		</div>
-		<i class="px-4 text-center text-sm" :class="{'invisible': tabIndex === 0}">
-			{t("save_10_percent_with_yearly", language)}
-		</i>
 		<!----------------------------------------->
 		<!-- Basic -->
 		<!----------------------------------------->
@@ -59,60 +42,31 @@ const hasActiveSub = await hasActiveSubscription(user.id || "");
 			<VoucherCard />
 		</div>
 		<!----------------------------------------->
-		<!-- Montly plan  -->
+		<!-- Subscriptions  -->
 		<!----------------------------------------->
 		<div class="flex w-full flex-col gap-4" x-show="tabIndex === 1">
-			<PlanCard title={t("starter", language)} price={`99,90 € / ${t("month", language)}`} planId={1}>
-				<ul>
-					<li class="list-disc">{t("monthly_starter_1", language)}</li>
-					<li class="list-disc">{t("monthly_starter_2", language)}</li>
-					<li class="list-disc">{t("monthly_starter_3", language)}</li>
-				</ul>
-			</PlanCard>
-			<PlanCard title={t("exclusive", language)} price={`249,90 € / ${t("month", language)}`} planId={2}>
-				<ul>
-					<li class="list-disc">{t("monthly_exclusive_1", language)}</li>
-					<li class="list-disc">{t("monthly_exclusive_2", language)}</li>
-					<li class="list-disc">{t("monthly_exclusive_3", language)}</li>
-					<li class="list-disc">{t("monthly_exclusive_4", language)}</li>
-				</ul>
-			</PlanCard>
-			<PlanCard title={t("premium", language)} price={`349,90 € / ${t("month", language)}`} planId={3}>
-				<ul>
-					<li class="list-disc">{t("monthly_premium_1", language)}</li>
-					<li class="list-disc">{t("monthly_premium_2", language)}</li>
-					<li class="list-disc">{t("monthly_premium_3", language)}</li>
-					<li class="list-disc">{t("monthly_premium_4", language)}</li>
-				</ul>
-			</PlanCard>
-		</div>
-		<!----------------------------------------->
-		<!-- Yearly plan  -->
-		<!----------------------------------------->
-		<div class="flex w-full flex-col gap-4" x-show="tabIndex === 2">
-			<PlanCard title={t("starter", language)} price={`1.099,90 € / ${t("month", language)}`} planId={4}>
-				<ul>
-					<li class="list-disc">{t("yearly_starter_1", language)}</li>
-					<li class="list-disc">{t("yearly_starter_2", language)}</li>
-					<li class="list-disc">{t("yearly_starter_3", language)}</li>
-				</ul>
-			</PlanCard>
-			<PlanCard title={t("exclusive", language)} price={`2.699,90 € / ${t("month", language)}`} planId={3}>
-				<ul>
-					<li class="list-disc">{t("yearly_exclusive_1", language)}</li>
-					<li class="list-disc">{t("yearly_exclusive_2", language)}</li>
-					<li class="list-disc">{t("yearly_exclusive_3", language)}</li>
-					<li class="list-disc">{t("yearly_exclusive_4", language)}</li>
-				</ul>
-			</PlanCard>
-			<PlanCard title={t("premium", language)} price={`3.799,90 € / ${t("month", language)}`} planId={3}>
-				<ul>
-					<li class="list-disc">{t("yearly_premium_1", language)}</li>
-					<li class="list-disc">{t("yearly_premium_2", language)}</li>
-					<li class="list-disc">{t("yearly_premium_3", language)}</li>
-					<li class="list-disc">{t("yearly_premium_4", language)}</li>
-				</ul>
-			</PlanCard>
+			<div class="my-4 flex justify-center gap-4">
+				<div>{t("monthly_payment", language)}</div>
+				<input type="checkbox" class="toggle toggle-warning" x-model="yearlyPayment" />
+				<div class="flex items-center gap-2">
+					<div>{t("yearly_payment", language)}</div>
+					<b class="text-sm">({t("save_10_percent_with_yearly", language)})</b>
+				</div>
+			</div>
+			<div
+				class="flex flex-col gap-4"
+				x-show="!yearlyPayment"
+				hx-get="/partials/pricing/monthly"
+				hx-target="this"
+				hx-trigger="load">
+			</div>
+			<div
+				class="flex flex-col gap-4"
+				x-show="yearlyPayment"
+				hx-get="/partials/pricing/yearly"
+				hx-target="this"
+				hx-trigger="load">
+			</div>
 		</div>
 	</section>
 </Layout>
