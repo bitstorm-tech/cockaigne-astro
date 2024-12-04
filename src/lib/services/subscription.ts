@@ -176,6 +176,16 @@ export async function getFreeDaysLeftInCurrentSubscriptionPeriod(
 		where d.dealer_id = ${dealerId} and d.created between ${startDate} and ${endDate} and template is false and payment_state = 'PAYED'
 		group by p.free_days_per_month`;
 
+	if (!result) {
+		const [result2] = await sql`
+			select free_days_per_month
+      from subscriptions s
+      join plans p on p.id = s.plan_id
+      where s.account_id = ${dealerId} and s.state = 'ACTIVE'`;
+
+		return result2.freeDaysPerMonth;
+	}
+
 	return result.freeDaysLeft;
 }
 
